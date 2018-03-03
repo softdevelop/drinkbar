@@ -13,16 +13,22 @@ admin.site.unregister(auth.models.Group)
 admin.site.unregister(DefaultCategory)
 
 class UserBaseAdmin(UserAdmin):
-    list_display = ('email','birthday','avatar')
+    list_display = ('email','first_name','last_name','birthday')
 
     fieldsets = (
         (None, {'fields': ('username','email', 'password')}),
-            (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
-                                       'groups', 'user_permissions')}),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
         (_('Personal info'),
-         {'fields': ('first_name', 'last_name','birthday','avatar')}),
-    )
+            {'fields': ('first_name', 'last_name','birthday','avatar',
+            'avatar_url','is_email_verified','fb_uid')}),
+        (_('Permissions'), 
+            {'fields': ('is_active', 'is_staff', 'is_superuser',
+                                       'groups', 'user_permissions')}),
+        (_('Important dates'), 
+            {'fields': ('last_login', 'date_joined')}),
+        )
+
+    readonly_fields = ('fb_uid',)
+
 class DrinkCategoryAdmin(admin.ModelAdmin):
     list_display = ('id','name','_link','active')
     fieldsets = (

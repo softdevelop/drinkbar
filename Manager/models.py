@@ -10,6 +10,9 @@ from django.contrib.auth.models import AbstractUser
 from rest_framework.authtoken.models import Token
 from categories.base import CategoryBase
 from django.urls import reverse
+from facepy import GraphAPI
+from datetime import datetime, date
+import api_utils
 
 class DrinkCategory(CategoryBase):
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),null=True, blank=True, upload_to='categories')
@@ -38,8 +41,13 @@ class DrinkCategory(CategoryBase):
 class UserBase(AbstractUser):
 
     birthday = models.DateField(null=True, blank=True)
-    avatar = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='avatars')
-                           
+    avatar = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='avatars',
+                                 null=True, blank=True)
+    avatar_url = models.CharField(max_length=200, null=True, blank=True)
+    is_email_verified = models.BooleanField(default=False)
+    fb_uid = models.CharField(max_length=200, null=True, blank=True)
+    fb_access_token = models.CharField(max_length=1000, null=True, blank=True)
+
     @property
     def full_name(self):
         return u'{} {}'.format(self.first_name,self.last_name)
@@ -48,13 +56,39 @@ class UserBase(AbstractUser):
     def token(self):
         return self.auth_token.key
 
+    @classmethod
+    def get_or_create_user_from_facebook(self, fb_token, should_create=True):
+        new_user = UserBase()
+        try:
+            graph = GraphAPI(fb_token)
+            user = graph.get("me?fields=id,email,first_name,last_name,birthday")
+
+            fb_uid = user.get('id')
+            email = user.get('email')
+            first_name = user.get('first_name', '')
+            last_name = user.get('last_name', '')
+            birthday = user.get('birthday', '')
+            birthday = datetime.strptime(birthday, '%m/%d/%Y')
+            avatar_url = "http://graph.facebook.com/%s/picture?width=500&height=500&type=square" % fb_uid
+            new_user = UserBase.objects.get(username=email,fb_uid=fb_uid)
+            if not new_user:
+                new_user = UserBase(username=email, email=email,fb_uid=fb_uid,
+                            first_name=first_name,last_name=last_name,
+                            birthday=birthday.date(),avatar_url=avatar_url,
+                            fb_access_token=unicode(fb_token).encode('utf-8'))
+                new_user.save()
+            # ret = self.update_user_data(ret, username, email, first_name, last_name,
+                                        # gender, relationship_status, about, dob, avatar_url)
+        except Exception as e:
+            print ">>> get_or_create_user_from_facebook ::", e
+            pass
+        return new_user
+
 @receiver(post_save, sender=UserBase)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
-        instance.username=instance.email
-        instance.save()
         Token.objects.create(user=instance)
-    
+
 class SeparateGlass(models.Model):
     name = models.CharField(max_length=200)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='glass')
