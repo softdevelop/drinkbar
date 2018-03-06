@@ -9,7 +9,7 @@ node_modules
 
 ## Project specific ignore patterns
 ###################################
-settings_local.py
+setting_local.py
 db.sql
 /media/
 /uploads/

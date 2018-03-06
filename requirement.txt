@@ -1,6 +1,8 @@
+facepy
 django==1.11
 djangorestframework
 django-categories
+django-cors-headers
 mysqlclient
 Pillow
-facepy
+
