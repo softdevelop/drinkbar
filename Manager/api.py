@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, status, exceptions, permissions, viewsets
 from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework.permissions import IsAuthenticated
 from serializer import *
 from models import *
 import api_utils
@@ -64,3 +65,28 @@ class UserProfile(generics.GenericAPIView):
             serializer = self.get_serializer(user)
             return Response(serializer.data)
         return Response({'user': 'INVALID_PROFILE'}, status=status.HTTP_400_BAD_REQUEST)
+
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserSerializer
+    queryset = UserBase
+    permission_classes = [IsAuthenticated]
+
+class UserChangePassword(APIView):
+
+    def post(self,request,format=None):
+        old_password = request.data.get('old_password', None)
+        if not old_password:
+            raise api_utils.BadRequest("INVALID_CURRENT_PASSWORD")
+        else:
+            if authenticate(username=request.user.username, password=old_password):
+                try:   
+                    new_password = request.data.get('new_password', None)     
+                    if not new_password:
+                        raise api_utils.BadRequest("INVALID_NEW_PASSWORD")
+                    request.user.set_password(new_password) 
+                    request.user.save()
+                except Exception as e:
+                    raise api_utils.BadRequest(e)
+            else:
+                raise api_utils.BadRequest("INVALID_CURRENT_PASSWORD")
+        return Response(status=status.HTTP_202_ACCEPTED)

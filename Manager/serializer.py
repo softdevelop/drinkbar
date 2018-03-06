@@ -20,6 +20,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     avatar_url = serializers.CharField(read_only=True)
+    email = serializers.CharField(read_only=True)
     class Meta:
         model = UserBase
         fields = ('email','avatar','birthday','avatar_url')

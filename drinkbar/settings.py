@@ -25,7 +25,7 @@ SECRET_KEY = '3xt@1z(omo)$2a#-33$-&g_(*oenruasc+u2555ny)lg03qppn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*',]
 
 
 # Application definition
@@ -42,12 +42,14 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'categories',
     "categories.editor",
+    'corsheaders',
 
     'Manager',
 ]
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -56,6 +58,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -75,7 +79,7 @@ ROOT_URLCONF = 'drinkbar.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['drinkbar/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -99,8 +103,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
         'NAME': 'drinkBar',                      # Or path to database file if using sqlite3.
         'USER': 'root',
-        'PASSWORD': 'softdev',
-        # 'PASSWORD': '2206',
+        'PASSWORD': '123456789@X',
         'HOST': 'localhost',                      # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
         'PORT': '3306',                      # Set to empty string for default.
     }
@@ -143,8 +146,15 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-SITE_URL = "http://localhost:8000/"
+SITE_URL = "http://35.153.189.132/"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'blur-admin/release'),]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = SITE_URL+"static/" 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = SITE_URL+"media/"
+
+
+try:
+    from settings_local import *
+except ImportError as e:
+    print e
