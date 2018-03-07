@@ -23,7 +23,8 @@ db.sql
 ## Deployment & build ignore pattern
 ####################################
 # Virtual envs
-#/env/
+/env/
+.vscode/
 #/*_env/
 #/env_*/
 .elasticbeanstalk/
