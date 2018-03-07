@@ -92,10 +92,11 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 class SeparateGlass(models.Model):
     name = models.CharField(max_length=200)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='glass')
-    size = models.PositiveIntegerField()    
+    size = models.PositiveIntegerField(help_text=_('mL'))    
 
     def __unicode__(self):
         return self.name
+
 class Ingredient(models.Model):
     CONST_STATUS_ENABLED = 0
     CONST_STATUS_BLOCKED = 10
@@ -111,29 +112,34 @@ class Ingredient(models.Model):
     name = models.CharField(max_length=200)
     price = models.FloatField(blank=True, null= True)
     bottles = models.PositiveIntegerField(blank=True, null=True)
+    quanlity_of_bottle = models.PositiveIntegerField(help_text=_('mL'),default=0)
 
     def __unicode__(self):
         return self.name
 
+class Garnish(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    active = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.name
 
 class Drink(models.Model):
     name = models.CharField(max_length=200)
     category = models.ForeignKey(DrinkCategory, blank=True, null=True)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='drink')
-    ingredients = models.ManyToManyField(Ingredient)
     numbers_bought = models.PositiveIntegerField(blank=True, null= True, default=0)
     price = models.FloatField(blank=True, null=True)
+    glass = models.ForeignKey(SeparateGlass,blank=True, null=True)
+    garnish = models.ManyToManyField(Garnish, blank =True)
 
     def __unicode__(self):
         return self.name
 
+class DrinkIngredient(models.Model):
+    drink = models.ForeignKey(Drink, related_name='ingredients')
+    ingredient = models.ForeignKey(Ingredient)
+    ratio = models.IntegerField(help_text=_('part'))
 
-class Garnish(models.Model):
-    name = models.CharField(max_length=200)
-    active = models.BooleanField(default=True)
-    drink = models.ForeignKey(Drink, related_name='garnishes')
-    def __unicode__(self):
-        return self.name
 
 class Order(models.Model):
     user = models.ForeignKey(UserBase, related_name='orders')

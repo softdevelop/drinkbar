@@ -41,17 +41,26 @@ class DrinkCategoryAdmin(admin.ModelAdmin):
         link = str(obj.get_absolute_url()).title()[1:]
         return link.replace("/", ", ")
     _link.short_description = 'Full Category'
-class GarnishInline(admin.TabularInline):
-    model = Garnish
-    extra = 0
-    min_num = 1
+
+class DrinkIngredientInline(admin.TabularInline):
+    model = DrinkIngredient
+    extra = 1
 
 class DrinkAdmin(admin.ModelAdmin):
     list_display = ('name','category','numbers_bought','price')
-    filter_horizontal = ('ingredients',)
     readonly_fields = ('numbers_bought',)
 
-    inlines = (GarnishInline,)
+    inlines = (DrinkIngredientInline,)
+
+class GarnishAdmin(admin.ModelAdmin):
+    list_display = ('name','active')
+    list_editable = ('active',)
+
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ('name', 'status', 'price',
+        'bottles','quanlity_of_bottle')
+
+    list_editable = ('status',)
 
 class TabAdmin(admin.ModelAdmin):
     list_display = ('user','drink','ice','quantity')
@@ -59,5 +68,6 @@ class TabAdmin(admin.ModelAdmin):
 admin.site.register(UserBase, UserBaseAdmin)
 admin.site.register(DrinkCategory, DrinkCategoryAdmin)
 admin.site.register(Drink,DrinkAdmin)
-admin.site.register(Ingredient)
+admin.site.register(Ingredient, IngredientAdmin)
+admin.site.register(Garnish, GarnishAdmin)
 admin.site.register(Tab, TabAdmin)
