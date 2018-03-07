@@ -7,7 +7,11 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from serializer import *
 from models import *
-import api_utils
+import api_utils, jwt, json, random
+from django.conf import settings
+from Manager.models import UserBase
+from django.core.mail import send_mail, EmailMessage
+from django.http import HttpResponse, JsonResponse
 
 class UserSignUp(generics.CreateAPIView):
     serializer_class = UserSignupSerializer
@@ -76,7 +80,19 @@ class UserChangePassword(APIView):
     def post(self,request,format=None):
         old_password = request.data.get('old_password', None)
         if not old_password:
-            raise api_utils.BadRequest("INVALID_CURRENT_PASSWORD")
+            # forgot password
+            new_password = request.data.get('password', None)
+            if not new_password:
+                raise api_utils.BadRequest("INVALID_CURRENT_PASSWORD")
+            else:
+                request.user.set_password(new_password)
+                request.user.save()
+                response = {
+                    'result' : 1,
+                    'status' : 'Reset success!'
+                }
+                return JsonResponse(response)
+            return Response(status=status.HTTP_202_ACCEPTED)
         else:
             if authenticate(username=request.user.username, password=old_password):
                 try:   
@@ -89,4 +105,61 @@ class UserChangePassword(APIView):
                     raise api_utils.BadRequest(e)
             else:
                 raise api_utils.BadRequest("INVALID_CURRENT_PASSWORD")
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+class UserConfirmEmail(APIView):
+
+    def post(self, request, format=None):
+        email = request.data.get('email', None)
+        if not email:
+            raise api_utils.BadRequest('INVALID_CURRENT_EMAIL')
+        else:
+            check_email = UserBase.objects.get(username=email)
+            opt = random.randint(100000, 9999999)
+            try:
+                content = 'Code reset password: '+ str(opt)
+                from_email = settings.DEFAULT_FROM_EMAIL
+                send_mail('Reset password:', content, from_email, [email])
+
+                check_email.opt = opt
+                check_email.save()
+
+                response = {
+                    'result': 1,
+                    'data':{
+                        'token' : check_email.token
+                    }
+                }
+            except:
+                response = {
+                    'result': 0,
+                    'data':{
+                    
+                    }
+                }
+            return JsonResponse(response)
+        return Response(status=status.HTTP_202_ACCEPTED)
+
+class UserForgotPassword(APIView):
+    def post(self, request, format=None):
+        opt = request.data.get('opt', None)
+        if not opt:
+            raise api_utils.BadRequest('INVALID_CURRENT_OPT')
+        else:
+            obj_user = request.user
+            if(obj_user.opt == opt):
+                response = {
+                    'result' : 1,
+                    'data': {
+
+                    }
+                }
+            else:
+                response = {
+                    'result' : 0,
+                    'data': {
+                    
+                    }
+                }
+            return JsonResponse(response)
         return Response(status=status.HTTP_202_ACCEPTED)
