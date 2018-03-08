@@ -81,3 +81,8 @@ class DrinkSerializer(serializers.ModelSerializer):
         qs = Garnish.objects.filter(drink=obj, active=True)
         serializer = GarnishSerializer(instance=qs, many=True)
         return serializer.data
+
+class IngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = '__all__'
