@@ -5,11 +5,13 @@
 
     function AppCtrl($scope, $state, $timeout, $window, $location) {
         $scope.appState = $state;
+        $scope.currentUser = {};
         $scope.$watch('appState.current', function(value) {
             var user = $window.localStorage.getItem('currentUser');
             user = JSON.parse(user);
             if (user && user.token) {
                 //logined
+                $scope.currentUser = user;
                 if (value.url.indexOf('login') !== -1) {
                     $location.path('/');
                 }
