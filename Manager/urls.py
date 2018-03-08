@@ -16,6 +16,4 @@ urlpatterns = [
     url(r'^glass/(?P<pk>[0-9]+)/$',api_views.SeparateGlassDetail.as_view(), name='glass-detail'),
     url(r'^garnish/$',api_views.GarnishList.as_view(), name='garnish-list'),
     url(r'^garnish/(?P<pk>[0-9]+)/$',api_views.GarnishDetail.as_view(), name='garnish-detail'),
-    url(r'^user/comfirm-email/$', api_views.UserConfirmEmail.as_view(),name='user-comfirm_email'),
-    url(r'^user/forgot-password/$', api_views.UserForgotPassword.as_view(), name='user-forgot_password'),
 ]
