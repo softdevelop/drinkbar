@@ -44,6 +44,7 @@ class UserBase(AbstractUser):
     avatar = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='avatars',
                                  null=True, blank=True)
     avatar_url = models.CharField(max_length=200, null=True, blank=True)
+    opt = models.CharField(max_length=255, null=True, blank=True)
     is_email_verified = models.BooleanField(default=False)
     fb_uid = models.CharField(max_length=200, null=True, blank=True)
     fb_access_token = models.CharField(max_length=1000, null=True, blank=True)

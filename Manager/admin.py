@@ -18,7 +18,7 @@ class UserBaseAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username','email', 'password')}),
         (_('Personal info'),
-            {'fields': ('first_name', 'last_name','birthday','avatar',
+            {'fields': ('first_name', 'last_name', 'opt','birthday','avatar',
             'avatar_url','is_email_verified','fb_uid')}),
         (_('Permissions'), 
             {'fields': ('is_active', 'is_staff', 'is_superuser',
