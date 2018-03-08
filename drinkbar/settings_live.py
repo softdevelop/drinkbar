@@ -141,14 +141,9 @@ USE_TZ = True
 
 # email
 EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_PORT = 465
 EMAIL_HOST_USER = 'user123example@gmail.com'
 EMAIL_HOST_PASSWORD = 'A123123Z'
-# EMAIL_USE_TLS = False 
-# EMAIL_USE_SSL = True 
 DEFAULT_FROM_EMAIL = 'user123example@gmail.com'
-# DEFAULT_DOMAIN = 'http://localhost:2000'
-
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
