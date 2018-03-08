@@ -107,6 +107,59 @@ class UserChangePassword(APIView):
                 raise api_utils.BadRequest("INVALID_CURRENT_PASSWORD")
         return Response(status=status.HTTP_202_ACCEPTED)
 
+class DrinkCategoryList(generics.ListCreateAPIView):
+    queryset = DrinkCategory.objects.all()
+    serializer_class = DrinkCategorySerializer
+    permission_classes = [IsAuthenticated]
+    paginator = None
+
+class DrinkCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = DrinkCategory
+    serializer_class = DrinkCategorySerializer
+    permission_classes = [IsAuthenticated]
+
+
+class DrinkList(generics.ListCreateAPIView):
+    queryset = Drink.objects.all()
+    serializer_class = DrinkSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        ret = self.queryset.all()
+        search_query = self.request.GET.get('search', None)
+        if search_query:
+            ret = ret.filter(name__icontains=search_query)
+
+        return ret
+
+class DrinkDetial(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Drink
+    serializer_class = DrinkSerializer
+    permission_classes = [IsAuthenticated]
+
+class SeparateGlassList(generics.ListCreateAPIView):
+    queryset = SeparateGlass.objects.all()
+    serializer_class = SeparateGlassSerializer
+    permission_classes = [IsAuthenticated]
+    paginator = None
+
+class SeparateGlassDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SeparateGlass
+    serializer_class = SeparateGlassSerializer
+    permission_classes = [IsAuthenticated]
+    
+class GarnishList(generics.ListCreateAPIView):
+    queryset = Garnish.objects.all()
+    serializer_class = GarnishSerializer
+    permission_classes = [IsAuthenticated]
+    paginator = None
+
+class GarnishDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Garnish
+    serializer_class = GarnishSerializer
+    permission_classes = [IsAuthenticated]
+
+
 class UserConfirmEmail(APIView):
 
     def post(self, request, format=None):
@@ -141,6 +194,7 @@ class UserConfirmEmail(APIView):
         return Response(status=status.HTTP_202_ACCEPTED)
 
 class UserForgotPassword(APIView):
+    
     def post(self, request, format=None):
         opt = request.data.get('opt', None)
         if not opt:

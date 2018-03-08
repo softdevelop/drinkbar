@@ -9,10 +9,16 @@
       .directive('pageTop', pageTop);
 
   /** @ngInject */
-  function pageTop() {
+  function pageTop($window, $location) {
     return {
       restrict: 'E',
-      templateUrl: 'app/theme/components/pageTop/pageTop.html'
+      templateUrl: 'app/theme/components/pageTop/pageTop.html',
+      link:function($scope, element, attrs) {
+        $scope.logout = function() {
+          $window.localStorage.removeItem('currentUser');
+          $location.path('/login');
+        }
+      }
     };
   }
 
