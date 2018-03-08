@@ -145,3 +145,23 @@ class GarnishDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Garnish
     serializer_class = GarnishSerializer
     permission_classes = [IsAuthenticated]
+
+class IngredientList(generics.ListCreateAPIView):
+    queryset = Ingredient.objects.all()
+    serializer_class = IngredientSerializer
+    permission_classes = [IsAuthenticated]
+
+class IngredientDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Ingredient
+    serializer_class = IngredientSerializer
+    permission_classes = [IsAuthenticated]
+
+class DrinkIngredientList(generics.ListCreateAPIView):
+    queryset = DrinkIngredient.objects.all()
+    serializer_class = DrinkIngredientSerializer
+    permission_classes = [IsAuthenticated]
+
+class DrinkIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = DrinkIngredient
+    serializer_class = DrinkIngredientSerializer
+    permission_classes = [IsAuthenticated]
