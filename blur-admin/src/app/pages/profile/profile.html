@@ -1,25 +1,17 @@
 <div ba-panel ba-panel-class="profile-page">
-    <div class="panel-content">
-        <div class="progress-info">Your profile is 70% Complete</div>
-        <div class="progress">
-            <div class="progress-bar progress-bar-primary progress-bar-striped active" role="progressbar"
-            aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%">
-        </div>
-    </div>
-    <h3 class="with-line">General Information</h3>
-
+    <h3 class="with-line">Information</h3>
     <div class="row">
         <div class="col-md-6">
             <div class="form-group row clearfix">
-                <label for="inputFirstName" class="col-sm-3 control-label">Picture</label>
+                <label for="inputFirstName" class="col-sm-3 control-label">Avatar</label>
 
                 <div class="col-sm-9">
                     <div class="userpic">
-                        <div ng-show="!currentUser.avatar" class="userpic-wrapper">
+                        <div ng-show="!data_profile.avatar" class="userpic-wrapper">
                             <img ng-src="{{ picture }}" ng-click="uploadPicture()">
                         </div>
-                        <div ng-show="currentUser.avatar" class="userpic-wrapper">
-                            <img ng-src="{{ currentUser.avatar }}" ng-click="uploadPicture()">
+                        <div ng-show="data_profile.avatar" class="userpic-wrapper">
+                            <img ng-src="{{ data_profile.avatar }}" ng-click="uploadPicture()">
                         </div>
                         <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i>
                         <a href class="change-userpic" ng-click="uploadPicture()">Change Profile Picture</a>
@@ -37,176 +29,197 @@
                 <label for="inputFirstName" class="col-sm-3 control-label">First Name</label>
 
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputFirstName" placeholder="" value="Anastasiya">
+                    <input type="text" class="form-control" id="inputFirstName" placeholder="" value="data_profile.first_name" ng-model="data_profile.first_name"
+                        ng-change="updateProfile('first_name', data_profile.first_name)">
                 </div>
             </div>
             <div class="form-group row clearfix">
                 <label for="inputLastName" class="col-sm-3 control-label">Last Name</label>
 
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputLastName" placeholder="" value="">
+                    <input type="text" class="form-control" id="inputLastName" placeholder="" value="data_profile.last_name" ng-model="data_profile.last_name"
+                        ng-change="updateProfile('last_name', data_profile.last_name)">
                 </div>
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group row clearfix">
-                <label class="col-sm-3 control-label">Department</label>
+                <label class="col-sm-3 control-label">Birthday</label>
 
                 <div class="col-sm-9">
-                    <select class="form-control" selectpicker>
-                        <option>Web Development</option>
-                        <option>System Development</option>
-                        <option>Sales</option>
-                        <option>Human Resources</option>
-                    </select>
+                    <p class="input-group">
+                        <input type="text" class="form-control" uib-datepicker-popup="{{format}}" value="birthday" ng-model="birthday" is-open="popupDatePicker.openBirthday"
+                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                            ng-change="changeBirthday(birthday)" />
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openDatePicker('birthday')">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p>
                 </div>
             </div>
 
-            <div class="form-group row clearfix">
-                <label for="inputOccupation" class="col-sm-3 control-label">Occupation</label>
+            <!-- <div class="form-group row clearfix">
+                <label for="inputOccupation" class="col-sm-3 control-label">Avatar url</label>
 
                 <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputOccupation" placeholder="" value="Front End Web Developer">
+                    <input disabled type="text" class="form-control" id="inputOccupation" placeholder="" value="data_profile.avatar_url" ng-model="data_profile.avatar_url">
+                </div>
+            </div> -->
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row clearfix">
+                <label for="inputOccupation" class="col-sm-3 control-label">OPT</label>
+
+                <div class="col-sm-9">
+                    <input disabled type="text" class="form-control" id="inputOccupation" placeholder="" value="data_profile.opt" ng-model="data_profile.opt">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row clearfix">
+                <label for="inputOccupation" class="col-sm-3 control-label">Fb uid</label>
+                <div class="col-sm-9">
+                    <input disabled type="text" class="form-control">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row clearfix">
+                <label class="col-sm-3 control-label">Last login</label>
+                <div class="col-sm-9">
+                    <p class="input-group">
+                        <input disabled type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="last_login" is-open="popupDatePicker.openLastLogin"
+                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                        />
+                        <span class="input-group-btn">
+                            <button disabled type="button" class="btn btn-default" ng-click="openDatePicker('lastLogin')">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row clearfix">
+                <label class="col-sm-3 control-label">Date joined</label>
+                <div class="col-sm-9">
+                    <p class="input-group">
+                        <input disabled type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="date_joined" is-open="popupDatePicker.openDateJoined"
+                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                        />
+                        <span class="input-group-btn">
+                            <button disabled type="button" class="btn btn-default" ng-click="openDatePicker('dataJoined')">
+                                <i class="glyphicon glyphicon-calendar"></i>
+                            </button>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group row clearfix">
+                <label for="inputOccupation" class="col-sm-3 control-label">Email verified</label>
+                <div class="col-sm-9">
+                    <input type="checkbox" value="data_profile.is_email_verified" ng-model="data_profile.is_email_verified" ng-change="updateProfile('is_email_verified', data_profile.is_email_verified)">
                 </div>
             </div>
         </div>
     </div>
 
-    <h3 class="with-line">Change Password</h3>
+    <h3 class="with-line">Permissions</h3>
 
     <div class="row">
-        <div class="col-md-6">
-            <div class="form-group row clearfix">
-                <label for="inputPassword" class="col-sm-3 control-label">Password</label>
-
-                <div class="col-sm-9">
-                    <input type="password" class="form-control" id="inputPassword" placeholder="" value="12345678">
+        <div class="col-md-12 row">
+            <div class="col-md-6">
+                <div class="form-group row clearfix">
+                    <label for="inputOccupation" class="col-sm-3 control-label">Active</label>
+                    <div class="col-sm-9">
+                        <input type="checkbox" value="data_profile.is_active" ng-model="data_profile.is_active" ng-change="updateProfile('is_active', data_profile.is_active)">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group row clearfix">
-                <label for="inputConfirmPassword" class="col-sm-3 control-label">Confirm Password</label>
 
-                <div class="col-sm-9">
-                    <input type="password" class="form-control" id="inputConfirmPassword" placeholder="">
+        <div class="col-md-12 row">
+            <div class="col-md-6">
+                <div class="form-group row clearfix">
+                    <label for="inputOccupation" class="col-sm-3 control-label">Staff status</label>
+                    <div class="col-sm-9">
+                        <input type="checkbox" value="data_profile.is_staff" ng-model="data_profile.is_staff" ng-change="updateProfile('is_staff', data_profile.is_staff)">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    <h3 class="with-line">Contact Information</h3>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group row clearfix">
-                <label for="inputEmail3" class="col-sm-3 control-label">Email</label>
-
-                <div class="col-sm-9">
-                    <input type="email" class="form-control" id="inputEmail3" placeholder="" value="{{ currentUser.email }}">
-                </div>
-            </div>
-            <div class="form-group row clearfix">
-                <label for="inputPhone" class="col-sm-3 control-label">Phone</label>
-
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputPhone" placeholder="" value="+1 (23) 456 7890">
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group row clearfix">
-                <label class="col-sm-3 control-label">Office Location</label>
-
-                <div class="col-sm-9">
-                    <select class="form-control" title="Standard Select" selectpicker>
-                        <option>San Francisco</option>
-                        <option>London</option>
-                        <option>Minsk</option>
-                        <option>Tokio</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group row clearfix">
-                <label for="inputRoom" class="col-sm-3 control-label">Room</label>
-
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputRoom" placeholder="" value="303">
+        <div class="col-md-12 row">
+            <div class="col-md-6">
+                <div class="form-group row clearfix">
+                    <label for="inputOccupation" class="col-sm-3 control-label">Superuser status</label>
+                    <div class="col-sm-9">
+                        <input type="checkbox" value="data_profile.is_superuser" ng-model="data_profile.is_superuser" ng-change="updateProfile('is_superuser', data_profile.is_superuser)">
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <h3 class="with-line">Social Profiles</h3>
-
-    <div class="social-profiles row clearfix">
-        <div class="col-md-3 col-sm-4" ng-repeat="item in socialProfiles">
-
-            <a class="sn-link" href ng-click="showModal(item)" ng-if="!item.href">
-                <i class="socicon {{ item.icon }}"></i>
-                <span>{{ item.name }}</span>
-            </a>
-
-            <a class="sn-link connected" href="{{ item.href }}" target="_blank" ng-if="item.href">
-                <i class="socicon {{ item.icon }}"></i>
-                <span>{{ item.name }}</span>
-                <em class="ion-ios-close-empty sn-link-close" ng-mousedown="unconnect(item)"></em>
-            </a>
+    <div class="row" ng-show="!isChangePassword">
+        <div class="col-md-12">
+            <div class="button-wrapper ng-scope">
+                <button type="button" class="btn btn-info pull-left" ng-click="isChangePassword = !isChangePassword">Change Password</button>
+            </div>
         </div>
     </div>
 
-    <h3 class="with-line">Send Email Notifications</h3>
+    <div class="change_password" ng-show="isChangePassword">
+        <h3 class="with-line">Change Password</h3>
+        <!-- <div ng-show="!isConfirmPassword" class="alert bg-danger">
+            {{errorMsg}}
+        </div> -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group row clearfix">
+                    <label for="inputPassword" class="col-sm-3 control-label">Old Password</label>
 
-    <div class="notification row clearfix">
-        <div class="col-sm-6">
-            <div class="form-group row clearfix">
-                <label class="col-xs-8">When I receive a message</label>
-
-                <div class="col-xs-4">
-                    <switch color="primary" ng-model="switches[0]"></switch>
+                    <div class="col-sm-9">
+                        <input min="6" type="password" class="form-control" id="inputPassword" placeholder="Old Password" ng-model="old_password"
+                            ng-change="updateProfile('old_password', data_profile.old_password)">
+                    </div>
                 </div>
             </div>
-            <div class="form-group row clearfix">
-                <label class="col-xs-8">When Someone sends me an invitation</label>
+            <div class="col-md-6">
+                <div class="form-group row clearfix">
+                    <label for="inputPassword" class="col-sm-3 control-label">New Password</label>
 
-                <div class="col-xs-4">
-                    <switch color="primary" ng-model="switches[1]"></switch>
+                    <div class="col-sm-9">
+                        <input type="password" min="6" class="form-control" id="inputPassword" placeholder="New Password" ng-model="new_password"
+                            ng-change="updateProfile('new_password', data_profile.new_password)">
+                    </div>
                 </div>
             </div>
-            <div class="form-group row clearfix">
-                <label class="col-xs-8">When profile information changes</label>
+            <div class="col-md-6">
+                <div class="form-group row clearfix">
+                    <label for="inputConfirmPassword" class="col-sm-3 control-label">Confirm New Password</label>
 
-                <div class="col-xs-4">
-                    <switch color="primary" ng-model="switches[2]"></switch>
+                    <div class="col-sm-9">
+                        <input type="password" min="6" class="form-control" id="inputConfirmPassword" placeholder="Confirm New Password" ng-model="res_password"
+                            ng-change="confirmPassword(new_password, res_password)">
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-sm-6">
-            <div class="form-group row clearfix">
-                <label class="col-xs-8">When anyone logs into your account from a new device or browser</label>
-
-                <div class="col-xs-4">
-                    <switch color="primary" ng-model="switches[3]"></switch>
-                </div>
-            </div>
-            <div class="form-group row clearfix">
-                <label class="col-xs-8">Weekly Reports</label>
-
-                <div class="col-xs-4">
-                    <switch color="primary" ng-model="switches[4]"></switch>
-                </div>
-            </div>
-
-            <div class="form-group row clearfix">
-                <label class="col-xs-8">Daily Reports</label>
-
-                <div class="col-xs-4">
-                    <switch color="primary" ng-model="switches[5]"></switch>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="button-wrapper ng-scope">
+                    <button type="button" class="btn btn-danger pull-right" ng-click="isChangePassword = !isChangePassword">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
-    <button type="button" class="btn btn-primary btn-with-icon save-profile">
+    <h3 class="with-line"></h3>
+    <button type="button" class="btn btn-primary btn-with-icon save-profile" ng-click="submitProfile()" >
         <i class="ion-android-checkmark-circle"></i>Update Profile
     </button>
 </div>
