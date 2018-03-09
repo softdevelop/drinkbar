@@ -13,7 +13,7 @@ from django.urls import reverse
 from facepy import GraphAPI
 from datetime import datetime, date
 import api_utils
-
+from django.utils import timezone
 class DrinkCategory(CategoryBase):
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),null=True, blank=True, upload_to='categories')
 
@@ -125,6 +125,7 @@ class Garnish(models.Model):
         return self.name
 
 class Drink(models.Model):
+
     name = models.CharField(max_length=200)
     category = models.ForeignKey(DrinkCategory, blank=True, null=True)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='drink')
@@ -132,6 +133,8 @@ class Drink(models.Model):
     price = models.FloatField(blank=True, null=True)
     glass = models.ForeignKey(SeparateGlass,blank=True, null=True)
     garnish = models.ManyToManyField(Garnish, blank =True)
+    key_word = models.CharField(max_length=200, blank=True, null=True)
+    estimate_time = models.PositiveIntegerField(help_text=_('seconds'), default=0)
 
     def __unicode__(self):
         return self.name
@@ -143,8 +146,36 @@ class DrinkIngredient(models.Model):
 
 
 class Order(models.Model):
+    CHANNEL_PAYPAL = 1
+    CHANNEL_STRIPE = 2
+    CHANNELS = (
+        (CHANNEL_PAYPAL, _('PayPal')),
+        (CHANNEL_STRIPE, _('Stripe')),
+    )
+    STATUS_NEW = 0
+    STATUS_PROCESSING = 10
+    STATUS_FINISHED = 20
+    STATUS_TOOK = 30
+    STATUS_NOT_TAKE = 40
+    STATUSES = (
+        (STATUS_NEW, _("New")),
+        (STATUS_PROCESSING, _("Processing")),
+        (STATUS_FINISHED, _("Finished")),
+        (STATUS_TOOK, _("Took")),
+        (STATUS_NOT_TAKE, _("Not take")),
+    )
+
+    status = models.SmallIntegerField(choices=STATUSES, default=STATUS_NEW, null=True, blank=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(UserBase, related_name='orders')
     amount = models.FloatField(blank=True, null=True)
+    channel = models.SmallIntegerField(choices=CHANNELS, null=True, blank=True)
+    transaction_code = models.CharField(max_length=300, null=True, blank=True)
+    transaction_id = models.CharField(max_length=50, null=True, blank=True)
+    payer_firstname = models.CharField(max_length=50, null=True, blank=True)
+    payer_lastname = models.CharField(max_length=50, null=True, blank=True)
+    payer_email = models.CharField(max_length=100, null=True, blank=True)
+    line_taking = models.SmallIntegerField(null=True, blank=True)
 
 class Tab(models.Model):
 
@@ -162,5 +193,6 @@ class Tab(models.Model):
     drink = models.ForeignKey(Drink)
     ice = models.PositiveSmallIntegerField(_('status'), choices=CONST_ICE_CHOICE, 
                                         default=CONST_100_ICE)
+    
     quantity = models.PositiveIntegerField(blank=True, null= True, default=0)
     order = models.ForeignKey(Order, related_name='products')

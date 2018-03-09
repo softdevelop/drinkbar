@@ -42,6 +42,28 @@ class DrinkCategoryAdmin(admin.ModelAdmin):
         return link.replace("/", ", ")
     _link.short_description = 'Full Category'
 
+    
+class SeparateGlassAdmin(admin.ModelAdmin):
+    list_display = ('name','image','size')
+
+
+class GarnishAdmin(admin.ModelAdmin):
+    list_display = ('name','active')
+    list_editable = ('active',)
+
+
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ('name', 'status', 'price',
+        'bottles','quanlity_of_bottle')
+
+    list_editable = ('status',)
+
+'''
+
+Drink 
+
+'''
+
 class DrinkIngredientInline(admin.TabularInline):
     model = DrinkIngredient
     extra = 1
@@ -52,22 +74,27 @@ class DrinkAdmin(admin.ModelAdmin):
 
     inlines = (DrinkIngredientInline,)
 
-class GarnishAdmin(admin.ModelAdmin):
-    list_display = ('name','active')
-    list_editable = ('active',)
 
-class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('name', 'status', 'price',
-        'bottles','quanlity_of_bottle')
-
-    list_editable = ('status',)
 
 class TabAdmin(admin.ModelAdmin):
     list_display = ('user','drink','ice','quantity')
+
+
+class TabInline(admin.TabularInline):
+    model = Tab
+    extra = 1
+
+
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id','amount')
+    readonly_fields = ('amount',)
+    inlines = (TabInline,)
 
 admin.site.register(UserBase, UserBaseAdmin)
 admin.site.register(DrinkCategory, DrinkCategoryAdmin)
 admin.site.register(Drink,DrinkAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Garnish, GarnishAdmin)
-admin.site.register(Tab, TabAdmin)
+# admin.site.register(Tab, TabAdmin)
+admin.site.register(Order, OrderAdmin)
+admin.site.register(SeparateGlass, SeparateGlassAdmin)
