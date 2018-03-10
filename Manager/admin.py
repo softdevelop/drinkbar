@@ -29,6 +29,29 @@ class UserBaseAdmin(UserAdmin):
 
     readonly_fields = ('fb_uid',)
 
+
+'''
+Ingredient
+'''
+class IngredientHistoryInline(admin.TabularInline):
+    model = IngredientHistory
+    extra = 1
+
+class IngredientHistoryAdmin(admin.ModelAdmin):
+    list_display = ('creation_date', 'status', 'machine','ingredient','quantity')
+
+    
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ('name', 'status', 'price',
+        'bottles','quanlity_of_bottle')
+
+    list_editable = ('status',)
+    inlines = (IngredientHistoryInline,)
+
+
+'''
+Drink 
+'''
 class DrinkCategoryAdmin(admin.ModelAdmin):
     list_display = ('id','name','_link','active')
     fieldsets = (
@@ -41,28 +64,16 @@ class DrinkCategoryAdmin(admin.ModelAdmin):
         link = str(obj.get_absolute_url()).title()[1:]
         return link.replace("/", ", ")
     _link.short_description = 'Full Category'
-
-    
+   
 class SeparateGlassAdmin(admin.ModelAdmin):
-    list_display = ('name','image','size')
+    list_display = ('name','image','size','unit','_ml')
 
+    def _ml(self, obj):
+        return obj.change_to_ml
 
 class GarnishAdmin(admin.ModelAdmin):
     list_display = ('name','active')
     list_editable = ('active',)
-
-
-class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('name', 'status', 'price',
-        'bottles','quanlity_of_bottle')
-
-    list_editable = ('status',)
-
-'''
-
-Drink 
-
-'''
 
 class DrinkIngredientInline(admin.TabularInline):
     model = DrinkIngredient
@@ -75,26 +86,39 @@ class DrinkAdmin(admin.ModelAdmin):
     inlines = (DrinkIngredientInline,)
 
 
-
-class TabAdmin(admin.ModelAdmin):
-    list_display = ('user','drink','ice','quantity')
-
-
+'''
+Order
+'''
 class TabInline(admin.TabularInline):
     model = Tab
     extra = 1
-
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id','amount')
     readonly_fields = ('amount',)
     inlines = (TabInline,)
 
+
+'''
+Robot
+'''
+class RobotIngredientInline(admin.TabularInline):
+    model = RobotIngredient
+    extra = 1
+    max_num = 60
+    readonly_fields = ('remain_of_bottle',)
+
+class RobotAdmin(admin.ModelAdmin):
+    list_display = ('id', 'status')
+    list_editable = ('status',)
+    inlines = (RobotIngredientInline,)
+
 admin.site.register(UserBase, UserBaseAdmin)
 admin.site.register(DrinkCategory, DrinkCategoryAdmin)
 admin.site.register(Drink,DrinkAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
+admin.site.register(IngredientHistory, IngredientHistoryAdmin)
 admin.site.register(Garnish, GarnishAdmin)
-# admin.site.register(Tab, TabAdmin)
+admin.site.register(Robot, RobotAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(SeparateGlass, SeparateGlassAdmin)
