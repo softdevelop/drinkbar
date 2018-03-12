@@ -2,7 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models import F
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
@@ -91,9 +92,23 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 class SeparateGlass(models.Model):
+    CONST_UNIT_ML = 0
+    CONST_UNIT_OZ = 10
+
+    CONST_UNIT = (
+        (CONST_UNIT_ML, _('mL')),
+        (CONST_UNIT_OZ, _('oz')),
+    )
     name = models.CharField(max_length=200)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='glass')
-    size = models.PositiveIntegerField(help_text=_('mL'))    
+    size = models.PositiveIntegerField(help_text=_('mL'))
+    unit = models.SmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_ML)  
+
+    @property
+    def change_to_ml(self):
+        if self.unit is self.CONST_UNIT_OZ:
+            return self.size*29.57
+        return self.size
 
     def __unicode__(self):
         return self.name
@@ -103,8 +118,8 @@ class Ingredient(models.Model):
     CONST_STATUS_BLOCKED = 10
 
     CONST_STATUSES = (
-        (CONST_STATUS_ENABLED, _('Enabled')),
-        (CONST_STATUS_BLOCKED, _('Blocked')),
+        (CONST_STATUS_ENABLED, _('On')),
+        (CONST_STATUS_BLOCKED, _('Off')),
     )
 
     status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
@@ -112,11 +127,12 @@ class Ingredient(models.Model):
 
     name = models.CharField(max_length=200)
     price = models.FloatField(blank=True, null= True)
-    bottles = models.PositiveIntegerField(blank=True, null=True)
-    quanlity_of_bottle = models.PositiveIntegerField(help_text=_('mL'),default=0)
+    bottles = models.PositiveIntegerField(blank=True, null=True, default=0)
+    quanlity_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
 
     def __unicode__(self):
-        return self.name
+        return "-".join([self.name, "".join([str(self.quanlity_of_bottle), "mL"])])
+
 
 class Garnish(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -191,8 +207,69 @@ class Tab(models.Model):
 
     user = models.ForeignKey(UserBase, related_name='tab')
     drink = models.ForeignKey(Drink)
-    ice = models.PositiveSmallIntegerField(_('status'), choices=CONST_ICE_CHOICE, 
+    ice = models.PositiveSmallIntegerField(_('ice'), choices=CONST_ICE_CHOICE, 
                                         default=CONST_100_ICE)
-    
+    garnish = models.ManyToManyField(Garnish, blank =True)
     quantity = models.PositiveIntegerField(blank=True, null= True, default=0)
     order = models.ForeignKey(Order, related_name='products')
+
+class Robot(models.Model):
+    STATUS_ENABLE = 0
+    STATUS_DISABLAE = 10
+
+    CONST_STATUSES = (
+        (STATUS_ENABLE, _('Turn on')),
+        (STATUS_DISABLAE, _('Turn off')),
+    )
+
+    status = models.PositiveSmallIntegerField(choices=CONST_STATUSES, 
+                                        default=STATUS_DISABLAE)
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return u'Robot-{}'.format(self.id)
+
+class RobotIngredient(models.Model):
+
+    robot = models.ForeignKey(Robot, related_name='ingredients')
+    ingredient = models.ForeignKey(Ingredient)
+    remain_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
+
+
+class IngredientHistory(models.Model):
+    CONST_STATUS_IMPORT= 0
+    CONST_STATUS_EXPORT = 10
+
+    CONST_STATUSES = (
+        (CONST_STATUS_IMPORT, _('Import')),
+        (CONST_STATUS_EXPORT, _('Export to machine')),
+    )
+
+    creation_date = models.DateTimeField(auto_now_add=True)
+    status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES)
+    machine = models.ForeignKey(Robot, related_name='ingredient_histories',null=True, blank=True)
+    ingredient = models.ForeignKey(Ingredient, related_name='histories')
+    quantity = models.PositiveIntegerField(default=1)
+
+@receiver(post_save, sender=IngredientHistory)
+def create_ingredient_history(sender, instance=None, created=False, **kwargs):
+    if created:
+        if instance.status is IngredientHistory.CONST_STATUS_IMPORT:
+            instance.ingredient.bottles += instance.quantity
+        else:
+            instance.ingredient.bottles -= instance.quantity
+        instance.ingredient.save()
+    '''
+        Not suppor update, change data, quantity, 
+            must delete and add again!
+    '''
+
+@receiver(post_delete, sender=IngredientHistory)
+def delete_ingredient_history(sender, instance=None, created=False, **kwargs):
+    if instance.status is IngredientHistory.CONST_STATUS_IMPORT:
+        instance.ingredient.bottles -= instance.quantity
+    else:
+        instance.ingredient.bottles += instance.quantity
+    instance.ingredient.save()
+
+
