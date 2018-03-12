@@ -21,6 +21,7 @@
 
         this.getMenuItems = function() {
           var states = defineMenuItemStates();
+          console.log(states)
           var menuItems = states.filter(function(item) {
             return item.level == 0;
           });
@@ -31,7 +32,7 @@
             });
             item.subMenu = children.length ? children : null;
           });
-
+          console.log(menuItems.concat(staticMenuItems))
           return menuItems.concat(staticMenuItems);
         };
 
