@@ -3,5 +3,6 @@ django==1.11
 djangorestframework
 django-categories
 django-cors-headers
+django-import-export
 mysqlclient
 Pillow

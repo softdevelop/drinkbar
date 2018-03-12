@@ -8,6 +8,9 @@ from .models import *
 from django.utils.translation import ugettext_lazy as _
 from categories.models import Category as DefaultCategory
 
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
+
 # # Register your models here.
 admin.site.unregister(auth.models.Group)
 admin.site.unregister(DefaultCategory)
@@ -33,6 +36,10 @@ class UserBaseAdmin(UserAdmin):
 '''
 Ingredient
 '''
+class IngredientResource(resources.ModelResource):
+    class Meta:
+        model = Ingredient
+
 class IngredientHistoryInline(admin.TabularInline):
     model = IngredientHistory
     extra = 1
@@ -41,7 +48,8 @@ class IngredientHistoryAdmin(admin.ModelAdmin):
     list_display = ('creation_date', 'status', 'machine','ingredient','quantity')
 
     
-class IngredientAdmin(admin.ModelAdmin):
+class IngredientAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+    resource_class = IngredientResource
     list_display = ('name', 'status', 'price',
         'bottles','quanlity_of_bottle')
 

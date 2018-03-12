@@ -37,6 +37,11 @@ class UserSignUp(generics.CreateAPIView):
         except IntegrityError as e:
             raise ValidationError({'email': str(e[1])})
 
+class UserList(generics.ListCreateAPIView):
+    queryset = UserBase.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
 class UserProfile(generics.GenericAPIView):
     serializer_class = UserWithTokenSerializer
 
@@ -165,3 +170,4 @@ class DrinkIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DrinkIngredient
     serializer_class = DrinkIngredientSerializer
     permission_classes = [IsAuthenticated]
+

@@ -29,6 +29,6 @@ if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL.replace(settings.SITE_URL, ''), document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL.replace(settings.SITE_URL, ''), document_root=settings.MEDIA_ROOT)
 
-# urlpatterns += [
-#     url(r'^', TemplateView.as_view(template_name="index.html")),
-# ]
+urlpatterns += [
+    url(r'^', TemplateView.as_view(template_name="index.html")),
+]
