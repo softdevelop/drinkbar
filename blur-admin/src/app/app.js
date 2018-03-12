@@ -30,4 +30,5 @@ angular.module('BlurAdmin', [
             };
         }]);
     }])
-.constant('AppSetting', {'BASE_URL': 'http://localhost:8000'});
+// .constant('AppSetting', {'BASE_URL': 'http://localhost:8000'});
+.constant('AppSetting', {'BASE_URL': 'http://hiefficiencybar.com'});

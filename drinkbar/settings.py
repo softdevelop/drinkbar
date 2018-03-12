@@ -79,7 +79,7 @@ ROOT_URLCONF = 'drinkbar.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['drinkbar/templates'],
+        'DIRS': [os.path.join(BASE_DIR,'drinkbar/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -156,7 +156,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-SITE_URL = "http://35.153.189.132/"
+SITE_URL = "http://hiefficiencybar.com/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'blur-admin/release'),]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = SITE_URL+"static/" 
