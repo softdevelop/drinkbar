@@ -18,8 +18,12 @@
 					var fd = new FormData();
 
 					for (var key in data) {
-						if(key !== 'avatar')
+						if(key === 'avatar'){
+							if(data[key])
+								fd.append(key, data[key]);
+						} else{
 							fd.append(key, data[key]);
+						}
 					}
 					return $http.patch(url, fd, {
 						headers: {
