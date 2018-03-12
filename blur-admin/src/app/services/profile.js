@@ -4,7 +4,7 @@
 		.factory('ProfileService', function ($http, AppSetting) {
 			return {
 				getUser: function (data) {
-					let url = AppSetting.BASE_URL + '/api/user/' + data.id + '/';
+					var url = AppSetting.BASE_URL + '/api/user/' + data.id + '/';
 
 					return $http.get(url, {
 						headers: {
@@ -14,7 +14,7 @@
 					});
 				},
 				submitProfile: function (data) {
-					let url = AppSetting.BASE_URL + '/api/user/' + data.id + '/';
+					var url = AppSetting.BASE_URL + '/api/user/' + data.id + '/';
 					var fd = new FormData();
 
 					for (var key in data) {
