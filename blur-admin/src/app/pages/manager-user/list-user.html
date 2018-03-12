@@ -1,1 +1,28 @@
-<h3>List User</h3>
+<div class="horizontal-scroll">
+    <table class="table table-hover">
+      <thead>
+      <tr class="black-muted-bg">
+        <th class="browser-icons"></th>
+        <th>Username / Email</th>
+        <th class="align-right">First Name</th>
+        <th class="table-arr"></th>
+        <th class="align-right">Last Name</th>
+        <th class="table-arr"></th>
+        <th class="align-right">%</th>
+        <th class="table-arr"></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="item in listUser" class="no-top-border">
+        <td><img ng-src="{{ item.avatar }}" width="20" height="20"></td>
+        <td ng-class="nowrap">{{item.email}}</td>
+        <td class="align-right">{{item.first_name}}</td>
+        <td class="table-arr"><i ng-class="{'icon-up': item.isVisitsUp, 'icon-down': !item.isVisitsUp }"></i></td>
+        <td class="align-right">{{item.last_name}}</td>
+        <td class="table-arr"><i ng-class="{'icon-up': item.isPurchasesUp, 'icon-down': !item.isPurchasesUp }"></i></td>
+        <td class="align-right">{{item.percent}}</td>
+        <td class="table-arr"><i ng-class="{'icon-up': item.isPercentUp, 'icon-down': !item.isPercentUp }"></i></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>

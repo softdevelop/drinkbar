@@ -8,7 +8,7 @@
     angular.module('BlurAdmin.pages.list-user')
         .controller('ManagerUserCtrl', ManagerUserCtrl);
 
-    function ManagerUserCtrl($window, $scope, fileReader, $filter, $uibModal, ProfileService, baProgressModal, toastr) {
+    function ManagerUserCtrl(ManagerUserService, $window, $scope, fileReader, $filter, $uibModal, ProfileService, baProgressModal, toastr) {
         $scope.listUser = [
             // {
             //     username : 'asdasd',
@@ -28,9 +28,15 @@
             // }
         ];
 
-        function getAllUser(){
+        $scope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
+        function getAllUser(){
+            ManagerUserService.getAllUser($scope.currentUser.token).success(function(res){
+                $scope.listUser = res;
+            })
         }
+
+        getAllUser();
 
     }
 

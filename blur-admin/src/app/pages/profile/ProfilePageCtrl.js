@@ -107,6 +107,7 @@
                 $scope.birthday = new Date(res.birthday);
                 $scope.last_login = new Date(res.last_login);
                 $scope.date_joined = new Date(res.date_joined);
+                res.token = $scope.currentUser.token;
                 $window.localStorage['currentUser'] = JSON.stringify(res);
                 setTimeout(function(){
                     $window.location.reload();
