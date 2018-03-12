@@ -124,11 +124,12 @@ class Ingredient(models.Model):
 
     status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
                                               default=CONST_STATUS_ENABLED)
-
+    type = models.CharField(max_length=200, blank=True, null= True)
     name = models.CharField(max_length=200)
     price = models.FloatField(blank=True, null= True)
     bottles = models.PositiveIntegerField(blank=True, null=True, default=0)
     quanlity_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
+    brand = models.CharField(max_length=200, blank=True, null= True)
 
     def __unicode__(self):
         return "-".join([self.name, "".join([str(self.quanlity_of_bottle), "mL"])])
