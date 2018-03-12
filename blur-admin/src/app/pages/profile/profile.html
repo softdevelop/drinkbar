@@ -5,17 +5,25 @@
             <div class="form-group row clearfix">
                 <label for="inputFirstName" class="col-sm-3 control-label">Avatar</label>
 
-                <div class="col-sm-9">
+                <div class="col-sm-9" style="margin-bottom: 50px;">
                     <div class="userpic">
-                        <div ng-show="!data_profile.avatar" class="userpic-wrapper">
-                            <img ng-src="{{ picture }}" ng-click="uploadPicture()">
+                        <div ng-show="isChangeAvatar" class="userpic-wrapper">
+                            <img style="width: 100% !important;" ng-src="{{ picture }}" ng-click="uploadPicture()">
                         </div>
-                        <div ng-show="data_profile.avatar" class="userpic-wrapper">
-                            <img ng-src="{{ data_profile.avatar }}" ng-click="uploadPicture()">
+                        <div ng-show="!isChangeAvatar" class="userpic-wrapper">
+                            <img style="width: 100% !important;" ng-src="{{ data_profile.avatar }}" ng-click="uploadPicture()">
                         </div>
                         <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i>
                         <a href class="change-userpic" ng-click="uploadPicture()">Change Profile Picture</a>
-                        <input type="file" ng-show="false" id="uploadFile" ng-file-select="onFileSelect($files)">
+                        <!-- <input type="file" id="uploadFile" name="avatar" ng-change="changeAvatar(file)" ng-model="file" > -->
+                        <!-- <input type="file" name="file" ng-model="file" ng-change="changeAvatar()" > -->
+
+                       <!--  <div ng-repeat="step in stepsModel">
+                            <img class="thumb" ng-src="{{step}}" />
+                        </div> -->
+
+                        <input type='file' id="uploadFile" ng-show="false" ng-model-instant onchange="angular.element(this).scope().imageUpload(event)" />
+
                     </div>
                 </div>
             </div>
@@ -30,7 +38,7 @@
 
                 <div class="col-sm-9">
                     <input type="text" class="form-control" id="inputFirstName" placeholder="" value="data_profile.first_name" ng-model="data_profile.first_name"
-                        ng-change="updateProfile('first_name', data_profile.first_name)">
+                    ng-change="updateProfile('first_name', data_profile.first_name)">
                 </div>
             </div>
             <div class="form-group row clearfix">
@@ -38,7 +46,7 @@
 
                 <div class="col-sm-9">
                     <input type="text" class="form-control" id="inputLastName" placeholder="" value="data_profile.last_name" ng-model="data_profile.last_name"
-                        ng-change="updateProfile('last_name', data_profile.last_name)">
+                    ng-change="updateProfile('last_name', data_profile.last_name)">
                 </div>
             </div>
         </div>
@@ -49,8 +57,8 @@
                 <div class="col-sm-9">
                     <p class="input-group">
                         <input type="text" class="form-control" uib-datepicker-popup="{{format}}" value="birthday" ng-model="birthday" is-open="popupDatePicker.openBirthday"
-                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
-                            ng-change="changeBirthday(birthday)" />
+                        datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                        ng-change="changeBirthday(birthday)" />
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openDatePicker('birthday')">
                                 <i class="glyphicon glyphicon-calendar"></i>
@@ -91,7 +99,7 @@
                 <div class="col-sm-9">
                     <p class="input-group">
                         <input disabled type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="last_login" is-open="popupDatePicker.openLastLogin"
-                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                        datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
                         />
                         <span class="input-group-btn">
                             <button disabled type="button" class="btn btn-default" ng-click="openDatePicker('lastLogin')">
@@ -108,7 +116,7 @@
                 <div class="col-sm-9">
                     <p class="input-group">
                         <input disabled type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="date_joined" is-open="popupDatePicker.openDateJoined"
-                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                        datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
                         />
                         <span class="input-group-btn">
                             <button disabled type="button" class="btn btn-default" ng-click="openDatePicker('dataJoined')">
@@ -168,58 +176,14 @@
     <div class="row" ng-show="!isChangePassword">
         <div class="col-md-12">
             <div class="button-wrapper ng-scope">
-                <button type="button" class="btn btn-info pull-left" ng-click="isChangePassword = !isChangePassword">Change Password</button>
+                <!-- <button type="button" class="btn btn-info pull-left" ng-click="isChangePassword = !isChangePassword">Change Password</button> -->
+                <button type="button" class="btn btn-info pull-left" data-toggle="modal" ng-click="openChangePassword('md')">Change Password</button>
             </div>
         </div>
     </div>
 
-    <div class="change_password" ng-show="isChangePassword">
-        <h3 class="with-line">Change Password</h3>
-        <!-- <div ng-show="!isConfirmPassword" class="alert bg-danger">
-            {{errorMsg}}
-        </div> -->
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group row clearfix">
-                    <label for="inputPassword" class="col-sm-3 control-label">Old Password</label>
-
-                    <div class="col-sm-9">
-                        <input min="6" type="password" class="form-control" id="inputOldPassword" placeholder="Old Password" ng-model="old_password"
-                            ng-change="updateProfile('old_password', data_profile.old_password)">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row clearfix">
-                    <label for="inputPassword" class="col-sm-3 control-label">New Password</label>
-
-                    <div class="col-sm-9">
-                        <input type="password" min="6" class="form-control" id="inputNewPassword" placeholder="New Password" ng-model="new_password"
-                            ng-change="updateProfile('new_password', data_profile.new_password)">
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group row clearfix">
-                    <label for="inputConfirmPassword" class="col-sm-3 control-label">Confirm New Password</label>
-
-                    <div class="col-sm-9">
-                        <input type="password" min="6" class="form-control" id="inputConfirmPassword" placeholder="Confirm New Password" ng-model="res_password"
-                            ng-change="confirmPassword(new_password, res_password)">
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="button-wrapper ng-scope">
-                    <button type="button" class="btn btn-danger pull-right" ng-click="isChangePassword = !isChangePassword">Cancel</button>
-                </div>
-            </div>
-        </div>
-    </div>
     <h3 class="with-line"></h3>
-    <button type="button" class="btn btn-primary btn-with-icon save-profile" ng-click="submitProfile()" >
+    <button ng-disabled="!isUpdated" type="button" class="btn btn-primary btn-with-icon save-profile" ng-click="submitProfile()" >
         <i class="ion-android-checkmark-circle"></i>Update Profile
     </button>
 </div>

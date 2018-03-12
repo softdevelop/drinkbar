@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserBase
         fields = ('id', 'email','avatar','birthday','avatar_url', 'first_name','last_name', 'fb_uid', 'opt', 
-            'is_email_verified', 'avatar_url', 'is_active', 'is_staff', 'is_superuser', 'last_login', 'date_joined')
+            'is_email_verified', 'avatar_url', 'is_active', 'is_staff', 'is_superuser', 'last_login', 'date_joined', 'token')
 
 class UserWithTokenSerializer(UserSerializer):
     token = serializers.CharField(read_only=True)
