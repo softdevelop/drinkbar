@@ -15,23 +15,23 @@
 
   <link rel="stylesheet" href="{% static 'styles/vendor-dddc8eebb5.css' %}">
 
-  <link rel="stylesheet" href="{% static 'styles/app-da5ae8b487.css' %}">
+  <link rel="stylesheet" href="{% static 'styles/app-69937703a2.css' %}">
 </head>
 <body>
 <div class="body-bg"></div>
 <main ng-if="$pageFinishedLoading" ng-class="{ 'menu-collapsed': $baSidebarService.isMenuCollapsed() }">
 
-  <ba-sidebar></ba-sidebar>
-  <page-top></page-top>
-
-  <div class="al-main">
-    <div class="al-content">
-      <content-top></content-top>
-      <div ui-view autoscroll="true" autoscroll-body-top></div>
+  <ba-sidebar ng-if="appState.current.name != 'login'"></ba-sidebar>
+    <page-top ng-if="appState.current.name != 'login'"></page-top>
+    
+    <div ng-class="{ 'al-main': appState.current.name != 'login', 'auth-block': appState.current.name == 'login'}">
+      <div class="al-content">
+        <content-top ng-if="appState.current.name != 'login'"></content-top>
+        <div ui-view autoscroll="true" autoscroll-body-top></div>
+      </div>
     </div>
-  </div>
 
-  <footer class="al-footer clearfix">
+    <footer ng-if="appState.current.name != 'login'" class="al-footer clearfix">
     <div class="al-footer-right">Created with <i class="ion-heart"></i></div>
     <div class="al-footer-main clearfix">
       <div class="al-copy">Blur Admin 2016</div>
@@ -54,7 +54,7 @@
 <script src="{% static 'scripts/vendor-fafab123cd.js' %}"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
-<script src="{% static 'scripts/app-6630995a9d.js' %}"></script>
+<script src="{% static 'scripts/app-2edb8b0f55.js' %}"></script>
 
 </body>
 </html>
