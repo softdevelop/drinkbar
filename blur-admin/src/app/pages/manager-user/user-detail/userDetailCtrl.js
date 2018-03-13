@@ -1,19 +1,22 @@
 /**
- * @author v.lugovsky
- * created on 16.12.2015
+ * @author a.demeshko
+ * created on 21.01.2016
  */
 (function () {
     'use strict';
 
-    angular.module('BlurAdmin.pages.profile')
-        .controller('ProfilePageCtrl', ProfilePageCtrl);
+    angular.module('BlurAdmin.pages.list-user')
+        .controller('UserDetailCtrl', UserDetailCtrl);
 
-    function ProfilePageCtrl($window, $scope, fileReader, $filter, $uibModal, ProfileService, baProgressModal, toastr, $rootScope) {
-        $scope.picture = $filter('profilePicture')('Nasta');
+    /** @ngInject */
+    function UserDetailCtrl($window, fileReader, $filter, $uibModal, ProfileService, baProgressModal, $scope, $uibModalInstance, toastr, items, $rootScope) {
+        console.log($uibModalInstance)
+        $scope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        $scope.data_profile = items;
+        $scope.birthday = new Date($scope.data_profile.birthday);
+        $scope.last_login = new Date($scope.data_profile.last_login);
+        $scope.date_joined = new Date($scope.data_profile.date_joined);
 
-        console.log($rootScope.userLogin)
-
-        $scope.data_profile = {};
         $scope.isChangePassword = false;
         $scope.isConfirmPassword = true;
         $scope.errorMsg = '';
@@ -22,31 +25,20 @@
         $scope.isUpdated = false;
 
         $scope.option = {
-			"autoDismiss": false,
-			"positionClass": "toast-bottom-right",
-			"type": "success",
-			"timeOut": "5000",
-			"extendedTimeOut": "2000",
-			"allowHtml": false,
-			"closeButton": false,
-			"tapToDismiss": false,
-			"progressBar": false,
-			"newestOnTop": false,
-			"maxOpened": 0,
-			"preventDuplicates": false,
-			"preventOpenDuplicates": false
-		};
-
-        getUser();
-
-        function getUser() {
-            ProfileService.getUser($scope.currentUser).success(function (res) {
-                $scope.data_profile = res;
-                $scope.birthday = new Date(res.birthday);
-                $scope.last_login = new Date(res.last_login);
-                $scope.date_joined = new Date(res.date_joined);
-            })
-        }
+            "autoDismiss": false,
+            "positionClass": "toast-bottom-right",
+            "type": "success",
+            "timeOut": "5000",
+            "extendedTimeOut": "2000",
+            "allowHtml": false,
+            "closeButton": false,
+            "tapToDismiss": false,
+            "progressBar": false,
+            "newestOnTop": false,
+            "maxOpened": 0,
+            "preventDuplicates": false,
+            "preventOpenDuplicates": false
+        };
 
         //   ==================== open modal change password ================
         $scope.openChangePassword = function (size) {
@@ -96,18 +88,25 @@
         // submit Profile
         $scope.submitProfile = function () {
 
+            // $scope.data_profile.token = $scope.currentUser.token;
             $scope.data_update.token = $scope.currentUser.token;
             $scope.data_update.id = $scope.data_profile.id;
+            console.log($scope.data_update)
 
+            // console.log($scope.data_profile)
             ProfileService.submitProfile($scope.data_update).success(function (res) {
-                toastr.success('', 'Change profile success!');
+                toastr.success('', 'Change profile success!', $scope.option);
                 $scope.data_profile = res;
                 $scope.birthday = new Date(res.birthday);
                 $scope.last_login = new Date(res.last_login);
                 $scope.date_joined = new Date(res.date_joined);
-                res.token = $scope.currentUser.token;
-                $window.localStorage['currentUser'] = JSON.stringify(res);
-                $rootScope.userLogin = res;
+                $rootScope.loadDataListUser = true;
+                $uibModalInstance.close();
+                // res.token = $scope.currentUser.token;
+                // $window.localStorage['currentUser'] = JSON.stringify(res);
+                // setTimeout(function(){
+                //     $window.location.reload();
+                // },300);
             })
         }
 

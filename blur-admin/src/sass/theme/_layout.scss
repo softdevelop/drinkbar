@@ -78,7 +78,7 @@ a {
   height: 34px;
   padding: 0px 18px 0 $left-space;
   width: 100%;
-  position: relative;
+  position: absolute;
   display: block;
   bottom: 0;
   font-size: 13px;
@@ -224,4 +224,29 @@ a {
 }
 .label_model{
   color: #000 !important;
+}
+.btn_action{
+  a{
+    margin: 0 5px;
+  }
+}
+.modalProfile{
+  #close_btn{
+    position: relative;
+    z-index: 5;
+    right: 10px;
+    color: #fff;
+    .modal .sn-link-close{
+      color: #fff;
+    }
+  }
+  .panel-body{
+    // background: #fff;
+    .form-control{
+      color: #fff;
+    }
+  }
+  .modal .modal-dialog .form-control{
+    color: #fff;
+  }
 }

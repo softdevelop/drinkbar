@@ -1,28 +1,32 @@
-<div class="horizontal-scroll">
-    <table class="table table-hover">
-      <thead>
-      <tr class="black-muted-bg">
-        <th class="browser-icons"></th>
-        <th>Username / Email</th>
-        <th class="align-right">First Name</th>
-        <th class="table-arr"></th>
-        <th class="align-right">Last Name</th>
-        <th class="table-arr"></th>
-        <th class="align-right">%</th>
-        <th class="table-arr"></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="item in listUser" class="no-top-border">
-        <td><img ng-src="{{ item.avatar }}" width="20" height="20"></td>
-        <td ng-class="nowrap">{{item.email}}</td>
-        <td class="align-right">{{item.first_name}}</td>
-        <td class="table-arr"><i ng-class="{'icon-up': item.isVisitsUp, 'icon-down': !item.isVisitsUp }"></i></td>
-        <td class="align-right">{{item.last_name}}</td>
-        <td class="table-arr"><i ng-class="{'icon-up': item.isPurchasesUp, 'icon-down': !item.isPurchasesUp }"></i></td>
-        <td class="align-right">{{item.percent}}</td>
-        <td class="table-arr"><i ng-class="{'icon-up': item.isPercentUp, 'icon-down': !item.isPercentUp }"></i></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
+<div class="" style="margin-bottom : 15px;">
+	<button class="btn btn-primary" ng-click="openCreateUser('md')" >Create User</button>
+</div>
+<div class="horizontal-scroll" style="padding: 15px; background : rgba(42, 52, 51, 0.5490196078431373);">
+	<table class="table table-hover">
+		<thead>
+			<tr class="black-muted-bg">
+				<th class="browser-icons"></th>
+				<th>Username / Email</th>
+				<th class="align-right">First Name</th>
+				<th class="align-right">Last Name</th>
+				<th class="align-right">Birthday</th>
+				<th class="align-right">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="item in listUser" class="no-top-border">
+				<td>
+					<img ng-src="{{ item.avatar }}" width="20" height="20">
+				</td>
+				<td ng-class="nowrap">{{item.email}}</td>
+				<td class="align-right">{{item.first_name}}</td>
+				<td class="align-right">{{item.last_name}}</td>
+				<td class="align-right">{{item.birthday | date:'MM/dd/yyyy'}}</td>
+				<td class="align-right btn_action">
+					<a href="" ng-click="openUser(item, 'lg')" ><i class="ion-compose"></i></a>
+					<a href="" ng-click="deleteUser(item)" ><i class="ion-android-delete"></i></a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
