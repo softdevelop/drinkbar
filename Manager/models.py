@@ -126,11 +126,11 @@ class Ingredient(models.Model):
                                               default=CONST_STATUS_ENABLED)
     type = models.CharField(max_length=200, blank=True, null= True)
     name = models.CharField(max_length=200)
-    price = models.FloatField(blank=True, null= True)
+    price = models.FloatField(blank=True, null= True, default=1)
     bottles = models.PositiveIntegerField(blank=True, null=True, default=0)
     quanlity_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
     brand = models.CharField(max_length=200, blank=True, null= True)
-
+    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='ingredient')
     def __unicode__(self):
         return "-".join([self.name, "".join([str(self.quanlity_of_bottle), "mL"])])
 

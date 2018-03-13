@@ -39,8 +39,8 @@ class UserSignUp(generics.CreateAPIView):
 
 class UserList(generics.ListCreateAPIView):
     queryset = UserBase.objects.all()
-    serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
+    serializer_class = UserSerializer
 
 class UserProfile(generics.GenericAPIView):
     serializer_class = UserWithTokenSerializer

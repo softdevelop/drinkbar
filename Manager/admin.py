@@ -16,7 +16,7 @@ admin.site.unregister(auth.models.Group)
 admin.site.unregister(DefaultCategory)
 
 class UserBaseAdmin(UserAdmin):
-    list_display = ('email','first_name','last_name','birthday')
+    list_display = ('id','email','first_name','last_name','birthday')
 
     fieldsets = (
         (None, {'fields': ('username','email', 'password')}),

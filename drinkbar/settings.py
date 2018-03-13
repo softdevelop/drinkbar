@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "categories.editor",
     'corsheaders',
     'import_export',
+    'django_cleanup',
 
     'Manager',
 ]

@@ -20,11 +20,21 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     avatar_url = serializers.CharField(read_only=True)
-    email = serializers.CharField(read_only=True)
     class Meta:
         model = UserBase
-        fields = ('id', 'email','avatar','birthday','avatar_url', 'first_name','last_name', 'fb_uid', 'opt', 
+        fields = ('id','username','password','email','avatar','birthday','avatar_url', 'first_name','last_name', 'fb_uid', 'opt', 
             'is_email_verified', 'avatar_url', 'is_active', 'is_staff', 'is_superuser', 'last_login', 'date_joined')
+        extra_kwargs = {'password': {'write_only': True},
+                        'username': {'write_only': True},}
+
+    def create(self, validated_data):
+        if validated_data.has_key('password'):
+            user = UserBase()
+            user.set_password(validated_data['password'])
+            validated_data['password'] = user.password
+        validated_data['is_staff'] = True
+        validated_data['is_superuser'] = True
+        return super(UserSerializer, self).create(validated_data)
 
 class UserWithTokenSerializer(UserSerializer):
     token = serializers.CharField(read_only=True)
