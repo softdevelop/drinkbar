@@ -250,3 +250,19 @@ a {
     color: #fff;
   }
 }
+.toast-top-right{
+  top: auto;
+  bottom: 12px;
+}
+.bg_content{
+  background: rgba(42, 52, 51, 0.5490196078431373);
+  padding: 15px;
+  .form_create{
+    label{
+      color: #fff !important;
+    }
+    input{
+      color: #fff !important;
+    }
+  }
+}

@@ -48,18 +48,19 @@
 
         // =================== open modal create user ==========================
         $scope.openCreateUser = function(size){
-            var page = 'app/pages/manager-user/user-create/user-create.html';
-            $uibModal.open({
-                animation: true,
-                templateUrl: page,
-                size: size,
-                resolve: {
-                    token: function () {
-                        return $scope.currentUser.token;
-                    }
-                },
-                controller: 'UserCreateCtrl',
-            });
+            // var page = 'app/pages/manager-user/user-create/user-create.html';
+            // $uibModal.open({
+            //     animation: true,
+            //     templateUrl: page,
+            //     size: size,
+            //     resolve: {
+            //         token: function () {
+            //             return $scope.currentUser.token;
+            //         }
+            //     },
+            //     controller: 'UserCreateCtrl',
+            // });
+            
         }
 
         // ====================== delete user ================================

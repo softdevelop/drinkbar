@@ -1,4 +1,4 @@
-<div class="modal-content">
+<!-- <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" ng-click="$dismiss()" aria-label="Close">
                 <em class="ion-ios-close-empty sn-link-close"></em>
@@ -24,4 +24,22 @@
                 <button ng-disabled="form.$invalid || isDisable" type="button" class="btn btn-primary" ng-click="create()">Create</button>
             </div>
         </form>
-    </div>
+    </div> -->
+
+<div class="create_user bg_content">
+    <form name="form" class="form_create">
+            <div class="form-group">
+                    <label style="color : #6b6b6b; font-weight : bold;" for="">Email</label>
+                    <input class="form-control" type="email" name="email" placeholder="Email" ng-model="account.username" ng-change="changeInfo('username', account.username)" required>
+                </div>
+                <div class="form-group">
+                    <label style="color : #6b6b6b; font-weight : bold;" for="">Password</label>
+                    <input class="form-control" type="password" name="password" placeholder="Password" ng-model="account.password" ng-change="changeInfo('password', account.password)" required>
+                </div>
+                <div class="form-group">
+                    <label style="color : #6b6b6b; font-weight : bold;" for="">Confirm Password</label>
+                    <input class="form-control" type="password" name="re_password" placeholder="Confirm Password" ng-model="account.re_password" ng-change="changeInfo('re_password', account.re_password)" required>
+                </div>
+                <button ng-disabled="form.$invalid || isDisable" type="button" class="btn btn-primary" ng-click="create()">Create</button>
+    </form>
+</div>

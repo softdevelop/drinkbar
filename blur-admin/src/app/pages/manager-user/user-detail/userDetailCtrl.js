@@ -9,36 +9,39 @@
         .controller('UserDetailCtrl', UserDetailCtrl);
 
     /** @ngInject */
-    function UserDetailCtrl($window, fileReader, $filter, $uibModal, ProfileService, baProgressModal, $scope, $uibModalInstance, toastr, items, $rootScope) {
-        console.log($uibModalInstance)
-        $scope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        $scope.data_profile = items;
-        $scope.birthday = new Date($scope.data_profile.birthday);
-        $scope.last_login = new Date($scope.data_profile.last_login);
-        $scope.date_joined = new Date($scope.data_profile.date_joined);
-
+    function UserDetailCtrl($stateParams, $window, fileReader, $filter, $uibModal, ProfileService, baProgressModal, $scope, toastr, $rootScope, ManagerUserService) {
+        $scope.user_id = $stateParams.id;
+        $scope.data_profile = {};
         $scope.isChangePassword = false;
         $scope.isConfirmPassword = true;
         $scope.errorMsg = '';
         $scope.isChangeAvatar = false;
         $scope.data_update = {};
         $scope.isUpdated = false;
+        // $scope.picture = $filter('profilePicture')('Nasta');
 
-        $scope.option = {
-            "autoDismiss": false,
-            "positionClass": "toast-bottom-right",
-            "type": "success",
-            "timeOut": "5000",
-            "extendedTimeOut": "2000",
-            "allowHtml": false,
-            "closeButton": false,
-            "tapToDismiss": false,
-            "progressBar": false,
-            "newestOnTop": false,
-            "maxOpened": 0,
-            "preventDuplicates": false,
-            "preventOpenDuplicates": false
-        };
+
+        // ============= get user detail =================
+        function getUser(){
+            ManagerUserService.getUser($scope.user_id, $rootScope.userLogin.token).success(function(res){
+                $scope.data_profile = res;
+            }).error(function (err, status, response) {
+                console.log(response);
+                toastr.error('', 'Error!');
+            });
+        }
+
+        getUser();
+
+        // ================ delete user ====================
+        $scope.deleteUser = function(id){
+            ManagerUserService.deleteUser(id, $rootScope.userLogin.token).success(function(res){
+
+            }).error(function (err, status, response) {
+                console.log(response);
+                toastr.error('', 'Error!');
+            });
+        }
 
         //   ==================== open modal change password ================
         $scope.openChangePassword = function (size) {
@@ -61,11 +64,12 @@
 
         //===========  updateProfile ================================
         $scope.updateProfile = function (field, value) {
+            console.log('====> updateProfile')
+            console.log(field)
+            console.log(value)
             // $scope.data_profile[field] = value;
             $scope.data_update[field] = value;
             $scope.isUpdated = true;
-            console.log($scope.data_update)
-
         }
 
         $scope.changeBirthday = function (value) {
@@ -88,26 +92,26 @@
         // submit Profile
         $scope.submitProfile = function () {
 
-            // $scope.data_profile.token = $scope.currentUser.token;
             $scope.data_update.token = $scope.currentUser.token;
             $scope.data_update.id = $scope.data_profile.id;
-            console.log($scope.data_update)
 
-            // console.log($scope.data_profile)
             ProfileService.submitProfile($scope.data_update).success(function (res) {
-                toastr.success('', 'Change profile success!', $scope.option);
+                toastr.success('', 'Change profile success!');
                 $scope.data_profile = res;
                 $scope.birthday = new Date(res.birthday);
                 $scope.last_login = new Date(res.last_login);
                 $scope.date_joined = new Date(res.date_joined);
-                $rootScope.loadDataListUser = true;
-                $uibModalInstance.close();
-                // res.token = $scope.currentUser.token;
-                // $window.localStorage['currentUser'] = JSON.stringify(res);
-                // setTimeout(function(){
-                //     $window.location.reload();
-                // },300);
-            })
+
+                if($scope.user_id === String($rootScope.userLogin.id)){
+                    console.log('yes')
+                    res.token = $rootScope.userLogin.token;
+                    $window.localStorage['currentUser'] = JSON.stringify(res);
+                    $rootScope.userLogin = res;
+                }
+            }).error(function (err, status, response) {
+                console.log(response);
+                toastr.error('', 'Error!');
+            });
         }
 
         // ========================= datepicker=========================
@@ -204,61 +208,16 @@
         }
         // ==========================================================================
 
-
-
-
-
         $scope.removePicture = function () {
-            $scope.picture = $filter('appImage')('theme/no-photo.png');
-            $scope.noPicture = true;
+            $scope.picture = '';
+            $scope.isChangeAvatar = false;
         };
 
         $scope.uploadPicture = function () {
-            console.log('==========> uploadPicture')
             var fileInput = document.getElementById('uploadFile');
-            console.log(fileInput)
             fileInput.click();
 
         };
-
-        $scope.socialProfiles = [
-            {
-                name: 'Facebook',
-                href: 'https://www.facebook.com/akveo/',
-                icon: 'socicon-facebook'
-            },
-            {
-                name: 'Twitter',
-                href: 'https://twitter.com/akveo_inc',
-                icon: 'socicon-twitter'
-            },
-            {
-                name: 'Google',
-                icon: 'socicon-google'
-            },
-            {
-                name: 'LinkedIn',
-                href: 'https://www.linkedin.com/company/akveo',
-                icon: 'socicon-linkedin'
-            },
-            {
-                name: 'GitHub',
-                href: 'https://github.com/akveo',
-                icon: 'socicon-github'
-            },
-            {
-                name: 'StackOverflow',
-                icon: 'socicon-stackoverflow'
-            },
-            {
-                name: 'Dribbble',
-                icon: 'socicon-dribble'
-            },
-            {
-                name: 'Behance',
-                icon: 'socicon-behace'
-            }
-        ];
 
         $scope.unconnect = function (item) {
             item.href = undefined;
@@ -275,8 +234,6 @@
         };
 
         $scope.getFile = function () {
-            console.log($scope.file)
-            console.log($scope.data_profile.file)
             fileReader.readAsDataUrl($scope.file, $scope)
                 .then(function (result) {
                     $scope.data_profile.picture = result;
@@ -285,13 +242,9 @@
 
         $scope.file = '';
         $scope.onFileSelect = function ($file) {
-            console.log('=======> onFileSelect')
-            console.log($file)
         }
 
         $scope.changeAvatar = function () {
-            console.log('====> changeAvatar')
-            console.log($scope.file)
         }
 
         $scope.switches = [true, true, false, true, true, false];
@@ -312,16 +265,15 @@
         $scope.imageIsLoaded = function (e) {
             $scope.isUpdated = true;
             $scope.$apply(function () {
-                console.log(e)
                 $scope.stepsModel.push(e.target.result);
                 $scope.isChangeAvatar = true;
                 $scope.picture = e.target.result;
 
                 var file = $window.document.getElementById('uploadFile');
-                console.log(file.files[0])
                 $scope.data_update.avatar = file.files[0];
             });
         }
+
     }
 
 })();

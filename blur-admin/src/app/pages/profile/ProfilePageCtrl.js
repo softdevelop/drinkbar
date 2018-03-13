@@ -11,8 +11,6 @@
     function ProfilePageCtrl($window, $scope, fileReader, $filter, $uibModal, ProfileService, baProgressModal, toastr, $rootScope) {
         $scope.picture = $filter('profilePicture')('Nasta');
 
-        console.log($rootScope.userLogin)
-
         $scope.data_profile = {};
         $scope.isChangePassword = false;
         $scope.isConfirmPassword = true;
@@ -108,7 +106,10 @@
                 res.token = $scope.currentUser.token;
                 $window.localStorage['currentUser'] = JSON.stringify(res);
                 $rootScope.userLogin = res;
-            })
+            }).error(function (err, status, response) {
+                console.log(response);
+                toastr.error('', 'Error!');
+            });
         }
 
         // ========================= datepicker=========================
@@ -215,51 +216,10 @@
         };
 
         $scope.uploadPicture = function () {
-            console.log('==========> uploadPicture')
             var fileInput = document.getElementById('uploadFile');
-            console.log(fileInput)
             fileInput.click();
 
         };
-
-        $scope.socialProfiles = [
-            {
-                name: 'Facebook',
-                href: 'https://www.facebook.com/akveo/',
-                icon: 'socicon-facebook'
-            },
-            {
-                name: 'Twitter',
-                href: 'https://twitter.com/akveo_inc',
-                icon: 'socicon-twitter'
-            },
-            {
-                name: 'Google',
-                icon: 'socicon-google'
-            },
-            {
-                name: 'LinkedIn',
-                href: 'https://www.linkedin.com/company/akveo',
-                icon: 'socicon-linkedin'
-            },
-            {
-                name: 'GitHub',
-                href: 'https://github.com/akveo',
-                icon: 'socicon-github'
-            },
-            {
-                name: 'StackOverflow',
-                icon: 'socicon-stackoverflow'
-            },
-            {
-                name: 'Dribbble',
-                icon: 'socicon-dribble'
-            },
-            {
-                name: 'Behance',
-                icon: 'socicon-behace'
-            }
-        ];
 
         $scope.unconnect = function (item) {
             item.href = undefined;
@@ -286,13 +246,9 @@
 
         $scope.file = '';
         $scope.onFileSelect = function ($file) {
-            console.log('=======> onFileSelect')
-            console.log($file)
         }
 
         $scope.changeAvatar = function () {
-            console.log('====> changeAvatar')
-            console.log($scope.file)
         }
 
         $scope.switches = [true, true, false, true, true, false];
@@ -313,13 +269,11 @@
         $scope.imageIsLoaded = function (e) {
             $scope.isUpdated = true;
             $scope.$apply(function () {
-                console.log(e)
                 $scope.stepsModel.push(e.target.result);
                 $scope.isChangeAvatar = true;
                 $scope.picture = e.target.result;
 
                 var file = $window.document.getElementById('uploadFile');
-                console.log(file.files[0])
                 $scope.data_update.avatar = file.files[0];
             });
         }

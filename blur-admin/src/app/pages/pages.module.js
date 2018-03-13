@@ -17,6 +17,7 @@
 		'BlurAdmin.pages.maps',
 		'BlurAdmin.pages.profile',
 		'BlurAdmin.pages.list-user',
+		'BlurAdmin.pages.create-user',
 	])
 		.config(routeConfig);
 
@@ -43,6 +44,10 @@
 			{
 				title: 'List User',
 				stateRef: 'list-user'
+			}, 
+			{
+				title: 'Create User',
+				stateRef: 'create-user'
 			}, 
 			{
 				title: '404 Page',

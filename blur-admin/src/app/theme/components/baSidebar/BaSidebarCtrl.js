@@ -50,10 +50,15 @@
 			// },
 			{
 				icon: "ion-person-stalker",
+				name: "manager",
 				subMenu: [
 					{
 						stateRef: "list-user",
 						title: "List User"
+					},
+					{
+						stateRef: "create-user",
+						title: "Create User"
 					}
 				],
 				title: "Manager User"

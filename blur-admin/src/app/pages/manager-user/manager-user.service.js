@@ -13,7 +13,12 @@
                 });
             },
             createUser : function(data, token){
-                return $http.post(AppSetting.BASE_URL + '/api/user/', {
+                var fd = new FormData();
+                for (var key in data){
+                    fd.append(key, data[key])
+                }
+
+                return $http.post(AppSetting.BASE_URL + '/api/user/', fd, {
                     headers: {
                         'Content-Type': undefined,
                         'Authorization': 'Token ' + token
@@ -27,6 +32,14 @@
                         'Authorization': 'Token ' + token
                     }
                 });
+            },
+            getUser : function(id, token){
+                return $http.get(AppSetting.BASE_URL + '/api/user/' + id + '/', {
+                    headers: {
+                        'Content-Type': undefined,
+                        'Authorization': 'Token ' + token
+                    }
+                })
             }
         }
     });
