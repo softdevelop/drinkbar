@@ -8,7 +8,7 @@ from .models import *
 from django.utils.translation import ugettext_lazy as _
 from categories.models import Category as DefaultCategory
 
-from import_export import resources
+from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 
 # # Register your models here.
@@ -36,9 +36,6 @@ class UserBaseAdmin(UserAdmin):
 '''
 Ingredient
 '''
-class IngredientResource(resources.ModelResource):
-    class Meta:
-        model = Ingredient
 
 class IngredientHistoryInline(admin.TabularInline):
     model = IngredientHistory
@@ -49,7 +46,6 @@ class IngredientHistoryAdmin(admin.ModelAdmin):
 
     
 class IngredientAdmin(ImportExportModelAdmin,admin.ModelAdmin):
-    resource_class = IngredientResource
     list_display = ('name', 'status', 'price',
         'bottles','quanlity_of_bottle')
 
@@ -79,19 +75,40 @@ class SeparateGlassAdmin(admin.ModelAdmin):
     def _ml(self, obj):
         return obj.change_to_ml
 
-class GarnishAdmin(admin.ModelAdmin):
-    list_display = ('name','active')
+class GarnishAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    list_display = ('id','name','active')
     list_editable = ('active',)
+
+class DrinkTypeAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    list_display = ('id','name','image')
 
 class DrinkIngredientInline(admin.TabularInline):
     model = DrinkIngredient
     extra = 1
 
-class DrinkAdmin(admin.ModelAdmin):
+class DrinkGarnishInline(admin.TabularInline):
+    model = DrinkGarnish
+    extra = 1
+
+class DrinkAdminResource(resources.ModelResource):
+    class Meta:
+        model = Drink
+        fields = ('id','name','type','image',
+            'numbers_bought','price','glass','key_word',
+            'estimate_time','is_have_ice')
+
+    def dehydrate_type(self, obj):
+        return obj.type.name
+
+    def dehydrate_glass(self, obj):
+        return obj.glass.name
+
+class DrinkAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = DrinkAdminResource
     list_display = ('name','category','numbers_bought','price')
     readonly_fields = ('numbers_bought',)
 
-    inlines = (DrinkIngredientInline,)
+    inlines = (DrinkIngredientInline,DrinkGarnishInline)
 
 
 '''
@@ -122,6 +139,7 @@ class RobotAdmin(admin.ModelAdmin):
     inlines = (RobotIngredientInline,)
 
 admin.site.register(UserBase, UserBaseAdmin)
+admin.site.register(DrinkType, DrinkTypeAdmin)
 admin.site.register(DrinkCategory, DrinkCategoryAdmin)
 admin.site.register(Drink,DrinkAdmin)
 admin.site.register(Ingredient, IngredientAdmin)

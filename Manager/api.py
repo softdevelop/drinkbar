@@ -11,7 +11,8 @@ from django.conf import settings
 from Manager.models import UserBase
 from django.core.mail import send_mail, EmailMessage
 from django.http import HttpResponse, JsonResponse
-
+from datetime import datetime, timedelta
+import hashlib
 class UserSignUp(generics.CreateAPIView):
     serializer_class = UserSignupSerializer
 
@@ -98,6 +99,64 @@ class UserChangePassword(APIView):
             else:
                 raise api_utils.BadRequest("INVALID_CURRENT_PASSWORD")
         return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class UserForgetPassword(APIView):
+    datetime_format = '%Y%m%d%H%M%S'
+
+    def get_reset_code(self, email, expired_time=None):
+        if not expired_time:
+            expired_time = (datetime.now() + timedelta(minutes=5)).strftime(self.datetime_format)
+        code = ''.join([email, settings.SECRET_KEY, expired_time])
+        return ''.join([hashlib.sha1(code).hexdigest().upper()[-8:], expired_time])
+
+    def post(self, request, format=None):
+        reset_code = request.data.get('code', None)
+        email = self.request.data.get('email')
+        user = UserBase.objects.filter(email=email).first()
+        if not reset_code:
+            if user:
+                user.opt = self.get_reset_code(email)
+                user.save()
+                reset_code = user.opt[:8]
+                print reset_code
+                # subject = 'Hi-Effeciency - Reset password requested'
+                # html_content = render_to_string('email/password_reset.html', {'reset_code':reset_code})
+
+                # tasks.send_email(subject, html_content, [email])
+            else:
+                raise api_utils.BadRequest('EMAIL_NOT_EXISTS')
+
+            return Response({'message': 'An email was sent to your email. '
+                                        'Please click on the link in it to verify your email address.'
+                            , 'success': True}, status=status.HTTP_200_OK)
+        else:
+            password = self.request.data.get('password')
+            if not password:
+                raise api_utils.BadRequest('NEW_PASSWORD_MISSING')
+            if not user:
+                raise api_utils.BadRequest('INVALID_USER')
+            try:
+                code = user.opt[:8]
+                expired_time = user.opt[8:]
+                print expired_time
+                if reset_code != code:
+                    raise api_utils.BadRequest('INVALID_RESET_CODE')
+            except:
+                raise api_utils.BadRequest('INVALID_RESET_CODE')
+
+            if datetime.now().strftime(self.datetime_format) > expired_time:
+                raise api_utils.BadRequest('RESET_CODE_EXPIRED')
+
+            user.set_password(password)
+            user.save()
+
+            return Response({'message': 'Password reset is successful.', 'success': True})
+
+        return Response({
+            'error': 'Error! Can\'t start forget password process',
+            'success': False
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 class DrinkCategoryList(generics.ListCreateAPIView):
     queryset = DrinkCategory.objects.all()

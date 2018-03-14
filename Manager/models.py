@@ -40,7 +40,7 @@ class DrinkCategory(CategoryBase):
         return prefix + '/'.join([force_text(ancestors[0].id)])
 
 class UserBase(AbstractUser):
-
+    email = models.EmailField(_('email address'), blank=True, unique=True)
     birthday = models.DateField(null=True, blank=True)
     avatar = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='avatars',
                                  null=True, blank=True)
@@ -130,7 +130,7 @@ class Ingredient(models.Model):
     bottles = models.PositiveIntegerField(blank=True, null=True, default=0)
     quanlity_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
     brand = models.CharField(max_length=200, blank=True, null= True)
-    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='ingredient')
+    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='ingredient', null=True, blank=True)
     def __unicode__(self):
         return "-".join([self.name, "".join([str(self.quanlity_of_bottle), "mL"])])
 
@@ -141,25 +141,46 @@ class Garnish(models.Model):
     def __unicode__(self):
         return self.name
 
+class DrinkType(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='drink-type', null=True, blank=True)
+    def __unicode__(self):
+        return self.name
+
 class Drink(models.Model):
 
     name = models.CharField(max_length=200)
+    type = models.ForeignKey(DrinkType, blank=True, null=True)
     category = models.ForeignKey(DrinkCategory, blank=True, null=True)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='drink')
     numbers_bought = models.PositiveIntegerField(blank=True, null= True, default=0)
     price = models.FloatField(blank=True, null=True)
     glass = models.ForeignKey(SeparateGlass,blank=True, null=True)
-    garnish = models.ManyToManyField(Garnish, blank =True)
     key_word = models.CharField(max_length=200, blank=True, null=True)
     estimate_time = models.PositiveIntegerField(help_text=_('seconds'), default=0)
-
+    is_have_ice = models.BooleanField(default=True)
+    
     def __unicode__(self):
         return self.name
 
 class DrinkIngredient(models.Model):
+    CONST_UNIT_PART = 0
+    CONST_UNIT_ML = 10
+
+    CONST_UNIT = (
+        (CONST_UNIT_PART, _('Part')),
+        (CONST_UNIT_ML, _('mL')),
+    )
+
     drink = models.ForeignKey(Drink, related_name='ingredients')
     ingredient = models.ForeignKey(Ingredient)
-    ratio = models.IntegerField(help_text=_('part'))
+    ratio = models.FloatField(help_text=_('part'))
+    unit = models.PositiveSmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_PART)
+
+class DrinkGarnish(models.Model):
+    drink = models.ForeignKey(Drink, related_name='garnishes')
+    garnish = models.ForeignKey(Garnish)
+    ratio = models.FloatField(help_text=_('pcs'))
 
 
 class Order(models.Model):

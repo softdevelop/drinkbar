@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^user/me/$', api_views.UserProfile.as_view(), name='user-me'), 
     url(r'^user/(?P<pk>[0-9]+)/$', api_views.UserDetail.as_view(), name='user-detail'), 
     url(r'^user/change/password/$', api_views.UserChangePassword.as_view(), name='user-change-password'), 
+    url(r'^user/forget/password/$', api_views.UserForgetPassword.as_view(), name='user-forget-password'), 
     url(r'^drink/category/$',api_views.DrinkCategoryList.as_view(), name='drink-categories'),
     url(r'^drink/category/(?P<pk>[0-9]+)/$',api_views.DrinkCategoryDetail.as_view(), name='drink-categories-detail'),
     url(r'^drink/$',api_views.DrinkList.as_view(), name='drink-list'),
