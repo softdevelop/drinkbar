@@ -176,10 +176,11 @@ class DrinkList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        ret = self.queryset.all()
+        ret = self.queryset.exclude(ingredients__ingredient__status=Ingredient.CONST_STATUS_BLOCKED)
         search_query = self.request.GET.get('search', None)
         if search_query:
             ret = ret.filter(name__icontains=search_query)
+        type = self.request.GET.get('type', None)
 
         return ret
 
@@ -228,5 +229,15 @@ class DrinkIngredientList(generics.ListCreateAPIView):
 class DrinkIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DrinkIngredient
     serializer_class = DrinkIngredientSerializer
+    permission_classes = [IsAuthenticated]
+
+class DrinkTypeList(generics.ListCreateAPIView):
+    queryset = DrinkType.objects.all()
+    serializer_class = DrinkTypeSerializer
+    permission_classes = [IsAuthenticated]
+
+class DrinkTypeDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = DrinkType
+    serializer_class = DrinkTypeSerializer
     permission_classes = [IsAuthenticated]
 
