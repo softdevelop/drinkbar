@@ -36,7 +36,10 @@
         // ================ delete user ====================
         $scope.deleteUser = function(id){
             ManagerUserService.deleteUser(id, $rootScope.userLogin.token).success(function(res){
-
+                toastr.success('Deleted success!');
+                setTimeout(function(){
+                    $window.location.href = '#/list-user';
+                },300)
             }).error(function (err, status, response) {
                 console.log(response);
                 toastr.error('', 'Error!');
@@ -64,19 +67,15 @@
 
         //===========  updateProfile ================================
         $scope.updateProfile = function (field, value) {
-            console.log('====> updateProfile')
-            console.log(field)
-            console.log(value)
-            // $scope.data_profile[field] = value;
             $scope.data_update[field] = value;
             $scope.isUpdated = true;
         }
 
         $scope.changeBirthday = function (value) {
-            $scope.birthday = value;
-            $scope.data_update.birthday = value;
+            var _birthday = $filter('date')(value, 'yyyy-MM-dd', 'GMT');
+            $scope.birthday = _birthday;
+            $scope.data_update.birthday = _birthday;
             $scope.isUpdated = true;
-            // $scope.data_profile.birthday = value;
         }
 
         $scope.confirmPassword = function (password, res_password) {

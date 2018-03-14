@@ -4,7 +4,6 @@
         <div class="col-md-6">
             <div class="form-group row clearfix">
                 <label for="inputFirstName" class="col-sm-3 control-label">Avatar</label>
-
                 <div class="col-sm-9" style="margin-bottom: 50px;">
                     <div class="userpic">
                         <div ng-show="isChangeAvatar" class="userpic-wrapper">
@@ -15,14 +14,9 @@
                         </div>
                         <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i>
                         <a href class="change-userpic" ng-click="uploadPicture()">Change Profile Picture</a>
-                        <!-- <input type="file" id="uploadFile" name="avatar" ng-change="changeAvatar(file)" ng-model="file" > -->
-                        <!-- <input type="file" name="file" ng-model="file" ng-change="changeAvatar()" > -->
 
-                       <!--  <div ng-repeat="step in stepsModel">
-                            <img class="thumb" ng-src="{{step}}" />
-                        </div> -->
-
-                        <input type='file' id="uploadFile" ng-show="false" ng-model-instant onchange="angular.element(this).scope().imageUpload(event)" />
+                        <input type='file' id="uploadFile" ng-show="false" ng-model-instant onchange="angular.element(this).scope().imageUpload(event)"
+                        />
 
                     </div>
                 </div>
@@ -38,7 +32,7 @@
 
                 <div class="col-sm-9">
                     <input type="text" class="form-control" id="inputFirstName" placeholder="" value="data_profile.first_name" ng-model="data_profile.first_name"
-                    ng-change="updateProfile('first_name', data_profile.first_name)">
+                        ng-change="updateProfile('first_name', data_profile.first_name)">
                 </div>
             </div>
             <div class="form-group row clearfix">
@@ -46,7 +40,7 @@
 
                 <div class="col-sm-9">
                     <input type="text" class="form-control" id="inputLastName" placeholder="" value="data_profile.last_name" ng-model="data_profile.last_name"
-                    ng-change="updateProfile('last_name', data_profile.last_name)">
+                        ng-change="updateProfile('last_name', data_profile.last_name)">
                 </div>
             </div>
         </div>
@@ -57,8 +51,8 @@
                 <div class="col-sm-9">
                     <p class="input-group">
                         <input type="text" class="form-control" uib-datepicker-popup="{{format}}" value="birthday" ng-model="birthday" is-open="popupDatePicker.openBirthday"
-                        datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
-                        ng-change="changeBirthday(birthday)" />
+                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                            ng-change="changeBirthday(birthday)" />
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openDatePicker('birthday')">
                                 <i class="glyphicon glyphicon-calendar"></i>
@@ -67,14 +61,6 @@
                     </p>
                 </div>
             </div>
-
-            <!-- <div class="form-group row clearfix">
-                <label for="inputOccupation" class="col-sm-3 control-label">Avatar url</label>
-
-                <div class="col-sm-9">
-                    <input disabled type="text" class="form-control" id="inputOccupation" placeholder="" value="data_profile.avatar_url" ng-model="data_profile.avatar_url">
-                </div>
-            </div> -->
         </div>
         <div class="col-md-6">
             <div class="form-group row clearfix">
@@ -99,7 +85,7 @@
                 <div class="col-sm-9">
                     <p class="input-group">
                         <input disabled type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="last_login" is-open="popupDatePicker.openLastLogin"
-                        datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
                         />
                         <span class="input-group-btn">
                             <button disabled type="button" class="btn btn-default" ng-click="openDatePicker('lastLogin')">
@@ -116,7 +102,7 @@
                 <div class="col-sm-9">
                     <p class="input-group">
                         <input disabled type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="date_joined" is-open="popupDatePicker.openDateJoined"
-                        datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
                         />
                         <span class="input-group-btn">
                             <button disabled type="button" class="btn btn-default" ng-click="openDatePicker('dataJoined')">
@@ -129,9 +115,12 @@
         </div>
         <div class="col-md-6">
             <div class="form-group row clearfix">
-                <label for="inputOccupation" class="col-sm-3 control-label">Email verified</label>
+                <div class="col-sm-3"></div>
                 <div class="col-sm-9">
-                    <input type="checkbox" value="data_profile.is_email_verified" ng-model="data_profile.is_email_verified" ng-change="updateProfile('is_email_verified', data_profile.is_email_verified)">
+                    <label class="checkbox-inline custom-checkbox nowrap">
+                        <input type="checkbox" value="data_profile.is_email_verified" ng-model="data_profile.is_email_verified" ng-change="updateProfile('is_email_verified', data_profile.is_email_verified)">
+                        <span>Email verified</span>
+                    </label>
                 </div>
             </div>
         </div>
@@ -140,34 +129,34 @@
     <h3 class="with-line">Permissions</h3>
 
     <div class="row">
-        <div class="col-md-12 row">
-            <div class="col-md-6">
-                <div class="form-group row clearfix">
-                    <label for="inputOccupation" class="col-sm-3 control-label">Active</label>
-                    <div class="col-sm-9">
+        <div class="col-md-4 row">
+            <div class="col-md-12">
+                <div class="form-group clearfix">
+                    <label class="checkbox-inline custom-checkbox nowrap">
                         <input type="checkbox" value="data_profile.is_active" ng-model="data_profile.is_active" ng-change="updateProfile('is_active', data_profile.is_active)">
-                    </div>
+                        <span>Active</span>
+                    </label>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-12 row">
-            <div class="col-md-6">
-                <div class="form-group row clearfix">
-                    <label for="inputOccupation" class="col-sm-3 control-label">Staff status</label>
-                    <div class="col-sm-9">
+        <div class="col-md-4 row">
+            <div class="col-md-12">
+                <div class="form-group clearfix">
+                    <label class="checkbox-inline custom-checkbox nowrap">
                         <input type="checkbox" value="data_profile.is_staff" ng-model="data_profile.is_staff" ng-change="updateProfile('is_staff', data_profile.is_staff)">
-                    </div>
+                        <span>Staff status</span>
+                    </label>
                 </div>
             </div>
         </div>
-        <div class="col-md-12 row">
-            <div class="col-md-6">
-                <div class="form-group row clearfix">
-                    <label for="inputOccupation" class="col-sm-3 control-label">Superuser status</label>
-                    <div class="col-sm-9">
+        <div class="col-md-4 row">
+            <div class="col-md-12">
+                <div class="form-group clearfix">
+                    <label class="checkbox-inline custom-checkbox nowrap">
                         <input type="checkbox" value="data_profile.is_superuser" ng-model="data_profile.is_superuser" ng-change="updateProfile('is_superuser', data_profile.is_superuser)">
-                    </div>
+                        <span>Superuser status</span>
+                    </label>
                 </div>
             </div>
         </div>
@@ -176,15 +165,13 @@
     <div class="row" ng-show="!isChangePassword">
         <div class="col-md-12">
             <div class="button-wrapper ng-scope">
-                <!-- <button type="button" class="btn btn-info pull-left" ng-click="isChangePassword = !isChangePassword">Change Password</button> -->
                 <button type="button" class="btn btn-info pull-left" data-toggle="modal" ng-click="openChangePassword('md')">Change Password</button>
             </div>
         </div>
     </div>
 
     <h3 class="with-line"></h3>
-    <button ng-disabled="!isUpdated" type="button" class="btn btn-primary btn-with-icon save-profile" ng-click="submitProfile()" >
+    <button ng-disabled="!isUpdated" type="button" class="btn btn-primary btn-with-icon" ng-click="submitProfile()">
         <i class="ion-android-checkmark-circle"></i>Update Profile
     </button>
-</div>
 </div>

@@ -9,7 +9,7 @@
 		.controller('UserCreateCtrl', UserCreateCtrl);
 
 	/** @ngInject */
-	function UserCreateCtrl($scope, ProfileService, toastr, ManagerUserService, $rootScope, $location) {
+	function UserCreateCtrl($scope, ProfileService, toastr, ManagerUserService, $rootScope, $location, $window) {
         $scope.account = {
             username : '',
             password : '',
@@ -33,9 +33,9 @@
             }
             ManagerUserService.createUser(_data, $rootScope.userLogin.token).success(function(res){
                 toastr.success('Created success!');
-                console.log(res)
                 if(res.id > 0){
-                    $location.path('#/list-user');
+                    var url_redirect = '#/user-detail/'+res.id;
+                    $window.location.href = url_redirect;
                 }
             }).error(function (err, status, response) {
                 console.log(response);

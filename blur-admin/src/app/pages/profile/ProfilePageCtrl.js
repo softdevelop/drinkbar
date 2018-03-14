@@ -67,18 +67,15 @@
 
         //===========  updateProfile ================================
         $scope.updateProfile = function (field, value) {
-            // $scope.data_profile[field] = value;
             $scope.data_update[field] = value;
             $scope.isUpdated = true;
-            console.log($scope.data_update)
-
         }
 
         $scope.changeBirthday = function (value) {
-            $scope.birthday = value;
-            $scope.data_update.birthday = value;
+            var _birthday = $filter('date')(value, 'yyyy-MM-dd', 'GMT');
+            $scope.birthday = _birthday;
+            $scope.data_update.birthday = _birthday;
             $scope.isUpdated = true;
-            // $scope.data_profile.birthday = value;
         }
 
         $scope.confirmPassword = function (password, res_password) {
