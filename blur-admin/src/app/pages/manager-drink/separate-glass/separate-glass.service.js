@@ -4,7 +4,7 @@
         .factory('SeparateService', function ($http, AppSetting) {
             return {
                 getList: function (token) {
-                    return $http.get(AppSetting.BASE_URL + '/api/glass/', {
+                    return $http.get(AppSetting.BASE_URL + '/api/glass/?admin=true', {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token

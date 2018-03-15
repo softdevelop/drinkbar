@@ -34,7 +34,7 @@
             ManagerUserService.createUser(_data, $rootScope.userLogin.token).success(function(res){
                 toastr.success('Created success!');
                 if(res.id > 0){
-                    var url_redirect = '#/user-detail/'+res.id;
+                    var url_redirect = '#/manager-user/user-detail/'+res.id;
                     $window.location.href = url_redirect;
                 }
             }).error(function (err, status, response) {

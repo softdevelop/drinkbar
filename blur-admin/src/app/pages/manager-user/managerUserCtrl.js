@@ -76,7 +76,7 @@
         // ===================== function get list user ============================
         function getAllUser(){
             ManagerUserService.getAllUser($scope.currentUser.token).success(function(res){
-                $scope.listUser = res;
+                $scope.listUser = res.results;
             }).error(function (err, status, response) {
                 console.log(response);
                 toastr.error('', 'Error!');

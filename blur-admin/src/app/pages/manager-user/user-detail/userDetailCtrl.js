@@ -96,17 +96,18 @@
 
             ProfileService.submitProfile($scope.data_update).success(function (res) {
                 toastr.success('', 'Change profile success!');
-                $scope.data_profile = res;
-                $scope.birthday = new Date(res.birthday);
-                $scope.last_login = new Date(res.last_login);
-                $scope.date_joined = new Date(res.date_joined);
+                // $scope.data_profile = res;
+                // $scope.birthday = new Date(res.birthday);
+                // $scope.last_login = new Date(res.last_login);
+                // $scope.date_joined = new Date(res.date_joined);
 
                 if($scope.user_id === String($rootScope.userLogin.id)){
-                    console.log('yes')
                     res.token = $rootScope.userLogin.token;
                     $window.localStorage['currentUser'] = JSON.stringify(res);
                     $rootScope.userLogin = res;
                 }
+                $window.location.href = '#/manager-user/list-user';
+                
             }).error(function (err, status, response) {
                 console.log(response);
                 toastr.error('', 'Error!');

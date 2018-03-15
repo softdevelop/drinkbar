@@ -10,7 +10,8 @@
                             <img style="width: 100% !important;" ng-src="{{ picture }}" ng-click="uploadPicture()">
                         </div>
                         <div ng-show="!isChangeAvatar" class="userpic-wrapper">
-                            <img style="width: 100% !important;" ng-src="{{ data_profile.avatar }}" ng-click="uploadPicture()">
+                            <img ng-if="data_profile.avatar" style="width: 100% !important;" ng-src="{{ data_profile.avatar }}" ng-click="uploadPicture()">
+                            <img ng-if="!data_profile.profile" style="width: 100% !important;" ng-src="{{ data_profile.avatar_url }}" ng-click="uploadPicture()">
                         </div>
                         <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i>
                         <a href class="change-userpic" ng-click="uploadPicture()">Change Profile Picture</a>
