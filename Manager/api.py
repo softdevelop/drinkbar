@@ -1,4 +1,6 @@
 from django.db.utils import IntegrityError
+from django.db.models import Q
+
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -176,9 +178,12 @@ class DrinkList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        is_admin = self.request.GET.get('admin', None)
-        if not is_admin:
-            ret = self.queryset.exclude(ingredients__ingredient__status=Ingredient.CONST_STATUS_BLOCKED)
+        is_admin = self.request.GET.get('admin', False)
+        ret = self.queryset.exclude(Q(ingredients__ingredient__status=Ingredient.CONST_STATUS_BLOCKED)|\
+                    Q(glass__status=SeparateGlass.CONST_STATUS_BLOCKED))
+        if is_admin:
+            print is_admin
+            ret = self.queryset.all()
 
         search_query = self.request.GET.get('search', None)
         if search_query:
@@ -205,6 +210,13 @@ class SeparateGlassList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     paginator = None
 
+    def get_queryset(self):
+        is_admin = self.request.GET.get('admin', False)
+        ret = self.queryset.exclude(status=SeparateGlass.CONST_STATUS_BLOCKED)
+        if is_admin:
+            ret = self.queryset.all()
+        return ret
+
 class SeparateGlassDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = SeparateGlass
     serializer_class = SeparateGlassSerializer
@@ -225,6 +237,22 @@ class IngredientList(generics.ListCreateAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        is_admin = self.request.GET.get('admin', False)
+        ret = self.queryset.exclude(status=Ingredient.CONST_STATUS_BLOCKED)
+
+        type = self.request.GET.get('type', None)
+        if type:
+            ret = ret.filter(type=type)
+
+        brand = self.request.GET.get('brand', None)
+        if brand:
+            ret = ret.filter(brand=brand)
+
+        if is_admin:
+            ret = self.queryset.all()
+        return ret
 
 class IngredientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ingredient
@@ -249,5 +277,34 @@ class DrinkTypeList(generics.ListCreateAPIView):
 class DrinkTypeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DrinkType
     serializer_class = DrinkTypeSerializer
+    permission_classes = [IsAuthenticated]
+class IngredientTypeList(generics.ListCreateAPIView):
+    queryset = IngredientType.objects.all()
+    serializer_class = IngredientTypeSerializer
+    permission_classes = [IsAuthenticated]
+    paginator = None
+
+class IngredientTypeDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = IngredientType
+    serializer_class = IngredientBrandSerializer
+    permission_classes = [IsAuthenticated]
+
+class IngredientBrandList(generics.ListCreateAPIView):
+    queryset = IngredientBrand.objects.all()
+    serializer_class = IngredientTypeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        ret = self.queryset.all()
+        type = self.request.GET.get('type', None)
+        if type:
+            ret = ret.filter(ingredient_brands__type=type)
+            return self.paginate_queryset(ret)
+        return ret
+
+    
+class IngredientBrandDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = IngredientBrand
+    serializer_class = IngredientBrandSerializer
     permission_classes = [IsAuthenticated]
 

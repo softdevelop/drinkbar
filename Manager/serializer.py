@@ -62,19 +62,19 @@ class DrinkCategorySmallSerializer(DrinkCategorySerializer):
         fields = ('id','link','main_level','name','image','main_level') 
 
 class SeparateGlassSerializer(serializers.ModelSerializer):
-    unit = serializers.SerializerMethodField()
+    unit_view = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = SeparateGlass
         fields = '__all__' 
 
-    def get_unit(self,obj):
+    def get_unit_view(self,obj):
         return obj.get_unit_display()
 
 class GarnishSerializer(serializers.ModelSerializer):
     class Meta:
         model = Garnish
         fields = '__all__'
-        
+
 class DrinkTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DrinkType
@@ -116,4 +116,14 @@ class DrinkSerializer(serializers.ModelSerializer):
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
+        fields = '__all__'
+
+class IngredientTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IngredientType
+        fields = '__all__'
+
+class IngredientBrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IngredientBrand
         fields = '__all__'

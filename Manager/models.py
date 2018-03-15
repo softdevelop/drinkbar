@@ -91,15 +91,17 @@ class Ingredient(models.Model):
 
     status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
                                               default=CONST_STATUS_ENABLED)
-    type = models.ForeignKey(IngredientType, on_delete=models.SET_NULL, blank=True, null=True)
+    type = models.ForeignKey(IngredientType, on_delete=models.SET_NULL, blank=True,
+                            null=True, related_name='ingredient_types')
     name = models.CharField(max_length=200)
     price = models.FloatField(blank=True, null= True, default=1)
     bottles = models.PositiveIntegerField(blank=True, null=True, default=0)
     quanlity_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
-    brand = models.ForeignKey(IngredientBrand, on_delete=models.SET_NULL, blank=True, null=True)
+    brand = models.ForeignKey(IngredientBrand, on_delete=models.SET_NULL, blank=True,
+                        null=True, related_name='ingredient_brands')
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='ingredient', null=True, blank=True)
-    # def __unicode__(self):
-    #     return "-".join([self.type, self.brand, self.name,  "".join([str(self.quanlity_of_bottle), "mL"])])
+    def __unicode__(self):
+        return "-".join([self.type.name, self.brand.name, self.name,  "".join([str(self.quanlity_of_bottle), "mL"])])
 
 class DrinkCategory(CategoryBase):
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),null=True, blank=True, upload_to='categories')
@@ -141,12 +143,12 @@ class SeparateGlass(models.Model):
         (CONST_STATUS_ENABLED, _('On')),
         (CONST_STATUS_BLOCKED, _('Off')),
     )
-    
+
     status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
                                               default=CONST_STATUS_ENABLED)
     name = models.CharField(max_length=200)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='glass')
-    size = models.PositiveIntegerField(help_text=_('mL'))
+    size = models.PositiveIntegerField()
     unit = models.SmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_ML)  
 
     @property
@@ -181,7 +183,7 @@ class Drink(models.Model):
                         upload_to='drink', blank=True, null=True)
     numbers_bought = models.PositiveIntegerField(blank=True, null= True, default=0)
     price = models.FloatField(blank=True, null=True)
-    glass = models.ForeignKey(SeparateGlass,blank=True, null=True)
+    glass = models.ForeignKey(SeparateGlass,blank=True, null=True, related_name='drinks')
     key_word = models.CharField(max_length=200, blank=True, null=True)
     estimate_time = models.PositiveIntegerField(help_text=_('seconds'), default=0)
     is_have_ice = models.BooleanField(default=True)
