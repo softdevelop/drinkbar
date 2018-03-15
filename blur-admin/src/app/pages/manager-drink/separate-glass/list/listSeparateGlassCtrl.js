@@ -12,6 +12,7 @@
 	/** @ngInject */
 	function SeparateGlassListCtrl($scope, toastr, SeparateService, $rootScope, $location, $window, $uibModal) {
 		$rootScope.listGalss = [];
+		$scope.status = true;
 
 		// ================= get list glass ===============
 		function getList(){
@@ -41,6 +42,18 @@
             });
 		}
 
+		// =============== fucntion change status ================
+		$scope.changeStatus = function(data){
+			console.log(data)
+			data.status === 0 ? data.status = 10 : data.status = 0;
+			SeparateService.changeStatusGlass(data, $rootScope.userLogin.token).success(function(res){
+				toastr.success('Change status success!');
+				getList();
+			}).error(function(err, status, res){
+				console.log(err);
+				toastr.error('Error!');
+			})
+		}
 		
 	};
 

@@ -9,6 +9,7 @@
 				<tr>
 					<th class="table-id">#</th>
 					<th>Name</th>
+					<th>Status</th>
 					<th>Image</th>
 					<th>Size</th>
 					<th>Unit</th>
@@ -18,12 +19,24 @@
 			<tbody>
 				<tr ng-repeat="item in listGalss" class="ng-scope">
 					<td class="table-id ng-binding">{{item.id}}</td>
-					<td class="ng-binding"><a href="#/manager-drink/separate-glass/detail/{{item.id}}">{{item.name}}</a></td>
+					<td class="ng-binding">
+						<a href="#/manager-drink/separate-glass/detail/{{item.id}}">{{item.name}}</a>
+					</td>
+					<td class="ng-binding">
+						<!-- <input ng-show="item.status === 0" type="checkbox" name="status" checked>
+						<input ng-show="item.status === 10" type="checkbox" name="status"> -->
+						<label class="checkbox-inline custom-checkbox nowrap">
+							<input type="checkbox" ng-checked="item.status === 0" ng-model="status" ng-change="changeStatus(item)">
+							<span></span>
+						</label>
+					</td>
 					<td class="ng-binding">{{item.image}}</td>
 					<td class="ng-binding">{{item.size}}</td>
 					<td class="ng-binding">{{item.unit}}</td>
 					<td class="ng-binding">
-						<a href="" data-toggle="modal" ng-click="confirmDelete(item)"><i class="ion-android-delete"></i></a>
+						<a href="" data-toggle="modal" ng-click="confirmDelete(item)">
+							<i class="ion-android-delete"></i>
+						</a>
 					</td>
 				</tr>
 			</tbody>

@@ -14,7 +14,8 @@
 			name : '',
 			image : '',
 			size : null,
-			unit : 'mL'
+			unit : '0',
+			status : '0'
 		};
 		$scope.isDisable = true;
 
