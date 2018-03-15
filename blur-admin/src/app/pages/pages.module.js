@@ -22,6 +22,9 @@
 		'BlurAdmin.pages.create-separate-glass',
 		'BlurAdmin.pages.list-separate-glass',
 		'BlurAdmin.pages.detail-separate-glass',
+		'BlurAdmin.pages.list-ingredient-types',
+		'BlurAdmin.pages.create-ingredient-types',
+		'BlurAdmin.pages.detail-ingredient-types',
 	])
 		.config(routeConfig);
 
@@ -32,48 +35,62 @@
 		baSidebarServiceProvider.addStaticItem({
 			title: 'Pages',
 			icon: 'ion-document',
-			subMenu: [{
-				title: 'Sign In',
-				fixedHref: 'auth.html',
-				blank: true
-			}, {
-				title: 'Sign Up',
-				fixedHref: 'reg.html',
-				blank: true
-			},
-			{
-				title: 'User Profile',
-				stateRef: 'profile'
-			}, 
-			{
-				title: 'List User',
-				stateRef: 'list-user'
-			}, 
-			{
-				title: 'Create User',
-				stateRef: 'create-user'
-			}, 
-			{
-				title: 'Drink Types',
-				stateRef: 'drink-types'
-			}, 
-			{
-				title: 'Separate Glass Create',
-				stateRef: 'create-separate-glass'
-			}, 
-			{
-				title: 'Separate Glass List',
-				stateRef: 'list-separate-glass'
-			}, 
-			{
-				title: 'Separate Glass Detail',
-				stateRef: 'detail-separate-glass/:id'
-			}, 
-			{
-				title: '404 Page',
-				fixedHref: '404.html',
-				blank: true
-			}]
+			subMenu: [
+				{
+					title: 'Sign In',
+					fixedHref: 'auth.html',
+					blank: true
+				}, {
+					title: 'Sign Up',
+					fixedHref: 'reg.html',
+					blank: true
+				},
+				{
+					title: 'User Profile',
+					stateRef: 'profile'
+				},
+				{
+					title: 'List User',
+					stateRef: 'list-user'
+				},
+				{
+					title: 'Create User',
+					stateRef: 'create-user'
+				},
+				{
+					title: 'Drink Types',
+					stateRef: 'drink-types'
+				},
+				{
+					title: 'Separate Glass Create',
+					stateRef: 'create-separate-glass'
+				},
+				{
+					title: 'Separate Glass List',
+					stateRef: 'list-separate-glass'
+				},
+				{
+					title: 'Separate Glass Detail',
+					stateRef: 'detail-separate-glass/:id'
+				},
+				{
+					title: 'Ingredient Types List',
+					stateRef: 'list-ingredient-types'
+				},
+				{
+					title: 'Ingredient Types Create',
+					stateRef: 'create-ingredient-types'
+				},
+				{
+					title: 'Ingredient Types Detail',
+					stateRef: 'detail-ingredient-types/:id'
+				},
+				{
+					title: '404 Page',
+					fixedHref: '404.html',
+					blank: true
+				}
+			]
 		});
 		baSidebarServiceProvider.addStaticItem({
 			title: 'Menu Level 1',

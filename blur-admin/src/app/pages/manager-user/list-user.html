@@ -16,7 +16,8 @@
 		<tbody>
 			<tr ng-repeat="item in listUser" class="no-top-border">
 				<td>
-					<img ng-src="{{ item.avatar }}" width="20" height="20">
+					<img ng-if="item.avatar" ng-src="{{ item.avatar }}" width="20" height="20">
+					<img ng-if="!item.avatar" ng-src="{{ item.avatar_url }}" width="20" height="20">
 				</td>
 				<td ng-class="nowrap">
 					<a href="#/manager-user/user-detail/{{item.id}}">{{item.email}}</a>

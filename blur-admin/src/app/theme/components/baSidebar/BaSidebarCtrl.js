@@ -22,32 +22,6 @@
 				subMenu: null,
 				title: "Dashboard"
 			},
-			// {
-			// 	icon: "ion-gear-a",
-			// 	level: 0,
-			// 	name: "components",
-			// 	order: 100,
-			// 	stateRef: "components",
-			// 	subMenu: [
-			// 		{
-			// 			icon: "ion-person-add",
-			// 			level: 1,
-			// 			name: "components.mail",
-			// 			order: 0,
-			// 			stateRef: "components.mail",
-			// 			title: "Mail"
-			// 		},
-			// 		{
-			// 			icon: "ion-ios-pulse",
-			// 			level: 1,
-			// 			name: "components.timeline",
-			// 			order: 100,
-			// 			stateRef: "components.timeline",
-			// 			title: "Timeline"
-			// 		},
-			// 	],
-			// 	title: "Components"
-			// },
 			{
 				icon: "ion-person-stalker",
 				name: "manager",
@@ -114,6 +88,26 @@
 								stateRef: "list-separate-glass",
 								title: "List",
 								name: 'list-separate-glass',
+								level: 2
+							}
+						]
+					},
+					{
+						stateRef: "ingredient-types",
+						title: "Ingredient Types",
+						name: 'ingredient-types',
+						level: 1,
+						subMenu : [
+							{
+								stateRef: "create-ingredient-types",
+								title: "Create",
+								level: 2,
+								name: 'create-ingredient-types'
+							},
+							{
+								stateRef: "list-ingredient-types",
+								title: "List",
+								name: 'list-ingredient-types',
 								level: 2
 							}
 						]

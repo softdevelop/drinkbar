@@ -21,7 +21,6 @@
 			SeparateService.getGlass($scope.glass_id, $rootScope.userLogin.token).success(function(res){
 				res.status = res.status === 0 ? '0' : '10';
 				res.unit = res.unit === 0 ? '0' : '10';
-				console.log(res)
 				$scope.glass = res;
 			}).error(function(err, status, res){
 				console.log(err);
