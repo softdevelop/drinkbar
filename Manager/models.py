@@ -132,7 +132,7 @@ class Ingredient(models.Model):
     brand = models.CharField(max_length=200, blank=True, null= True)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='ingredient', null=True, blank=True)
     def __unicode__(self):
-        return "-".join([self.name, "".join([str(self.quanlity_of_bottle), "mL"])])
+        return "-".join([self.name, self.brand, "".join([str(self.quanlity_of_bottle), "mL"])])
 
 
 class Garnish(models.Model):
@@ -144,6 +144,7 @@ class Garnish(models.Model):
 class DrinkType(models.Model):
     name = models.CharField(max_length=200, unique=True)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='drink-type', null=True, blank=True)
+
     def __unicode__(self):
         return self.name
 
@@ -159,7 +160,7 @@ class Drink(models.Model):
     key_word = models.CharField(max_length=200, blank=True, null=True)
     estimate_time = models.PositiveIntegerField(help_text=_('seconds'), default=0)
     is_have_ice = models.BooleanField(default=True)
-    
+
     def __unicode__(self):
         return self.name
 
@@ -179,7 +180,7 @@ class DrinkIngredient(models.Model):
 
 class DrinkGarnish(models.Model):
     drink = models.ForeignKey(Drink, related_name='garnishes')
-    garnish = models.ForeignKey(Garnish)
+    garnish = models.ForeignKey(Garnish, related_name='drinks')
     ratio = models.FloatField(help_text=_('pcs'))
 
 

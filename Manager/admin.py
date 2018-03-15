@@ -10,6 +10,7 @@ from categories.models import Category as DefaultCategory
 
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ForeignKeyWidget
 
 # # Register your models here.
 admin.site.unregister(auth.models.Group)
@@ -46,9 +47,10 @@ class IngredientHistoryAdmin(admin.ModelAdmin):
 
     
 class IngredientAdmin(ImportExportModelAdmin,admin.ModelAdmin):
-    list_display = ('name', 'status', 'price',
+    list_display = ('name', 'brand', 'status', 'price', 
         'bottles','quanlity_of_bottle')
 
+    search_fields = ('name',)
     list_editable = ('status',)
     inlines = (IngredientHistoryInline,)
 
@@ -91,23 +93,29 @@ class DrinkGarnishInline(admin.TabularInline):
     extra = 1
 
 class DrinkAdminResource(resources.ModelResource):
+    glass = fields.Field(
+        column_name='glass',
+        attribute='glass',
+        widget=ForeignKeyWidget(SeparateGlass, 'name'))
+
+    type = fields.Field(
+        column_name='type',
+        attribute='type',
+        widget=ForeignKeyWidget(DrinkType, 'name'))
+
     class Meta:
         model = Drink
-        fields = ('id','name','type','image',
+        fields = ('id','name','image','type',
             'numbers_bought','price','glass','key_word',
             'estimate_time','is_have_ice')
 
-    def dehydrate_type(self, obj):
-        return obj.type.name
-
-    def dehydrate_glass(self, obj):
-        return obj.glass.name
 
 class DrinkAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = DrinkAdminResource
-    list_display = ('name','category','numbers_bought','price')
+    list_display = ('name','type','category','glass','numbers_bought','price')
     readonly_fields = ('numbers_bought',)
 
+    list_filter = ('type','category')
     inlines = (DrinkIngredientInline,DrinkGarnishInline)
 
 

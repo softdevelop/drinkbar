@@ -22,4 +22,6 @@ urlpatterns = [
     url(r'^ingredient/(?P<pk>[0-9]+)/$', api_views.IngredientDetail.as_view(), name="ingredient-detail"),
     url(r'^drink/ingredient/$', api_views.DrinkIngredientList.as_view(), name="drink-ingredient-list"),
     url(r'^drink/ingredient/(?P<pk>[0-9]+)/$', api_views.DrinkIngredientDetail.as_view(), name="drink-ingredient-detail"),
+    url(r'^drink/type/$', api_views.DrinkTypeList.as_view(), name="drink-type-list"),
+    url(r'^drink/type/(?P<pk>[0-9]+)/$', api_views.DrinkTypeDetail.as_view(), name="drink-type-detail"),
 ]

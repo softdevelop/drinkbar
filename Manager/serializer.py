@@ -62,19 +62,39 @@ class DrinkCategorySmallSerializer(DrinkCategorySerializer):
         fields = ('id','link','main_level','name','image','main_level') 
 
 class SeparateGlassSerializer(serializers.ModelSerializer):
+    unit = serializers.SerializerMethodField()
     class Meta:
         model = SeparateGlass
         fields = '__all__' 
 
+    def get_unit(self,obj):
+        return obj.get_unit_display()
+
 class GarnishSerializer(serializers.ModelSerializer):
     class Meta:
         model = Garnish
-        fields = '__all__' 
+        fields = '__all__'
+        
+class DrinkTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DrinkType
+        fields = '__all__'
+
+
+class IngredientSmallSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = ('name',)
 
 class DrinkIngredientSerializer(serializers.ModelSerializer):
+    ingredient = IngredientSmallSerializer(read_only=True)
+    unit = serializers.SerializerMethodField()
     class Meta:
         model = DrinkIngredient
-        fields = '__all__'
+        fields = ('ingredient','unit','ratio')
+
+    def get_unit(self,obj):
+        return obj.get_unit_display()
 
 class DrinkSerializer(serializers.ModelSerializer):
     numbers_bought = serializers.IntegerField(read_only=True)
@@ -89,7 +109,7 @@ class DrinkSerializer(serializers.ModelSerializer):
         # depth = 1
 
     def _garnishes(self, obj):
-        qs = Garnish.objects.filter(drink=obj, active=True)
+        qs = Garnish.objects.filter(drinks__drink=obj, active=True)
         serializer = GarnishSerializer(instance=qs, many=True)
         return serializer.data
 
