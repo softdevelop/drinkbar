@@ -18,6 +18,10 @@
 		'BlurAdmin.pages.profile',
 		'BlurAdmin.pages.list-user',
 		'BlurAdmin.pages.create-user',
+		'BlurAdmin.pages.drink-types',
+		'BlurAdmin.pages.create-separate-glass',
+		'BlurAdmin.pages.list-separate-glass',
+		'BlurAdmin.pages.detail-separate-glass',
 	])
 		.config(routeConfig);
 
@@ -48,6 +52,22 @@
 			{
 				title: 'Create User',
 				stateRef: 'create-user'
+			}, 
+			{
+				title: 'Drink Types',
+				stateRef: 'drink-types'
+			}, 
+			{
+				title: 'Separate Glass Create',
+				stateRef: 'create-separate-glass'
+			}, 
+			{
+				title: 'Separate Glass List',
+				stateRef: 'list-separate-glass'
+			}, 
+			{
+				title: 'Separate Glass Detail',
+				stateRef: 'detail-separate-glass/:id'
 			}, 
 			{
 				title: '404 Page',

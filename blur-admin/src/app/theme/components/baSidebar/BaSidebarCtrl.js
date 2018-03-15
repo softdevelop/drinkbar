@@ -67,49 +67,101 @@
 					}
 				],
 				title: "Manager User"
+			},
+			{
+				icon: "ion-beer",
+				name: "drink",
+				level: 0,
+				title: "Manager Drink",
+				subMenu: [
+					{
+						stateRef: "drink-categories",
+						title: "Drink Catefories",
+						level: 1,
+						name: 'drink-categories'
+					},
+					{
+						stateRef: "drink-types",
+						title: "Drink Types",
+						name: 'drink-types',
+						level: 1
+					},
+					{
+						stateRef: "drinks",
+						title: "Drinks",
+						name: 'drinks',
+						level: 1
+					},
+					{
+						stateRef: "garnishs",
+						title: "Garnishs",
+						name: 'garnishs',
+						level: 1
+					},
+					{
+						stateRef: "separate-glass",
+						title: "Separate Glass",
+						name: 'separate-glass',
+						level: 1,
+						subMenu : [
+							{
+								stateRef: "create-separate-glass",
+								title: "Create",
+								level: 2,
+								name: 'create-separate-glass'
+							},
+							{
+								stateRef: "list-separate-glass",
+								title: "List",
+								name: 'list-separate-glass',
+								level: 2
+							}
+						]
+					}
+				]
 			}
 		];
 
 		// get data drink categories 
 		var staticMenuItems = [];
 
-		function getDataDrinkCategories() {
-			BarLeftService.getDrinkCategories($rootScope.userLogin.token).success(function (res) {
-				var _drink_categories = res;
-				var _bar = [];
+		// function getDataDrinkCategories() {
+		// 	BarLeftService.getDrinkCategories($rootScope.userLogin.token).success(function (res) {
+		// 		var _drink_categories = res;
+		// 		var _bar = [];
 
-				var _menu = _drink_categories.filter(function (item) {
-					return item.level == 0;
-				});
+		// 		var _menu = _drink_categories.filter(function (item) {
+		// 			return item.level == 0;
+		// 		});
 
-				var _menu_1 = _drink_categories.filter(function (item) {
-					return item.level == 1;
-				});
+		// 		var _menu_1 = _drink_categories.filter(function (item) {
+		// 			return item.level == 1;
+		// 		});
 
-				_menu.forEach(function (item) {
-					var children = _drink_categories.filter(function (child) {
-						return child.level == 1 && child.link.indexOf(item.link) === 0;
-					});
-					item.subMenu = children.length ? children : null;
-				});
+		// 		_menu.forEach(function (item) {
+		// 			var children = _drink_categories.filter(function (child) {
+		// 				return child.level == 1 && child.link.indexOf(item.link) === 0;
+		// 			});
+		// 			item.subMenu = children.length ? children : null;
+		// 		});
 
-				_menu_1.forEach(function (item) {
-					var children = _drink_categories.filter(function (child) {
-						return child.level == 2 && child.link.indexOf(item.link) === 0;
-					});
-					item.subMenu = children.length ? children : null;
-				});
+		// 		_menu_1.forEach(function (item) {
+		// 			var children = _drink_categories.filter(function (child) {
+		// 				return child.level == 2 && child.link.indexOf(item.link) === 0;
+		// 			});
+		// 			item.subMenu = children.length ? children : null;
+		// 		});
 
-				$scope.menuItems = $scope.menuItems.concat(_menu);
-				console.log($scope.menuItems)
+		// 		$scope.menuItems = $scope.menuItems.concat(_menu);
+		// 		console.log($scope.menuItems)
 
-			}).error(function (err, status, response) {
-				console.log(response);
-				toastr.error('', 'Error!');
-			});
-		}
+		// 	}).error(function (err, status, response) {
+		// 		console.log(response);
+		// 		toastr.error('', 'Error!');
+		// 	});
+		// }
 
-		getDataDrinkCategories();
+		// getDataDrinkCategories();
 
 
 		$scope.defaultSidebarState = $scope.menuItems[0].stateRef;

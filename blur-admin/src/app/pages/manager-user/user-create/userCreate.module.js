@@ -34,7 +34,7 @@
 		// 	controller: 'ManagerUserCtrl',
 		// });
 		$stateProvider.state('create-user', {
-			url: '/create-user',
+			url: '/manager-user/create-user',
 			title: 'Create User',
 			templateUrl: 'app/pages/manager-user/user-create/user-create.html',
 			controller: 'UserCreateCtrl',

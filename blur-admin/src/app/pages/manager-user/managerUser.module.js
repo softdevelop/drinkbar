@@ -12,13 +12,13 @@
 	function routeConfig($stateProvider, $urlRouterProvider) {
 
 		$stateProvider.state('list-user', {
-			url: '/list-user',
+			url: '/manager-user/list-user',
 			title: 'List User',
 			templateUrl: 'app/pages/manager-user/list-user.html',
 			controller: 'ManagerUserCtrl',
 		});
 		$stateProvider.state('user-detail', {
-			url: '/user-detail/:id',
+			url: '/manager-user/user-detail/:id',
 			title: 'User Detail',
 			templateUrl: 'app/pages/manager-user/user-detail/user-detail.html',
 			controller: 'UserDetailCtrl',
