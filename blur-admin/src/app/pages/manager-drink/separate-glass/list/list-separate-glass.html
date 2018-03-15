@@ -1,33 +1,32 @@
 <div class="" style="margin-bottom : 15px;">
-	<a class="btn btn-primary" href="#/manager-drink/separate-glass/create" style="background: #209e91; border-color: #209e91;" >Create</a>
+	<a class="btn btn-primary" href="#/manager-drink/separate-glass/create" style="background: #209e91; border-color: #209e91;">Create</a>
 </div>
-<div class="horizontal-scroll" style="padding: 15px; background : rgba(42, 52, 51, 0.5490196078431373);">
-	<table class="table table-hover">
-		<thead>
-			<tr class="black-muted-bg">
-				<th>Name</th>
-				<th class="browser-icons">Image</th>
-				<!-- <th class="align-right">Image</th> -->
-				<th class="align-right">Size</th>
-				<th class="align-right">Unit</th>
-				<th class="align-right">Action</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="item in listGalss" class="no-top-border">
-				
-				<td ng-class="nowrap">
-					<a href="#/manager-drink/separate-glass/detail/{{item.id}}">{{item.name}}</a>
-                </td>
-                <td class="align-right">
-					<img ng-if="item.image" ng-src="{{ item.image }}" width="50" height="50">
-				</td>
-				<td class="align-right">{{item.size}}</td>
-				<td class="align-right">{{item.unit}}</td>
-				<td class="align-right btn_action">
-					<a href="" ng-click="deleteUser(item)" ><i class="ion-android-delete"></i></a>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+
+<div ba-panel="" ba-panel-title="List Separate Glass" ba-panel-class="with-scroll">
+	<div class="panel-body">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th class="table-id">#</th>
+					<th>Name</th>
+					<th>Image</th>
+					<th>Size</th>
+					<th>Unit</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in listGalss" class="ng-scope">
+					<td class="table-id ng-binding">{{item.id}}</td>
+					<td class="ng-binding"><a href="#/manager-drink/separate-glass/detail/{{item.id}}">{{item.name}}</a></td>
+					<td class="ng-binding">{{item.image}}</td>
+					<td class="ng-binding">{{item.size}}</td>
+					<td class="ng-binding">{{item.unit}}</td>
+					<td class="ng-binding">
+						<a href="" data-toggle="modal" ng-click="confirmDelete(item)"><i class="ion-android-delete"></i></a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </div>
