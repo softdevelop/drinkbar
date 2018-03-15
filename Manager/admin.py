@@ -37,6 +37,24 @@ class UserBaseAdmin(UserAdmin):
 '''
 Ingredient
 '''
+class IngredientBrandAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+    pass
+class IngredientTypeAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+    pass
+
+class IngredientAdminResource(resources.ModelResource):
+    brand = fields.Field(
+        column_name='brand',
+        attribute='brand',
+        widget=ForeignKeyWidget(IngredientBrand, 'name'))
+
+    type = fields.Field(
+        column_name='type',
+        attribute='type',
+        widget=ForeignKeyWidget(IngredientType, 'name'))
+
+    class Meta:
+        model = Ingredient
 
 class IngredientHistoryInline(admin.TabularInline):
     model = IngredientHistory
@@ -47,7 +65,8 @@ class IngredientHistoryAdmin(admin.ModelAdmin):
 
     
 class IngredientAdmin(ImportExportModelAdmin,admin.ModelAdmin):
-    list_display = ('name', 'brand', 'status', 'price', 
+    resource_class = IngredientAdminResource
+    list_display = ('type', 'brand', 'name', 'status', 'price', 
         'bottles','quanlity_of_bottle')
 
     search_fields = ('name',)
@@ -65,15 +84,15 @@ class DrinkCategoryAdmin(admin.ModelAdmin):
             'fields': ('parent', 'name','active','image',)
         }),
     )
-
     def _link(self, obj):
         link = str(obj.get_absolute_url()).title()[1:]
         return link.replace("/", ", ")
     _link.short_description = 'Full Category'
    
 class SeparateGlassAdmin(admin.ModelAdmin):
-    list_display = ('name','image','size','unit','_ml')
+    list_display = ('name','status','image','size','unit','_ml')
 
+    list_editable = ('status',)
     def _ml(self, obj):
         return obj.change_to_ml
 
@@ -107,7 +126,7 @@ class DrinkAdminResource(resources.ModelResource):
         model = Drink
         fields = ('id','name','image','type',
             'numbers_bought','price','glass','key_word',
-            'estimate_time','is_have_ice')
+            'estimate_time','is_have_ice','ingredients__ingredient',)
 
 
 class DrinkAdmin(ImportExportModelAdmin, admin.ModelAdmin):
@@ -117,6 +136,9 @@ class DrinkAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
     list_filter = ('type','category')
     inlines = (DrinkIngredientInline,DrinkGarnishInline)
+
+class DrinkIngredientAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    list_display = ('drink','ingredient','ratio','unit')
 
 
 '''
@@ -150,8 +172,11 @@ admin.site.register(UserBase, UserBaseAdmin)
 admin.site.register(DrinkType, DrinkTypeAdmin)
 admin.site.register(DrinkCategory, DrinkCategoryAdmin)
 admin.site.register(Drink,DrinkAdmin)
+admin.site.register(DrinkIngredient, DrinkIngredientAdmin)
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(IngredientHistory, IngredientHistoryAdmin)
+admin.site.register(IngredientBrand, IngredientBrandAdmin)
+admin.site.register(IngredientType, IngredientTypeAdmin)
 admin.site.register(Garnish, GarnishAdmin)
 admin.site.register(Robot, RobotAdmin)
 admin.site.register(Order, OrderAdmin)

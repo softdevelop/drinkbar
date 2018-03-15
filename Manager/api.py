@@ -176,11 +176,21 @@ class DrinkList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        ret = self.queryset.exclude(ingredients__ingredient__status=Ingredient.CONST_STATUS_BLOCKED)
+        is_admin = self.request.GET.get('admin', None)
+        if not is_admin:
+            ret = self.queryset.exclude(ingredients__ingredient__status=Ingredient.CONST_STATUS_BLOCKED)
+
         search_query = self.request.GET.get('search', None)
         if search_query:
             ret = ret.filter(name__icontains=search_query)
+            
         type = self.request.GET.get('type', None)
+        if type:
+            ret = ret.filter(type=type)
+
+        category = self.request.GET.get('category', None)
+        if category:
+            ret = ret.filter(category=category)
 
         return ret
 

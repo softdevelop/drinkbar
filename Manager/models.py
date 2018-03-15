@@ -15,36 +15,15 @@ from facepy import GraphAPI
 from datetime import datetime, date
 import api_utils
 from django.utils import timezone
-class DrinkCategory(CategoryBase):
-    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),null=True, blank=True, upload_to='categories')
+from django.conf import settings
 
-    def get_absolute_url(self):
-        """Return a path"""
-        from django.core.urlresolvers import NoReverseMatch
-
-        try:
-            prefix = reverse('categories_tree_list')
-        except NoReverseMatch:
-            prefix = '/'
-        ancestors = list(self.get_ancestors()) + [self, ]
-        return prefix + '/'.join([force_text(i.name) for i in ancestors]) + '/'
-
-    def get_main_level(self):
-        from django.core.urlresolvers import NoReverseMatch
-
-        try:
-            prefix = reverse('categories_tree_list')
-        except NoReverseMatch:
-            prefix = '/'
-        ancestors = list(self.get_ancestors()) + [self, ]
-        return prefix + '/'.join([force_text(ancestors[0].id)])
 
 class UserBase(AbstractUser):
     email = models.EmailField(_('email address'), blank=True, unique=True)
     birthday = models.DateField(null=True, blank=True)
     avatar = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='avatars',
                                  null=True, blank=True)
-    avatar_url = models.CharField(max_length=200, null=True, blank=True)
+    avatar_url = models.CharField(max_length=200, null=True, blank=True, default=settings.MEDIA_URL+'avatar_defautl.png')
     opt = models.CharField(max_length=255, null=True, blank=True)
     is_email_verified = models.BooleanField(default=False)
     fb_uid = models.CharField(max_length=200, null=True, blank=True)
@@ -91,6 +70,61 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
 
+class IngredientType(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    def __unicode__(self):
+        return self.name
+
+class IngredientBrand(models.Model):
+    name = models.CharField(max_length=200, unique=True)
+    def __unicode__(self):
+        return self.name
+        
+class Ingredient(models.Model):
+    CONST_STATUS_ENABLED = 0
+    CONST_STATUS_BLOCKED = 10
+
+    CONST_STATUSES = (
+        (CONST_STATUS_ENABLED, _('On')),
+        (CONST_STATUS_BLOCKED, _('Off')),
+    )
+
+    status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
+                                              default=CONST_STATUS_ENABLED)
+    type = models.ForeignKey(IngredientType, on_delete=models.SET_NULL, blank=True, null=True)
+    name = models.CharField(max_length=200)
+    price = models.FloatField(blank=True, null= True, default=1)
+    bottles = models.PositiveIntegerField(blank=True, null=True, default=0)
+    quanlity_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
+    brand = models.ForeignKey(IngredientBrand, on_delete=models.SET_NULL, blank=True, null=True)
+    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='ingredient', null=True, blank=True)
+    # def __unicode__(self):
+    #     return "-".join([self.type, self.brand, self.name,  "".join([str(self.quanlity_of_bottle), "mL"])])
+
+class DrinkCategory(CategoryBase):
+    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),null=True, blank=True, upload_to='categories')
+
+    def get_absolute_url(self):
+        """Return a path"""
+        from django.core.urlresolvers import NoReverseMatch
+
+        try:
+            prefix = reverse('categories_tree_list')
+        except NoReverseMatch:
+            prefix = '/'
+        ancestors = list(self.get_ancestors()) + [self, ]
+        return prefix + '/'.join([force_text(i.name) for i in ancestors]) + '/'
+
+    def get_main_level(self):
+        from django.core.urlresolvers import NoReverseMatch
+
+        try:
+            prefix = reverse('categories_tree_list')
+        except NoReverseMatch:
+            prefix = '/'
+        ancestors = list(self.get_ancestors()) + [self, ]
+        return prefix + '/'.join([force_text(ancestors[0].id)])
+
 class SeparateGlass(models.Model):
     CONST_UNIT_ML = 0
     CONST_UNIT_OZ = 10
@@ -99,6 +133,17 @@ class SeparateGlass(models.Model):
         (CONST_UNIT_ML, _('mL')),
         (CONST_UNIT_OZ, _('oz')),
     )
+
+    CONST_STATUS_ENABLED = 0
+    CONST_STATUS_BLOCKED = 10
+
+    CONST_STATUSES = (
+        (CONST_STATUS_ENABLED, _('On')),
+        (CONST_STATUS_BLOCKED, _('Off')),
+    )
+    
+    status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
+                                              default=CONST_STATUS_ENABLED)
     name = models.CharField(max_length=200)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='glass')
     size = models.PositiveIntegerField(help_text=_('mL'))
@@ -111,29 +156,7 @@ class SeparateGlass(models.Model):
         return self.size
 
     def __unicode__(self):
-        return self.name
-
-class Ingredient(models.Model):
-    CONST_STATUS_ENABLED = 0
-    CONST_STATUS_BLOCKED = 10
-
-    CONST_STATUSES = (
-        (CONST_STATUS_ENABLED, _('On')),
-        (CONST_STATUS_BLOCKED, _('Off')),
-    )
-
-    status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
-                                              default=CONST_STATUS_ENABLED)
-    type = models.CharField(max_length=200, blank=True, null= True)
-    name = models.CharField(max_length=200)
-    price = models.FloatField(blank=True, null= True, default=1)
-    bottles = models.PositiveIntegerField(blank=True, null=True, default=0)
-    quanlity_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
-    brand = models.CharField(max_length=200, blank=True, null= True)
-    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='ingredient', null=True, blank=True)
-    def __unicode__(self):
-        return "-".join([self.name, self.brand, "".join([str(self.quanlity_of_bottle), "mL"])])
-
+        return '-'.join([self.name, str(self.size)])
 
 class Garnish(models.Model):
     name = models.CharField(max_length=200, unique=True)
@@ -154,6 +177,8 @@ class Drink(models.Model):
     type = models.ForeignKey(DrinkType, blank=True, null=True)
     category = models.ForeignKey(DrinkCategory, blank=True, null=True)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='drink')
+    image_background = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), 
+                        upload_to='drink', blank=True, null=True)
     numbers_bought = models.PositiveIntegerField(blank=True, null= True, default=0)
     price = models.FloatField(blank=True, null=True)
     glass = models.ForeignKey(SeparateGlass,blank=True, null=True)
@@ -173,8 +198,8 @@ class DrinkIngredient(models.Model):
         (CONST_UNIT_ML, _('mL')),
     )
 
-    drink = models.ForeignKey(Drink, related_name='ingredients')
-    ingredient = models.ForeignKey(Ingredient)
+    drink = models.ForeignKey(Drink, related_name='ingredients', on_delete=models.SET_NULL, null=True, blank=True)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.SET_NULL, null=True, blank=True)
     ratio = models.FloatField(help_text=_('part'))
     unit = models.PositiveSmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_PART)
 
@@ -271,7 +296,7 @@ class IngredientHistory(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES)
     machine = models.ForeignKey(Robot, related_name='ingredient_histories',null=True, blank=True)
-    ingredient = models.ForeignKey(Ingredient, related_name='histories')
+    ingredient = models.ForeignKey(Ingredient, related_name='histories', on_delete=models.SET_NULL, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)
 
 @receiver(post_save, sender=IngredientHistory)
