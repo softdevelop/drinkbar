@@ -131,6 +131,26 @@
 								level: 2
 							}
 						]
+					},
+					{
+						stateRef: "garnish",
+						title: "Garnish",
+						name: 'garnish',
+						level: 1,
+						subMenu : [
+							{
+								stateRef: "create-garnish",
+								title: "Create",
+								level: 2,
+								name: 'create-garnish'
+							},
+							{
+								stateRef: "list-garnish",
+								title: "List",
+								name: 'list-garnish',
+								level: 2
+							}
+						]
 					}
 				]
 			}

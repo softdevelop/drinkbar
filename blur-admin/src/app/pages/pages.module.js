@@ -28,6 +28,9 @@
 		'BlurAdmin.pages.list-ingredient-brand',
 		'BlurAdmin.pages.create-ingredient-brand',
 		'BlurAdmin.pages.detail-ingredient-brand',
+		'BlurAdmin.pages.list-garnish',
+		'BlurAdmin.pages.create-garnish',
+		'BlurAdmin.pages.detail-garnish',
 	])
 		.config(routeConfig);
 
@@ -99,6 +102,18 @@
 				{
 					title: 'Ingredient Brand Detail',
 					stateRef: 'detail-ingredient-brand/:id'
+				},
+				{
+					title: 'Garnish List',
+					stateRef: 'list-garnish'
+				},
+				{
+					title: 'Garnish Create',
+					stateRef: 'create-garnish'
+				},
+				{
+					title: 'Garnish Detail',
+					stateRef: 'detail-garnish/:id'
 				},
 				{
 					title: '404 Page',
