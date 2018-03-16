@@ -35,7 +35,7 @@
 		
 		// =========== function create =================
 		$scope.save = function(){
-			IngredientBrandService.updateGlass($scope.data_detail, $rootScope.userLogin.token).success(function(res){
+			IngredientBrandService.updated($scope.data_detail, $rootScope.userLogin.token).success(function(res){
 				toastr.success('Updated success!');
 				setTimeout(function(){
 					res.id > 0 && ($window.location.href = '#/manager-drink/ingredient-brand/list');
