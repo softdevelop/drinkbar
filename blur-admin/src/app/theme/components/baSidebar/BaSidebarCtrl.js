@@ -111,6 +111,26 @@
 								level: 2
 							}
 						]
+					},
+					{
+						stateRef: "ingredient-brand",
+						title: "Ingredient Brand",
+						name: 'ingredient-brand',
+						level: 1,
+						subMenu : [
+							{
+								stateRef: "create-ingredient-brand",
+								title: "Create",
+								level: 2,
+								name: 'create-ingredient-brand'
+							},
+							{
+								stateRef: "list-ingredient-brand",
+								title: "List",
+								name: 'list-ingredient-brand',
+								level: 2
+							}
+						]
 					}
 				]
 			}

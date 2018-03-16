@@ -25,6 +25,9 @@
 		'BlurAdmin.pages.list-ingredient-types',
 		'BlurAdmin.pages.create-ingredient-types',
 		'BlurAdmin.pages.detail-ingredient-types',
+		'BlurAdmin.pages.list-ingredient-brand',
+		'BlurAdmin.pages.create-ingredient-brand',
+		'BlurAdmin.pages.detail-ingredient-brand',
 	])
 		.config(routeConfig);
 
@@ -84,6 +87,18 @@
 				{
 					title: 'Ingredient Types Detail',
 					stateRef: 'detail-ingredient-types/:id'
+				},
+				{
+					title: 'Ingredient Brand List',
+					stateRef: 'list-ingredient-brand'
+				},
+				{
+					title: 'Ingredient Brand Create',
+					stateRef: 'create-ingredient-brand'
+				},
+				{
+					title: 'Ingredient Brand Detail',
+					stateRef: 'detail-ingredient-brand/:id'
 				},
 				{
 					title: '404 Page',
