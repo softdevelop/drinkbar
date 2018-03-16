@@ -51,7 +51,7 @@
 		// ================= get list glass ===============
 		function getList(){
 			IngredientBrandService.getList($rootScope.userLogin.token).success(function(res){
-				$rootScope.listData = res;
+				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
 				console.log(res)
 				toastr.error('Error!');
