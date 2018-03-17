@@ -54,23 +54,38 @@
 						level: 1,
 						name: 'drink-categories'
 					},
-					{
-						stateRef: "drink-types",
-						title: "Drink Types",
-						name: 'drink-types',
-						level: 1
-					},
+					// {
+					// 	stateRef: "drink-types",
+					// 	title: "Drink Types",
+					// 	name: 'drink-types',
+					// 	level: 1
+					// },
 					{
 						stateRef: "drinks",
 						title: "Drinks",
 						name: 'drinks',
 						level: 1
 					},
+					
 					{
-						stateRef: "garnishs",
-						title: "Garnishs",
-						name: 'garnishs',
-						level: 1
+						stateRef: "drink-types",
+						title: "Drink Types",
+						name: 'drink-types',
+						level: 1,
+						subMenu : [
+							{
+								stateRef: "create-drink-types",
+								title: "Create",
+								level: 2,
+								name: 'create-drink-types'
+							},
+							{
+								stateRef: "list-drink-types",
+								title: "List",
+								name: 'list-drink-types',
+								level: 2
+							}
+						]
 					},
 					{
 						stateRef: "separate-glass",

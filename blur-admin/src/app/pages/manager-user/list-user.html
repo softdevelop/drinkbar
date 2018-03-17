@@ -1,8 +1,8 @@
-<div class="" style="margin-bottom : 15px;">
-	<a class="btn btn-primary" href="#/manager-user/create-user" style="background: #209e91; border-color: #209e91;" >Create User</a>
+<!-- <div class="" style="margin-bottom : 15px;">
+	<a class="btn btn-primary" href="#/manager-user/create-user" style="background: #209e91; border-color: #209e91;">Create User</a>
 </div>
 <div class="horizontal-scroll" style="padding: 15px; background : rgba(42, 52, 51, 0.5490196078431373);">
-	<table class="table table-hover">
+	<table class="table table-hover" st-table="listUser">
 		<thead>
 			<tr class="black-muted-bg">
 				<th class="browser-icons"></th>
@@ -26,10 +26,56 @@
 				<td class="align-right">{{item.last_name}}</td>
 				<td class="align-right">{{item.birthday | date:'MM/dd/yyyy'}}</td>
 				<td class="align-right btn_action">
-					<!-- <a href="" ng-click="openUser(item, 'lg')" ><i class="ion-compose"></i></a> -->
-					<a href="" ng-click="deleteUser(item)" ><i class="ion-android-delete"></i></a>
+					<a href="" ng-click="deleteUser(item)">
+						<i class="ion-android-delete"></i>
+					</a>
+				</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="6" class="text-center">
+					<div st-pagination="" st-items-by-page="5" st-displayed-pages="5"></div>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+</div> -->
+
+
+<div class="horizontal-scroll">
+	<table class="table table-hover" st-table="listUser">
+		<thead>
+			<tr class="sortable">
+				<th class="browser-icons"></th>
+				<th>Username / Email</th>
+				<th class="align-right">First Name</th>
+				<th class="align-right">Last Name</th>
+				<th class="align-right">Birthday</th>
+				<th class="align-right">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="item in listUser" class="editable-tr-wrap">
+				<td>
+					<img ng-if="item.avatar" ng-src="{{ item.avatar }}" width="20" height="20">
+					<img ng-if="!item.avatar" ng-src="{{ item.avatar_url }}" width="20" height="20">
+				</td>
+				<td ng-class="nowrap">
+					<a href="#/manager-user/user-detail/{{item.id}}">{{item.email}}</a>
+				</td>
+				<td class="align-right">{{item.first_name}}</td>
+				<td class="align-right">{{item.last_name}}</td>
+				<td class="align-right">{{item.birthday | date:'MM/dd/yyyy'}}</td>
+				<td class="align-right btn_action">
+					<a href="" ng-click="deleteUser(item)">
+						<i class="ion-android-delete"></i>
+					</a>
 				</td>
 			</tr>
 		</tbody>
 	</table>
+	<div class="align-right" ng-show="bigTotalItems > 10">
+		<ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" ng-click="changePage(bigCurrentPage)" class="pagination-sm" boundary-link-numbers="true"></ul>
+	</div>
 </div>

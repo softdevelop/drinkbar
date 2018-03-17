@@ -18,7 +18,7 @@
 		'BlurAdmin.pages.profile',
 		'BlurAdmin.pages.list-user',
 		'BlurAdmin.pages.create-user',
-		'BlurAdmin.pages.drink-types',
+		// 'BlurAdmin.pages.drink-types',
 		'BlurAdmin.pages.create-separate-glass',
 		'BlurAdmin.pages.list-separate-glass',
 		'BlurAdmin.pages.detail-separate-glass',
@@ -31,6 +31,9 @@
 		'BlurAdmin.pages.list-garnish',
 		'BlurAdmin.pages.create-garnish',
 		'BlurAdmin.pages.detail-garnish',
+		'BlurAdmin.pages.list-drink-types',
+		'BlurAdmin.pages.create-drink-types',
+		'BlurAdmin.pages.detail-drink-types',
 	])
 		.config(routeConfig);
 
@@ -114,6 +117,18 @@
 				{
 					title: 'Garnish Detail',
 					stateRef: 'detail-garnish/:id'
+				},
+				{
+					title: 'Drink Types List',
+					stateRef: 'list-drink-types'
+				},
+				{
+					title: 'Drink Types Create',
+					stateRef: 'create-drink-types'
+				},
+				{
+					title: 'Drink Types Detail',
+					stateRef: 'detail-drink-types/:id'
 				},
 				{
 					title: '404 Page',

@@ -5,20 +5,20 @@
 (function () {
 	'use strict';
 
-	angular.module('BlurAdmin.pages.list-ingredient-brand')
-		.controller('IngredientBrandListCtrl', IngredientBrandListCtrl)
-		.controller('IngredientBrandDeleteCtrl', IngredientBrandDeleteCtrl);
+	angular.module('BlurAdmin.pages.list-drink-types')
+		.controller('DrinkTypesListCtrl', DrinkTypesListCtrl)
+		.controller('DrinkTypesDeleteCtrl', DrinkTypesDeleteCtrl);
 
 	/** @ngInject */
-	function IngredientBrandListCtrl($scope, toastr, IngredientBrandService, $rootScope, $location, $window, $uibModal) {
-		$rootScope.listData = [];
+	function DrinkTypesListCtrl($scope, toastr, DrinkTypesService, $rootScope, $location, $window, $uibModal) {
+        $rootScope.listData = [];
 
-		$scope.maxSize = 10;
+        $scope.maxSize = 10;
         $scope.bigTotalItems = 0;
         $scope.bigCurrentPage = 1;
-		$rootScope.offset = 0;
-		
-		// ================ pagination ====================
+        $rootScope.offset = 0;
+        
+        // ================ pagination ====================
         $scope.changePage =  function(page_index){
             $rootScope.offset = page_index > 1 ? ((page_index - 1)*10) : 0;
             getAllUser();
@@ -32,7 +32,7 @@
 		
 		// ================= get list ===============
 		function getList(){
-			IngredientBrandService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
+			DrinkTypesService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
 				console.log(res)
@@ -40,11 +40,22 @@
 			});
 		}
 
-		getList();
+        getList();
+        
+        // =========== change active ==================
+        $scope.changeActive = function(data){
+            DrinkTypesService.updated(data, $rootScope.userLogin.token).success(function(res){
+                toastr.success('Updated active success!');
+                getList();
+            }).error(function(err, stt, res){
+                console.log(res);
+                toastr.error('Error!');
+            })
+        }
 
 		// =========== open modal confirm delete Glass ===========
 		$scope.confirmDelete = function(data){
-			var page = 'app/pages/manager-drink/ingredient-brand/list/confirm.html';
+			var page = 'app/pages/manager-drink/drink-types/list/confirm/index.html';
             $uibModal.open({
                 animation: true,
                 templateUrl: page,
@@ -54,20 +65,20 @@
                         return data;
                     }
                 },
-                controller: 'IngredientBrandDeleteCtrl',
+                controller: 'DrinkTypesDeleteCtrl',
             });
 		}
 
 	};
 
-	// controler IngredientBrandListDeleteCtrl
-	function IngredientBrandDeleteCtrl($scope, toastr, IngredientBrandService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
+	// controler GarnishListDeleteCtrl
+	function DrinkTypesDeleteCtrl($scope, toastr, DrinkTypesService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
 		console.log(items)
 		$scope.item_del = items;
 
 		// ================= get list glass ===============
 		function getList(){
-			IngredientBrandService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
+			DrinkTypesService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
 				console.log(res)
@@ -77,7 +88,7 @@
 
 		// =========== function delete glass =============
 		$scope.remove = function(data){
-			IngredientBrandService.removed(data.id, $rootScope.userLogin.token).success(function(res){
+			DrinkTypesService.removed(data.id, $rootScope.userLogin.token).success(function(res){
 				toastr.success('Deleted success!');
 				$uibModalInstance.close();
 				getList();
