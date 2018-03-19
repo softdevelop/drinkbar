@@ -9,7 +9,7 @@
 		.controller('IngredientCreateCtrl', IngredientCreateCtrl);
 
 	/** @ngInject */
-	function IngredientCreateCtrl($scope, IngredientService, toastr, $rootScope, $location, $window) {
+	function IngredientCreateCtrl($scope, IngredientService, toastr, $rootScope, $location, $window, $uibModal) {
         $scope.data_create = {
             name : '',
             type : null,
@@ -21,14 +21,62 @@
             image : null
         };
         $scope.types = [];
-        $scope.brands = [];
+        $rootScope.brands = [];
         $scope.isDisableBrand = true;
         $scope.isDisable = true;
+		$scope.isAddElement = {
+			type : true,
+			brand : true
+        };
+        $rootScope.create_new_type = undefined;
+        $rootScope.create_new_brand = undefined;
+
+        $rootScope.load_page = function(){
+            if($rootScope.create_new_type){
+                $scope.data_create.type = String($rootScope.create_new_type.id);
+                getListType();
+                $scope.isDisableBrand = false;
+                getListBrand($scope.data_create.type);
+            }
+            if($rootScope.create_new_brand){
+                $rootScope.brands = $rootScope.brands.push($rootScope.create_new_brand);
+                $scope.data_create.brand = String($rootScope.create_new_brand.id);
+                console.log($rootScope.brands)
+            }
+        }
+
+        
+        
+        // =============== function opne modal add type ===========
+        $scope.openAddType = function(size){
+            var page = 'app/pages/manager-ingredient/ingredient/create/type/create.html';
+
+            $uibModal.open({
+				animation: true,
+				templateUrl: page,
+                size: size,
+                controller : 'IngredientCreateNewTypeCtrl'
+			});
+        }
+        
+        // =============== function opne modal add brand ===========
+        $scope.openAddBrand = function(size){
+            var page = 'app/pages/manager-ingredient/ingredient/create/brand/create.html';
+
+            $uibModal.open({
+				animation: true,
+				templateUrl: page,
+                size: size,
+                controller : 'IngredientCreateNewBrandCtrl'
+			});
+        }
         
         // ========== function get list type ============
         function getListType(){
             IngredientService.getListType($rootScope.userLogin.token).success(function(res){
                 $scope.types = res;
+
+                $scope.types.length === 0 && ($scope.isAddElement.type = true);
             }).error(function(err, stt, res){
                 console.log(res)
                 toastr.error('Error!');
@@ -40,7 +88,9 @@
         // ============ function get list brand ===========
         function getListBrand(type){
             IngredientService.getListBrand($rootScope.userLogin.token, type).success(function(res){
-                $scope.brands = res;
+                $rootScope.brands = res;
+
+                $rootScope.brands.length === 0 && ($scope.isAddElement.brand = true);
             }).error(function(err, stt, res){
                 console.log(res)
                 toastr.error('Error!');

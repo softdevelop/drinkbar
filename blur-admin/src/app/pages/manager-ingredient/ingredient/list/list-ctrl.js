@@ -27,7 +27,7 @@
 		// ================= get list ===============
 		function getList(){
 			IngredientService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
-                $rootScope.listData = res.results;
+				$rootScope.listData = res.results;
                 $scope.bigTotalItems = res.count;
 			}).error(function(err, status, res){
 				console.log(res)
