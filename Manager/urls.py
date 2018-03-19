@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 import models
 import api as api_views
+import views
 from Manager import views
 
 urlpatterns = [
@@ -10,6 +11,9 @@ urlpatterns = [
     url(r'^user/(?P<pk>[0-9]+)/$', api_views.UserDetail.as_view(), name='user-detail'), 
     url(r'^user/change/password/$', api_views.UserChangePassword.as_view(), name='user-change-password'), 
     url(r'^user/forget/password/$', api_views.UserForgetPassword.as_view(), name='user-forget-password'), 
+    url(r'^user/send/email/$', api_views.SendVerificationEmail.as_view(), name='user-send-verify-email'), 
+    url(r'^user/add/tab/$', api_views.AddToTab.as_view(), name='user-add-tab'), 
+    url(r'^user/me/tab/$', api_views.MyTab.as_view(), name='user-me-tab'), 
 
     url(r'^drink/$',api_views.DrinkList.as_view(), name='drink-list'),
     url(r'^drink/(?P<pk>[0-9]+)/$',api_views.DrinkDetial.as_view(), name='drink-detail'),
@@ -17,8 +21,6 @@ urlpatterns = [
     url(r'^drink/category/(?P<pk>[0-9]+)/$',api_views.DrinkCategoryDetail.as_view(), name='drink-categories-detail'),
     url(r'^drink/ingredient/$', api_views.DrinkIngredientList.as_view(), name="drink-ingredient-list"),
     url(r'^drink/ingredient/(?P<pk>[0-9]+)/$', api_views.DrinkIngredientDetail.as_view(), name="drink-ingredient-detail"),
-    url(r'^drink/type/$', api_views.DrinkTypeList.as_view(), name="drink-type-list"),
-    url(r'^drink/type/(?P<pk>[0-9]+)/$', api_views.DrinkTypeDetail.as_view(), name="drink-type-detail"),
     url(r'^glass/$',api_views.SeparateGlassList.as_view(), name='glass-list'),
     url(r'^glass/(?P<pk>[0-9]+)/$',api_views.SeparateGlassDetail.as_view(), name='glass-detail'),
 

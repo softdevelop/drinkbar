@@ -14,6 +14,8 @@ from django.urls import reverse
 from facepy import GraphAPI
 from datetime import datetime, date
 import api_utils
+import facebook
+import urllib
 from django.utils import timezone
 from django.conf import settings
 
@@ -36,13 +38,20 @@ class UserBase(AbstractUser):
     @property
     def token(self):
         return self.auth_token.key
+    @property
+    def qr_code(self):
+        datetime_format = '%Y-%m-%d %H:%M:%S'
+        today = (self.last_login).strftime(datetime_format)
+        data = u'User:{} {} Login time:{}'.format(self.first_name, self.last_name, today)
+        data = urllib.quote_plus(data)
+        return u'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={}'.format(data)
 
     @classmethod
     def get_or_create_user_from_facebook(self, fb_token, should_create=True):
         new_user = UserBase()
         try:
-            graph = GraphAPI(fb_token)
-            user = graph.get("me?fields=id,email,first_name,last_name,birthday")
+            graph = facebook.GraphAPI(access_token=fb_token, version="2.11")
+            user = graph.get_object(id="me",fields="email, first_name, last_name, birthday")
 
             fb_uid = user.get('id')
             email = user.get('email')
@@ -51,15 +60,18 @@ class UserBase(AbstractUser):
             birthday = user.get('birthday', '')
             birthday = datetime.strptime(birthday, '%m/%d/%Y')
             avatar_url = "http://graph.facebook.com/%s/picture?width=500&height=500&type=square" % fb_uid
-            new_user = UserBase.objects.get(username=email,fb_uid=fb_uid)
+            new_user = self.objects.filter(username=email,fb_uid=fb_uid).first()
             if not new_user:
-                new_user = UserBase(username=email, email=email,fb_uid=fb_uid,
-                            first_name=first_name,last_name=last_name,
+                new_user = UserBase(username=email, email=email, fb_uid=fb_uid,
+                            first_name=first_name,last_name=last_name, is_email_verified=True,
                             birthday=birthday.date(),avatar_url=avatar_url,
                             fb_access_token=unicode(fb_token).encode('utf-8'))
                 new_user.save()
-            # ret = self.update_user_data(ret, username, email, first_name, last_name,
-                                        # gender, relationship_status, about, dob, avatar_url)
+            else:
+                # Update user information if it was changed.
+                self.objects.filter(username=email,fb_uid=fb_uid).update(first_name=first_name,
+                            last_name=last_name, birthday=birthday.date(),
+                            fb_access_token=unicode(fb_token).encode('utf-8'))
         except Exception as e:
             print ">>> get_or_create_user_from_facebook ::", e
             pass
@@ -95,7 +107,7 @@ class Ingredient(models.Model):
                             null=True, related_name='ingredient_types')
     name = models.CharField(max_length=200)
     price = models.FloatField(blank=True, null= True, default=1)
-    bottles = models.PositiveIntegerField(blank=True, null=True, default=0)
+    bottles = models.PositiveIntegerField(_('Bottles in Storage'), blank=True, null=True, default=0)
     quanlity_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
     brand = models.ForeignKey(IngredientBrand, on_delete=models.SET_NULL, blank=True,
                         null=True, related_name='ingredient_brands')
@@ -166,19 +178,15 @@ class Garnish(models.Model):
     def __unicode__(self):
         return self.name
 
-class DrinkType(models.Model):
-    name = models.CharField(max_length=200, unique=True)
-    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='drink-type', null=True, blank=True)
-
-    def __unicode__(self):
-        return self.name
+def get_admin():
+    return UserBase.objects.filter(is_superuser=True).first().id
 
 class Drink(models.Model):
 
     name = models.CharField(max_length=200)
-    type = models.ForeignKey(DrinkType, blank=True, null=True)
-    category = models.ForeignKey(DrinkCategory, blank=True, null=True)
-    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='drink')
+    category = models.ManyToManyField(DrinkCategory)
+    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),
+                        blank=True, null=True, upload_to='drink')
     image_background = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), 
                         upload_to='drink', blank=True, null=True)
     numbers_bought = models.PositiveIntegerField(blank=True, null= True, default=0)
@@ -187,7 +195,8 @@ class Drink(models.Model):
     key_word = models.CharField(max_length=200, blank=True, null=True)
     estimate_time = models.PositiveIntegerField(help_text=_('seconds'), default=0)
     is_have_ice = models.BooleanField(default=True)
-
+    creator = models.ForeignKey(UserBase,related_name='creative_drinks', default=get_admin)
+    creation_date = models.DateTimeField(auto_now_add=True)
     def __unicode__(self):
         return self.name
 
@@ -261,7 +270,7 @@ class Tab(models.Model):
                                         default=CONST_100_ICE)
     garnish = models.ManyToManyField(Garnish, blank =True)
     quantity = models.PositiveIntegerField(blank=True, null= True, default=0)
-    order = models.ForeignKey(Order, related_name='products')
+    order = models.ForeignKey(Order, related_name='products',blank=True, null= True,)
 
 class Robot(models.Model):
     STATUS_ENABLE = 0
@@ -283,15 +292,16 @@ class RobotIngredient(models.Model):
 
     robot = models.ForeignKey(Robot, related_name='ingredients')
     ingredient = models.ForeignKey(Ingredient)
+    place_number = models.PositiveSmallIntegerField(null=True, blank=True, unique=True)
     remain_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
-
+    last_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
 
 class IngredientHistory(models.Model):
     CONST_STATUS_IMPORT= 0
     CONST_STATUS_EXPORT = 10
 
     CONST_STATUSES = (
-        (CONST_STATUS_IMPORT, _('Import')),
+        (CONST_STATUS_IMPORT, _('Import to storage')),
         (CONST_STATUS_EXPORT, _('Export to machine')),
     )
 
@@ -307,7 +317,12 @@ def create_ingredient_history(sender, instance=None, created=False, **kwargs):
         if instance.status is IngredientHistory.CONST_STATUS_IMPORT:
             instance.ingredient.bottles += instance.quantity
         else:
+            if instance.ingredient.bottles<instance.quantity:
+                raise api_utils.BadRequest('OVER THE BOTTEL IN STORAGE')
             instance.ingredient.bottles -= instance.quantity
+            instance.machine.ingredients.filter(ingredient=instance.ingredient)\
+                .update(last_bottle=F('remain_of_bottle'), remain_of_bottle=instance.ingredient.quanlity_of_bottle)
+
         instance.ingredient.save()
     '''
         Not suppor update, change data, quantity, 
@@ -320,6 +335,8 @@ def delete_ingredient_history(sender, instance=None, created=False, **kwargs):
         instance.ingredient.bottles -= instance.quantity
     else:
         instance.ingredient.bottles += instance.quantity
+        instance.machine.ingredients.filter(ingredient=instance.ingredient)\
+                .update(remain_of_bottle=F('last_bottle'))
     instance.ingredient.save()
 
 

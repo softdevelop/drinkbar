@@ -5,9 +5,7 @@ from email.MIMEImage import MIMEImage
 from django.conf import settings
 from django.core import mail
 
-
-
-from mailin import Mailin
+# from mailin import Mailin
 import base64 
 
 def send_pushnotifs(channels, message, auto_increment=True):
@@ -80,7 +78,7 @@ def send_email(subject, html_content, emails, from_email=None):
     # msg_img = MIMEImage(fp.read())
     # fp.close()
     # msg_img.add_header('Content-ID', '<emailheader.png>')
-    msg.attach(msg_img)
+    # msg.attach(msg_img)
 
     print msg.send()
 

@@ -19,10 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from Manager import urls as api_urls
+from Manager import views
 from django.views.generic import TemplateView
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(api_urls)),
+    url(r'^verify/email/$', views.VerificationEmail.as_view(), name='user-verify-email'), 
+
 ]
 
 if settings.DEBUG:

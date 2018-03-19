@@ -74,7 +74,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'PAGINATE_BY': 10,  # Default to 10
     'PAGINATE_BY_PARAM': 'page_size',  # Allow client to override, using `?page_size=xxx`.
-    'MAX_PAGINATE_BY': 100  # Maximum limit allowed when using `?page_size=xxx`.
+    'MAX_PAGINATE_BY': 1000  # Maximum limit allowed when using `?page_size=xxx`.
 }
 
 ROOT_URLCONF = 'drinkbar.urls'
@@ -147,24 +147,23 @@ USE_L10N = True
 USE_TZ = True
 
 
-# # send mail
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = 'user123example@gmail.com'
-# EMAIL_HOST_PASSWORD = 'A123123Z'
-# DEFAULT_FROM_EMAIL = 'user123example@gmail.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# DEFAULT_FROM_EMAIL='user123example@gmail.com'
+# send mail
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'user123example@gmail.com'
+EMAIL_HOST_PASSWORD = 'A123123Z'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_FROM='user123example@gmail.com'
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-SITE_URL = "http://hiefficiencybar.com/"
+SITE_URL = "http://hiefficiencybar.com"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'blur-admin/release'),]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = SITE_URL+"static/" 
+STATIC_URL = SITE_URL+"/static/" 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = SITE_URL+"media/"
+MEDIA_URL = SITE_URL+"/media/"
 
 
 try:

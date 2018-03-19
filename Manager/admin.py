@@ -10,11 +10,41 @@ from categories.models import Category as DefaultCategory
 
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
-from import_export.widgets import ForeignKeyWidget
+from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
 # # Register your models here.
 admin.site.unregister(auth.models.Group)
 admin.site.unregister(DefaultCategory)
+
+
+'''
+Order
+'''
+class TabInline(admin.TabularInline):
+    model = Tab
+    extra = 1
+
+class TabAdmin(admin.ModelAdmin):
+    list_display = ('user','drink', 'ice', 'quantity', 'order')
+
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('id','amount')
+    readonly_fields = ('amount',)
+    inlines = (TabInline,)
+
+# class OrderInline(admin.TabularInline):
+#     model = Order
+#     extra = 1
+#     fields= ('_id_order','creation_date','amount','status','line_taking')
+#     readonly_fields = ('creation_date',)
+#     def has_add_permission(self, request, obj=None):
+#         return False
+
+#     can_delete = False
+#     def _id_order(self, obj):
+#         return '<a href="{}" target="blank">{}</a>'.format(obj.url_store_platform,obj.url_store_platform)
+#     _id_order.allow_tags = True
+
 
 class UserBaseAdmin(UserAdmin):
     list_display = ('id','email','first_name','last_name','birthday')
@@ -32,13 +62,13 @@ class UserBaseAdmin(UserAdmin):
         )
 
     readonly_fields = ('fb_uid',)
-
+    # inlines = (OrderInline,)
 
 '''
 Ingredient
 '''
 class IngredientBrandAdmin(ImportExportModelAdmin,admin.ModelAdmin):
-    pass
+    search_fields= ('name',)
 class IngredientTypeAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     pass
 
@@ -77,7 +107,16 @@ class IngredientAdmin(ImportExportModelAdmin,admin.ModelAdmin):
 '''
 Drink 
 '''
-class DrinkCategoryAdmin(admin.ModelAdmin):
+class DrinkCategoryResource(resources.ModelResource):
+    parent = fields.Field(
+        column_name='parent',
+        attribute='parent',
+        widget=ForeignKeyWidget(DrinkCategory, field='name'))
+
+    class Meta:
+        model = DrinkCategory
+
+class DrinkCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('id','name','_link','active')
     fieldsets = (
         (None, {
@@ -100,9 +139,6 @@ class GarnishAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('id','name','active')
     list_editable = ('active',)
 
-class DrinkTypeAdmin(ImportExportModelAdmin, admin.ModelAdmin):
-    list_display = ('id','name','image')
-
 class DrinkIngredientInline(admin.TabularInline):
     model = DrinkIngredient
     extra = 1
@@ -117,41 +153,31 @@ class DrinkAdminResource(resources.ModelResource):
         attribute='glass',
         widget=ForeignKeyWidget(SeparateGlass, 'name'))
 
-    type = fields.Field(
-        column_name='type',
-        attribute='type',
-        widget=ForeignKeyWidget(DrinkType, 'name'))
+    category = fields.Field(
+        column_name='category',
+        attribute='category',
+        widget=ManyToManyWidget(DrinkCategory, field='name'))
 
     class Meta:
         model = Drink
-        fields = ('id','name','image','type',
+        fields = ('id','name','image','category',
             'numbers_bought','price','glass','key_word',
-            'estimate_time','is_have_ice','ingredients__ingredient',)
+            'estimate_time','is_have_ice')
 
 
 class DrinkAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = DrinkAdminResource
-    list_display = ('name','type','category','glass','numbers_bought','price')
+    list_display = ('name','glass','numbers_bought','price')
     readonly_fields = ('numbers_bought',)
 
-    list_filter = ('type','category')
+    filter_horizontal = ('category',)
+
+    list_filter = ('category',)
     inlines = (DrinkIngredientInline,DrinkGarnishInline)
 
 class DrinkIngredientAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_display = ('drink','ingredient','ratio','unit')
 
-
-'''
-Order
-'''
-class TabInline(admin.TabularInline):
-    model = Tab
-    extra = 1
-
-class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id','amount')
-    readonly_fields = ('amount',)
-    inlines = (TabInline,)
 
 
 '''
@@ -160,7 +186,7 @@ Robot
 class RobotIngredientInline(admin.TabularInline):
     model = RobotIngredient
     extra = 1
-    max_num = 60
+    max_num = 70
     readonly_fields = ('remain_of_bottle',)
 
 class RobotAdmin(admin.ModelAdmin):
@@ -168,8 +194,10 @@ class RobotAdmin(admin.ModelAdmin):
     list_editable = ('status',)
     inlines = (RobotIngredientInline,)
 
+    def has_add_permission(self, obj):
+        return False
+
 admin.site.register(UserBase, UserBaseAdmin)
-admin.site.register(DrinkType, DrinkTypeAdmin)
 admin.site.register(DrinkCategory, DrinkCategoryAdmin)
 admin.site.register(Drink,DrinkAdmin)
 admin.site.register(DrinkIngredient, DrinkIngredientAdmin)
@@ -181,3 +209,4 @@ admin.site.register(Garnish, GarnishAdmin)
 admin.site.register(Robot, RobotAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(SeparateGlass, SeparateGlassAdmin)
+admin.site.register(Tab, TabAdmin)

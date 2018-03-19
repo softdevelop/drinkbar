@@ -9,12 +9,19 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from serializer import *
 from models import *
+import tasks
 from django.conf import settings
 from Manager.models import UserBase
 from django.core.mail import send_mail, EmailMessage
 from django.http import HttpResponse, JsonResponse
+from django.template.loader import render_to_string
 from datetime import datetime, timedelta
 import hashlib
+
+'''
+User API:
+'''
+
 class UserSignUp(generics.CreateAPIView):
     serializer_class = UserSignupSerializer
 
@@ -64,15 +71,15 @@ class UserProfile(generics.GenericAPIView):
         #     user = UserBase.get_or_create_user_from_googleplus(gp_token, should_create=False)
         elif email and password:
             user = authenticate(username=email, password=password)
-
         if not user:
             return Response({'user': 'INVALID_PROFILE'}, status=status.HTTP_400_BAD_REQUEST)
 
         # if request.session.get('_auth_user_id', 0) != user.id:
         #     # create logged in session for the user if not available
         #     utils.login_user(request, user)
-
         if type(user) == UserBase:
+            user.last_login = datetime.now()
+            user.save()
             serializer = self.get_serializer(user)
             return Response(serializer.data)
         return Response({'user': 'INVALID_PROFILE'}, status=status.HTTP_400_BAD_REQUEST)
@@ -121,16 +128,13 @@ class UserForgetPassword(APIView):
                 user.opt = self.get_reset_code(email)
                 user.save()
                 reset_code = user.opt[:8]
-                print reset_code
-                # subject = 'Hi-Effeciency - Reset password requested'
-                # html_content = render_to_string('email/password_reset.html', {'reset_code':reset_code})
-
-                # tasks.send_email(subject, html_content, [email])
+                subject = 'Hi-Effeciency - Reset password requested'
+                html_content = render_to_string('email/password_reset.html', {'user':user.full_name, 'reset_code':reset_code})
+                tasks.send_email(subject, html_content, [email])
             else:
                 raise api_utils.BadRequest('EMAIL_NOT_EXISTS')
 
-            return Response({'message': 'An email was sent to your email. '
-                                        'Please click on the link in it to verify your email address.'
+            return Response({'message': 'A code for verify was sent to your email. '
                             , 'success': True}, status=status.HTTP_200_OK)
         else:
             password = self.request.data.get('password')
@@ -159,6 +163,52 @@ class UserForgetPassword(APIView):
             'error': 'Error! Can\'t start forget password process',
             'success': False
         }, status=status.HTTP_400_BAD_REQUEST)
+
+class SendVerificationEmail(APIView):
+
+    def get_verification_code(self, user):
+        code = '{}++{}++{}'.format(settings.SECRET_KEY, user.id, user.email)
+        return '{}_{}'.format(hashlib.sha1(code).hexdigest(),user.id)
+
+    def post(self, request, format=None):
+        email = self.request.data.get('email')
+        user = UserBase.objects.filter(email=email).first()
+        if not user:
+            return Response({
+                'error': 'Error! Can\'t start email verification process',
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        verification_link = settings.SITE_URL +reverse('user-verify-email')+'?code={}'.format(self.get_verification_code(user))
+
+        subject = 'Hi-Efficiency - Validate your account first'
+        html_content = render_to_string('email/verify_email.html', {'verification_link':verification_link})
+        tasks.send_email(subject, html_content, [user.email])
+
+        return Response({'message': 'An email was sent to your email. '
+                                    'Please click on the link in it to verify your email address.'},status=status.HTTP_202_ACCEPTED)
+class AddToTab(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = AddToTabSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.validated_data['user']=request.user
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class MyTab(generics.ListAPIView):
+    queryset = Tab
+    permission_classes = [IsAuthenticated]
+    serializer_class = AddToTabSerializer
+
+    def get_queryset(self):
+        return Tab.objects.filter(user=self.request.user)
+
+'''
+Drink API:
+'''
 
 class DrinkCategoryList(generics.ListCreateAPIView):
     queryset = DrinkCategory.objects.all()
@@ -233,6 +283,10 @@ class GarnishDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = GarnishSerializer
     permission_classes = [IsAuthenticated]
 
+'''
+Ingredient API
+'''
+
 class IngredientList(generics.ListCreateAPIView):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
@@ -259,25 +313,6 @@ class IngredientDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = IngredientSerializer
     permission_classes = [IsAuthenticated]
 
-class DrinkIngredientList(generics.ListCreateAPIView):
-    queryset = DrinkIngredient.objects.all()
-    serializer_class = DrinkIngredientSerializer
-    permission_classes = [IsAuthenticated]
-
-class DrinkIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = DrinkIngredient
-    serializer_class = DrinkIngredientSerializer
-    permission_classes = [IsAuthenticated]
-
-class DrinkTypeList(generics.ListCreateAPIView):
-    queryset = DrinkType.objects.all()
-    serializer_class = DrinkTypeSerializer
-    permission_classes = [IsAuthenticated]
-
-class DrinkTypeDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = DrinkType
-    serializer_class = DrinkTypeSerializer
-    permission_classes = [IsAuthenticated]
 class IngredientTypeList(generics.ListCreateAPIView):
     queryset = IngredientType.objects.all()
     serializer_class = IngredientTypeSerializer
@@ -290,21 +325,29 @@ class IngredientTypeDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 class IngredientBrandList(generics.ListCreateAPIView):
-    queryset = IngredientBrand.objects.all()
+    queryset = IngredientBrand.objects.all().order_by('id')
     serializer_class = IngredientTypeSerializer
     permission_classes = [IsAuthenticated]
+    paginator = None
 
     def get_queryset(self):
         ret = self.queryset.all()
         type = self.request.GET.get('type', None)
         if type:
             ret = ret.filter(ingredient_brands__type=type)
-            return self.paginate_queryset(ret)
         return ret
-
     
 class IngredientBrandDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = IngredientBrand
     serializer_class = IngredientBrandSerializer
     permission_classes = [IsAuthenticated]
 
+class DrinkIngredientList(generics.ListCreateAPIView):
+    queryset = DrinkIngredient.objects.all()
+    serializer_class = DrinkIngredientSerializer
+    permission_classes = [IsAuthenticated]
+
+class DrinkIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = DrinkIngredient
+    serializer_class = DrinkIngredientSerializer
+    permission_classes = [IsAuthenticated]

@@ -20,27 +20,34 @@ class UserSignupSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     avatar_url = serializers.CharField(read_only=True)
+    qr_code = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = UserBase
         fields = ('id','username','password','email','avatar','birthday','avatar_url', 'first_name','last_name', 'fb_uid', 'opt', 
-            'is_email_verified', 'avatar_url', 'is_active', 'is_staff', 'is_superuser', 'last_login', 'date_joined')
+            'is_email_verified', 'avatar_url', 'is_active', 'is_staff', 
+            'is_superuser', 'last_login', 'date_joined','qr_code')
         extra_kwargs = {'password': {'write_only': True},
                         'username': {'write_only': True},}
+
+    def get_qr_code(self,obj):
+        return obj.qr_code
 
     def create(self, validated_data):
         if validated_data.has_key('password'):
             user = UserBase()
             user.set_password(validated_data['password'])
             validated_data['password'] = user.password
+        validated_data['is_active'] = True
         validated_data['is_staff'] = True
         validated_data['is_superuser'] = True
         return super(UserSerializer, self).create(validated_data)
 
 class UserWithTokenSerializer(UserSerializer):
     token = serializers.CharField(read_only=True)
-
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ('token',)
+
 
 class DrinkCategorySerializer(serializers.ModelSerializer):
     link = serializers.SerializerMethodField('_name')
@@ -74,12 +81,6 @@ class GarnishSerializer(serializers.ModelSerializer):
     class Meta:
         model = Garnish
         fields = '__all__'
-
-class DrinkTypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = DrinkType
-        fields = '__all__'
-
 
 class IngredientSmallSerializer(serializers.ModelSerializer):
     class Meta:
@@ -126,4 +127,10 @@ class IngredientTypeSerializer(serializers.ModelSerializer):
 class IngredientBrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientBrand
+        fields = '__all__'
+
+class AddToTabSerializer(serializers.ModelSerializer):
+    user = UserSerializer(required=False, read_only=True)
+    class Meta:
+        model = Tab
         fields = '__all__'
