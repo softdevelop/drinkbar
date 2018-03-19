@@ -12,6 +12,7 @@ body a {
   color: $activelink;
   text-decoration: none !important;
   transition: color 0.2s ease;
+  color: #4ad8c9;
   &:hover {
     color: $hoverlink;
   }

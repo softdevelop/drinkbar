@@ -18,10 +18,31 @@
 		'BlurAdmin.pages.profile',
 		'BlurAdmin.pages.list-user',
 		'BlurAdmin.pages.create-user',
-		'BlurAdmin.pages.drink-types',
+		// ============= separate ===========
 		'BlurAdmin.pages.create-separate-glass',
 		'BlurAdmin.pages.list-separate-glass',
 		'BlurAdmin.pages.detail-separate-glass',
+		// ============ ingredient ==========
+		// -------- ingredient types --------
+		'BlurAdmin.pages.list-ingredient-types',
+		'BlurAdmin.pages.create-ingredient-types',
+		'BlurAdmin.pages.detail-ingredient-types',
+		// ------- ingredient brand ---------
+		'BlurAdmin.pages.list-ingredient-brand',
+		'BlurAdmin.pages.create-ingredient-brand',
+		'BlurAdmin.pages.detail-ingredient-brand',
+		// ------ ingredient -----------
+		'BlurAdmin.pages.list-ingredient',
+		'BlurAdmin.pages.create-ingredient',
+		'BlurAdmin.pages.detail-ingredient',
+		// ============ garnish ==============
+		'BlurAdmin.pages.list-garnish',
+		'BlurAdmin.pages.create-garnish',
+		'BlurAdmin.pages.detail-garnish',
+		// ============ drink ================
+		'BlurAdmin.pages.list-drink-types',
+		'BlurAdmin.pages.create-drink-types',
+		'BlurAdmin.pages.detail-drink-types',
 	])
 		.config(routeConfig);
 
@@ -32,48 +53,111 @@
 		baSidebarServiceProvider.addStaticItem({
 			title: 'Pages',
 			icon: 'ion-document',
-			subMenu: [{
-				title: 'Sign In',
-				fixedHref: 'auth.html',
-				blank: true
-			}, {
-				title: 'Sign Up',
-				fixedHref: 'reg.html',
-				blank: true
-			},
-			{
-				title: 'User Profile',
-				stateRef: 'profile'
-			}, 
-			{
-				title: 'List User',
-				stateRef: 'list-user'
-			}, 
-			{
-				title: 'Create User',
-				stateRef: 'create-user'
-			}, 
-			{
-				title: 'Drink Types',
-				stateRef: 'drink-types'
-			}, 
-			{
-				title: 'Separate Glass Create',
-				stateRef: 'create-separate-glass'
-			}, 
-			{
-				title: 'Separate Glass List',
-				stateRef: 'list-separate-glass'
-			}, 
-			{
-				title: 'Separate Glass Detail',
-				stateRef: 'detail-separate-glass/:id'
-			}, 
-			{
-				title: '404 Page',
-				fixedHref: '404.html',
-				blank: true
-			}]
+			subMenu: [
+				{
+					title: 'Sign In',
+					fixedHref: 'auth.html',
+					blank: true
+				}, {
+					title: 'Sign Up',
+					fixedHref: 'reg.html',
+					blank: true
+				},
+				// ============== user ===============
+				{
+					title: 'User Profile',
+					stateRef: 'profile'
+				},
+				{
+					title: 'List User',
+					stateRef: 'list-user'
+				},
+				{
+					title: 'Create User',
+					stateRef: 'create-user'
+				},
+				// ============== separate ============
+				{
+					title: 'Separate Glass Create',
+					stateRef: 'create-separate-glass'
+				},
+				{
+					title: 'Separate Glass List',
+					stateRef: 'list-separate-glass'
+				},
+				{
+					title: 'Separate Glass Detail',
+					stateRef: 'detail-separate-glass/:id'
+				},
+				// ========= ingredient ==============
+				{
+					title: 'Ingredient Types List',
+					stateRef: 'list-ingredient-types'
+				},
+				{
+					title: 'Ingredient Types Create',
+					stateRef: 'create-ingredient-types'
+				},
+				{
+					title: 'Ingredient Types Detail',
+					stateRef: 'detail-ingredient-types/:id'
+				},
+				{
+					title: 'Ingredient Brand List',
+					stateRef: 'list-ingredient-brand'
+				},
+				{
+					title: 'Ingredient Brand Create',
+					stateRef: 'create-ingredient-brand'
+				},
+				{
+					title: 'Ingredient Brand Detail',
+					stateRef: 'detail-ingredient-brand/:id'
+				},
+				{
+					title: 'Ingredient List',
+					stateRef: 'list-ingredient'
+				},
+				{
+					title: 'Ingredient Create',
+					stateRef: 'create-ingredient'
+				},
+				{
+					title: 'Ingredient Detail',
+					stateRef: 'detail-ingredient/:id'
+				},
+				// ============ Garnish ===============
+				{
+					title: 'Garnish List',
+					stateRef: 'list-garnish'
+				},
+				{
+					title: 'Garnish Create',
+					stateRef: 'create-garnish'
+				},
+				{
+					title: 'Garnish Detail',
+					stateRef: 'detail-garnish/:id'
+				},
+				// ============= Drink ===============
+				{
+					title: 'Drink Types List',
+					stateRef: 'list-drink-types'
+				},
+				{
+					title: 'Drink Types Create',
+					stateRef: 'create-drink-types'
+				},
+				{
+					title: 'Drink Types Detail',
+					stateRef: 'detail-drink-types/:id'
+				},
+				{
+					title: '404 Page',
+					fixedHref: '404.html',
+					blank: true
+				}
+			]
 		});
 		baSidebarServiceProvider.addStaticItem({
 			title: 'Menu Level 1',

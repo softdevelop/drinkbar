@@ -44,7 +44,6 @@
 
 		// =============== fucntion change status ================
 		$scope.changeStatus = function(data){
-			console.log(data)
 			data.status === 0 ? data.status = 10 : data.status = 0;
 			SeparateService.changeStatusGlass(data, $rootScope.userLogin.token).success(function(res){
 				toastr.success('Change status success!');
@@ -57,6 +56,9 @@
 		
 	};
 
+	// ======================================================
+	// ========== ************************ ==================
+	// ======================================================
 	function SeparateGlassListDeleteCtrl($scope, toastr, SeparateService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
 		console.log(items)
 		$scope.item_del = items;

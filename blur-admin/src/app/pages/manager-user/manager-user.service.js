@@ -3,9 +3,9 @@
     angular.module('BlurAdmin')
     .factory('ManagerUserService', function($http, AppSetting){
         return {
-            getAllUser: function(token) {
+            getAllUser: function(token, offset) {
                 // return $http.get('http://petshopro.giinger.com/api/users/');
-                return $http.get(AppSetting.BASE_URL + '/api/user/', {
+                return $http.get(AppSetting.BASE_URL + '/api/user/?limit=10&offset=' + offset, {
                     headers: {
                         'Content-Type': undefined,
                         'Authorization': 'Token ' + token
