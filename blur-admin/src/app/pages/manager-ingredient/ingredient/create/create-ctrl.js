@@ -39,10 +39,15 @@
                 getListBrand($scope.data_create.type);
             }
             if($rootScope.create_new_brand){
-                $rootScope.brands = $rootScope.brands.push($rootScope.create_new_brand);
-                $scope.data_create.brand = String($rootScope.create_new_brand.id);
+                var _arr = [
+                    $rootScope.create_new_brand
+                ];
+                console.log(_arr)
+                $rootScope.brands = _arr;
                 console.log($rootScope.brands)
+                $scope.data_create.brand = String($rootScope.create_new_brand.id);
             }
+
         }
 
         

@@ -78,13 +78,30 @@
                     });
                 },
                 getListBrand : function(token, type){
-                    var offset = 0;
-                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/brand/?type=' + type, {
+                    if(type){
+                        return $http.get(AppSetting.BASE_URL + '/api/ingredient/brand/?type=' + type, {
+                            headers: {
+                                'Content-Type': undefined,
+                                'Authorization': 'Token ' + token
+                            }
+                        });
+                    } else{
+                        return $http.get(AppSetting.BASE_URL + '/api/ingredient/brand/', {
+                            headers: {
+                                'Content-Type': undefined,
+                                'Authorization': 'Token ' + token
+                            }
+                        });
+                    }
+                    
+                },
+                filterData : function(data, token){
+                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/?type=' + data.filter_type + '&brand=' + data.filter_brand, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
                         }
-                    });
+                    })
                 }
             }
         });

@@ -4,19 +4,57 @@
 
 <div ba-panel="" ba-panel-title="List Ingredient" ba-panel-class="with-scroll">
     <div class="panel-body">
-        <table class="table table-striped">
+        <div class="filter-top">
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <h6>Filter Type:</h6>
+                        <select class="form-control" name="status" ng-model="data_filter.filter_type" ng-change="changeFilter('filter_type', data_filter.filter_type)">
+                            <option ng-repeat="item in filter_types" class="form-control" value="{{item.id}}">{{item.name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div ng-if="isShowFilterBrand" class="col-md-2">
+                    <div class="form-group">
+                        <h6>Filter Brand:</h6>
+                        <select class="form-control" name="status" ng-model="data_filter.filter_brand" ng-change="changeFilter('filter_brand', data_filter.filter_brand)">
+                            <option ng-repeat="item in filter_brands" class="form-control" value="{{item.id}}">{{item.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped" st-table="smartTableData">
             <thead>
-                <tr>
-                    <th class="table-id">#</th>
-                    <th>Name</th>
+                <tr class="sortable ">
+                    <th class="" style="text-align : left;">Name</th>
+                    <th>Type</th>
+                    <th>Brand</th>
+                    <th>Status</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="item in listData" class="ng-scope">
-                    <td class="table-id ng-binding">{{item.id}}</td>
-                    <td class="ng-binding">
+                    <td class="ng-binding" style="text-align : left;">
                         <a href="#/manager-ingredient/ingredient/detail/{{item.id}}">{{item.name}}</a>
+                    </td>
+                    <td class="ng-binding">
+                        <span ng-repeat="obj in types">
+                            <!-- <div ng-class="{ 'glyphicon spinning ion-load-a load_page' : obj.id !== item.type }"></div> -->
+                            <span ng-if="obj.id === item.type">{{ obj.name }}</span>
+                        </span>
+                    </td>
+                    <td class="ng-binding">
+                        <span ng-repeat="obj in brands">
+                            <span ng-if="obj.id == item.brand">{{ obj.name }}</span>
+                        </span>
+                    </td>
+                    <td class="ng-binding">
+                        <label class="checkbox-inline custom-checkbox nowrap">
+                            <input type="checkbox" ng-checked="item.status === 0" ng-model="status" ng-click="changeStatus(item)">
+                            <span></span>
+                        </label>
                     </td>
                     <td class="ng-binding" style="width: 30px; text-align : center;">
                         <a href="" data-toggle="modal" ng-click="confirmDelete(item)">
@@ -27,7 +65,8 @@
             </tbody>
         </table>
         <div class="align-right" ng-show="bigTotalItems > 10">
-            <ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" ng-click="changePage(bigCurrentPage)" class="pagination-sm" boundary-link-numbers="true"></ul>
+            <ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" ng-click="changePage(bigCurrentPage)"
+                class="pagination-sm" boundary-link-numbers="true"></ul>
         </div>
     </div>
 </div>
