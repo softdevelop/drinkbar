@@ -252,6 +252,9 @@ class Order(models.Model):
     payer_email = models.CharField(max_length=100, null=True, blank=True)
     line_taking = models.SmallIntegerField(null=True, blank=True)
 
+    def __unicode__(self):
+        return str(self.id)
+
 class Tab(models.Model):
 
     CONST_NO_ICE = 0
