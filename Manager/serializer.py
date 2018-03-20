@@ -117,10 +117,6 @@ class DrinkSerializer(serializers.ModelSerializer):
         qs = Garnish.objects.filter(drinks__drink=obj, active=True)
         serializer = GarnishSerializer(instance=qs, many=True)
         return serializer.data
-class IngredientSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Ingredient
-        fields = '__all__'
 
 class IngredientTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -131,6 +127,18 @@ class IngredientBrandSerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientBrand
         fields = '__all__'
+
+class IngredientCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredient
+        fields = '__all__'
+
+class IngredientListSerializer(IngredientCreateSerializer):
+    type = IngredientTypeSerializer(read_only=True)
+    brand = IngredientBrandSerializer(read_only=True)
+
+
+
 
 class AddToTabSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False, read_only=True)
@@ -150,9 +158,24 @@ class MyTabSerializer(serializers.ModelSerializer):
     def get_ice(self,obj):
         return obj.get_ice_display()
 
-class OrderSerializer(serializers.ModelSerializer):
+class OrderSmallSerializer(serializers.ModelSerializer):
+    products = MyTabSerializer(many=True, required=False)
+    class Meta:
+        model = Order
+        fields = ('id','status','creation_date','amount',
+            'channel','transaction_code','transaction_id',
+            'payer_firstname','payer_lastname','payer_email',
+            'tray_number','products')
+
+class OrderSerializer(OrderSmallSerializer):
     user = UserSerializer(required=False, read_only=True)
-    products = MyTabSerializer(many=True)
+    products = MyTabSerializer(many=True, required=False)
     class Meta:
         model = Order
         fields = '__all__'
+
+
+class UserWithOrderSerializer(UserSerializer):
+    orders = OrderSmallSerializer(read_only=True, many=True, required=False,)
+    class Meta(UserSerializer.Meta):
+        fields = UserSerializer.Meta.fields + ('orders',)

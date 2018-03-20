@@ -178,8 +178,11 @@ class Garnish(models.Model):
     def __unicode__(self):
         return self.name
 
-# def get_admin():
-#     return UserBase.objects.filter(is_superuser=True).first().id
+def get_admin():
+    try:
+        return UserBase.objects.filter(is_superuser=True).first().id
+    except Exception as e:
+        return 1
 
 class Drink(models.Model):
 
@@ -250,7 +253,7 @@ class Order(models.Model):
     payer_firstname = models.CharField(max_length=50, null=True, blank=True)
     payer_lastname = models.CharField(max_length=50, null=True, blank=True)
     payer_email = models.CharField(max_length=100, null=True, blank=True)
-    line_taking = models.SmallIntegerField(null=True, blank=True)
+    tray_number = models.SmallIntegerField(null=True, blank=True)
 
     def __unicode__(self):
         return str(self.id)

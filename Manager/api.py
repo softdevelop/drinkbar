@@ -18,11 +18,11 @@ from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from datetime import datetime, timedelta
 import hashlib
-
+from pprint import pprint
 '''
 User API:
 '''
-
+# Create by user
 class UserSignUp(generics.CreateAPIView):
     serializer_class = UserSignupSerializer
 
@@ -48,11 +48,13 @@ class UserSignUp(generics.CreateAPIView):
         except IntegrityError as e:
             raise ValidationError({'email': str(e[1])})
 
+# Create by admin
 class UserList(generics.ListCreateAPIView):
     queryset = UserBase.objects.all()
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
 
+# User login and get their profile
 class UserProfile(generics.GenericAPIView):
     serializer_class = UserWithTokenSerializer
 
@@ -85,10 +87,17 @@ class UserProfile(generics.GenericAPIView):
             return Response(serializer.data)
         return Response({'user': 'INVALID_PROFILE'}, status=status.HTTP_400_BAD_REQUEST)
 
+# Admin see detail user, user update, delete
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     queryset = UserBase
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        order = self.request.GET.get('order', False)
+        if order:
+            return UserWithOrderSerializer
+        return self.serializer_class
 
 class UserChangePassword(APIView):
 
@@ -217,6 +226,14 @@ class UserOrder(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = OrderSerializer
 
+    def get_queryset(self):
+        is_admin = self.request.GET.get('admin', False)
+        if is_admin:
+            return self.queryset.all()
+        ret = self.queryset.filter(user=self.request.user)
+        # is_current = self.request.GET.get('admin', False)
+        return ret
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -336,8 +353,14 @@ Ingredient API
 
 class IngredientList(generics.ListCreateAPIView):
     queryset = Ingredient.objects.all()
-    serializer_class = IngredientSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        # print pprint(vars(self.request.method))
+        # print self.request.method
+        if self.request.method == 'GET':
+            return IngredientListSerializer
+        return IngredientCreateSerializer
 
     def get_queryset(self):
         is_admin = self.request.GET.get('admin', False)
@@ -357,7 +380,7 @@ class IngredientList(generics.ListCreateAPIView):
 
 class IngredientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ingredient
-    serializer_class = IngredientSerializer
+    serializer_class = IngredientListSerializer
     permission_classes = [IsAuthenticated]
 
 class IngredientTypeList(generics.ListCreateAPIView):
