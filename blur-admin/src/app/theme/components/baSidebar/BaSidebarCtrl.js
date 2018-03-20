@@ -54,26 +54,26 @@
 						level: 1,
 						name: 'drink-categories'
 					},
-					{
-						stateRef: "drink-types",
-						title: "Drink Types",
-						name: 'drink-types',
-						level: 1,
-						subMenu : [
-							{
-								stateRef: "create-drink-types",
-								title: "Create",
-								level: 2,
-								name: 'create-drink-types'
-							},
-							{
-								stateRef: "list-drink-types",
-								title: "List",
-								name: 'list-drink-types',
-								level: 2
-							}
-						]
-					},
+					// {
+					// 	stateRef: "drink-types",
+					// 	title: "Drink Types",
+					// 	name: 'drink-types',
+					// 	level: 1,
+					// 	subMenu : [
+					// 		{
+					// 			stateRef: "create-drink-types",
+					// 			title: "Create",
+					// 			level: 2,
+					// 			name: 'create-drink-types'
+					// 		},
+					// 		{
+					// 			stateRef: "list-drink-types",
+					// 			title: "List",
+					// 			name: 'list-drink-types',
+					// 			level: 2
+					// 		}
+					// 	]
+					// },
 					{
 						stateRef: "drinks",
 						title: "Drinks",
@@ -120,9 +120,19 @@
 							}
 						]
 					},
+					
+					
+				]
+			},
+			{
+				icon: "ion-waterdrop",
+				name: "manager-ingredient",
+				level: 0,
+				title: "Manager Ingredient",
+				subMenu : [
 					{
 						stateRef: "ingredient-types",
-						title: "Ingredient Types",
+						title: "Types",
 						name: 'ingredient-types',
 						level: 1,
 						subMenu : [
@@ -142,7 +152,7 @@
 					},
 					{
 						stateRef: "ingredient-brand",
-						title: "Ingredient Brand",
+						title: "Brand",
 						name: 'ingredient-brand',
 						level: 1,
 						subMenu : [
@@ -180,7 +190,6 @@
 							}
 						]
 					}
-					
 				]
 			}
 		];

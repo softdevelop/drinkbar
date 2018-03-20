@@ -178,8 +178,8 @@ class Garnish(models.Model):
     def __unicode__(self):
         return self.name
 
-def get_admin():
-    return UserBase.objects.filter(is_superuser=True).first().id
+# def get_admin():
+#     return UserBase.objects.filter(is_superuser=True).first().id
 
 class Drink(models.Model):
 
@@ -195,7 +195,7 @@ class Drink(models.Model):
     key_word = models.CharField(max_length=200, blank=True, null=True)
     estimate_time = models.PositiveIntegerField(help_text=_('seconds'), default=0)
     is_have_ice = models.BooleanField(default=True)
-    creator = models.ForeignKey(UserBase,related_name='creative_drinks', default=get_admin)
+    creator = models.ForeignKey(UserBase,related_name='creative_drinks', default=1)
     creation_date = models.DateTimeField(auto_now_add=True)
     def __unicode__(self):
         return self.name
