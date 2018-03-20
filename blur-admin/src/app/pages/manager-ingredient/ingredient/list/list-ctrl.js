@@ -36,15 +36,13 @@
 				$scope.isShowFilterBrand = true;
 			}
 			if($scope.data_filter.filter_brand !== '' && $scope.data_filter.filter_type !== ''){
-				console.log('filter')
 				returnDataFilter($scope.data_filter);
 			}
 		}
 
 		// =============== return data filter ============
 		function returnDataFilter(data){
-			IngredientService.filterData(data, token).success(function(res){
-				console.log(res)
+			IngredientService.filterData(data, $rootScope.userLogin.token).success(function(res){
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
 			}).error(function(err, stt, res){

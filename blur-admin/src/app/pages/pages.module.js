@@ -43,6 +43,10 @@
 		'BlurAdmin.pages.list-drink-types',
 		'BlurAdmin.pages.create-drink-types',
 		'BlurAdmin.pages.detail-drink-types',
+		// ============ categories ================
+		'BlurAdmin.pages.list-categories',
+		'BlurAdmin.pages.create-categories',
+		'BlurAdmin.pages.detail-categories',
 	])
 		.config(routeConfig);
 
@@ -151,6 +155,19 @@
 				{
 					title: 'Drink Types Detail',
 					stateRef: 'detail-drink-types/:id'
+				},
+				// ============= Categories ===============
+				{
+					title: 'Categories List',
+					stateRef: 'list-categories'
+				},
+				{
+					title: 'Categories Create',
+					stateRef: 'create-categories'
+				},
+				{
+					title: 'Categories Detail',
+					stateRef: 'detail-categories/:id'
 				},
 				{
 					title: '404 Page',

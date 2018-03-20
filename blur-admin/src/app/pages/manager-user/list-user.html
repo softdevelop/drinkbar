@@ -43,32 +43,27 @@
 </div> -->
 
 
-<div class="horizontal-scroll">
-	<table class="table table-hover" st-table="listUser">
+<!-- <div class="horizontal-scroll">
+	<table class="table table-striped" st-table="smartTableData">
 		<thead>
 			<tr class="sortable">
-				<th class="browser-icons"></th>
-				<th>Username / Email</th>
-				<th class="align-right">First Name</th>
-				<th class="align-right">Last Name</th>
-				<th class="align-right">Birthday</th>
-				<th class="align-right">Action</th>
+				<th class="ng-binding" style="text-align : left;">Username / Email</th>
+				<th>First Name</th>
+				<th>Last Name</th>
+				<th>Birthday</th>
+				<th class="ng-binding" style="width: 30px; text-align : center;">Action</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="item in listUser" class="editable-tr-wrap">
-				<td>
-					<img ng-if="item.avatar" ng-src="{{ item.avatar }}" width="20" height="20">
-					<img ng-if="!item.avatar" ng-src="{{ item.avatar_url }}" width="20" height="20">
-				</td>
-				<td ng-class="nowrap">
+			<tr ng-repeat="item in listUser" class="ng-scope">
+				<td class="ng-binding" style="text-align : left;">
 					<a href="#/manager-user/user-detail/{{item.id}}">{{item.email}}</a>
 				</td>
-				<td class="align-right">{{item.first_name}}</td>
-				<td class="align-right">{{item.last_name}}</td>
-				<td class="align-right">{{item.birthday | date:'MM/dd/yyyy'}}</td>
-				<td class="align-right btn_action">
-					<a href="" ng-click="deleteUser(item)">
+				<td class="ng-binding">{{item.first_name}}</td>
+				<td class="ng-binding">{{item.last_name}}</td>
+				<td class="ng-binding">{{item.birthday | date:'MM/dd/yyyy'}}</td>
+				<td class="ng-binding" style="width: 30px; text-align : center;">
+					<a href="" ng-click="deleteUser(item)" style="color : #e85555;">
 						<i class="ion-android-delete"></i>
 					</a>
 				</td>
@@ -77,5 +72,45 @@
 	</table>
 	<div class="align-right" ng-show="bigTotalItems > 10">
 		<ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" ng-click="changePage(bigCurrentPage)" class="pagination-sm" boundary-link-numbers="true"></ul>
+	</div>
+</div> -->
+
+
+<div class="" style="margin-bottom : 15px;">
+	<a class="btn btn-primary" href="#/manager-user/create-user" style="background: #209e91; border-color: #209e91;">Create</a>
+</div>
+
+<div ba-panel="" ba-panel-title="List Ingredient" ba-panel-class="with-scroll">
+	<div class="panel-body">
+		<table class="table table-striped" st-table="smartTableData">
+			<thead>
+				<tr class="sortable">
+					<th class="ng-binding" style="text-align : left;">Username / Email</th>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Birthday</th>
+					<th class="ng-binding" style="width: 30px; text-align : center;">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in listUser" class="ng-scope">
+					<td class="ng-binding" style="text-align : left;">
+						<a href="#/manager-user/user-detail/{{item.id}}">{{item.email}}</a>
+					</td>
+					<td class="ng-binding">{{item.first_name}}</td>
+					<td class="ng-binding">{{item.last_name}}</td>
+					<td class="ng-binding">{{item.birthday | date:'MM/dd/yyyy'}}</td>
+					<td class="ng-binding" style="width: 30px; text-align : center;">
+						<a href="" ng-click="deleteUser(item)" style="color : #e85555;">
+							<i class="ion-android-delete"></i>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="align-right" ng-show="bigTotalItems > 10">
+			<ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" ng-click="changePage(bigCurrentPage)"
+			 class="pagination-sm" boundary-link-numbers="true"></ul>
+		</div>
 	</div>
 </div>

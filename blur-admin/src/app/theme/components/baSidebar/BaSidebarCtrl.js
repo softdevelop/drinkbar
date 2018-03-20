@@ -29,13 +29,13 @@
 				subMenu: [
 					{
 						stateRef: "create-user",
-						title: "Create User",
+						title: "Create",
 						level: 1,
 						name: 'create-user'
 					},
 					{
 						stateRef: "list-user",
-						title: "List User",
+						title: "List",
 						name: 'list-user',
 						level: 1
 					}
@@ -50,30 +50,24 @@
 				subMenu: [
 					{
 						stateRef: "drink-categories",
-						title: "Drink Catefories",
+						title: "Categories",
 						level: 1,
-						name: 'drink-categories'
+						name: 'drink-categories',
+						subMenu : [
+							{
+								stateRef: "create-categories",
+								title: "Create",
+								level: 2,
+								name: 'create-categories'
+							},
+							{
+								stateRef: "list-categories",
+								title: "List",
+								name: 'list-categories',
+								level: 2
+							}
+						]
 					},
-					// {
-					// 	stateRef: "drink-types",
-					// 	title: "Drink Types",
-					// 	name: 'drink-types',
-					// 	level: 1,
-					// 	subMenu : [
-					// 		{
-					// 			stateRef: "create-drink-types",
-					// 			title: "Create",
-					// 			level: 2,
-					// 			name: 'create-drink-types'
-					// 		},
-					// 		{
-					// 			stateRef: "list-drink-types",
-					// 			title: "List",
-					// 			name: 'list-drink-types',
-					// 			level: 2
-					// 		}
-					// 	]
-					// },
 					{
 						stateRef: "drinks",
 						title: "Drinks",

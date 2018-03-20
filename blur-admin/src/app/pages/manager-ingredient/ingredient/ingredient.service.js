@@ -101,7 +101,7 @@
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
                         }
-                    })
+                    });
                 }
             }
         });
