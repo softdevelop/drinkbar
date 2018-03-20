@@ -1,3 +1,4 @@
+--upgrade pip
 facepy
 django==1.11
 djangorestframework
@@ -5,6 +6,8 @@ django_cleanup
 django-categories
 django-cors-headers
 django-import-export
+django-redis
 facebook-sdk
 mysqlclient
 Pillow
+stripe

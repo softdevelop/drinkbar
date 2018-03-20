@@ -96,6 +96,10 @@ class DrinkIngredientSerializer(serializers.ModelSerializer):
 
     def get_unit(self,obj):
         return obj.get_unit_display()
+class DrinkSmallSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Drink
+        fields = ('name','image','price')
 
 class DrinkSerializer(serializers.ModelSerializer):
     numbers_bought = serializers.IntegerField(read_only=True)
@@ -113,7 +117,6 @@ class DrinkSerializer(serializers.ModelSerializer):
         qs = Garnish.objects.filter(drinks__drink=obj, active=True)
         serializer = GarnishSerializer(instance=qs, many=True)
         return serializer.data
-
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
@@ -133,4 +136,23 @@ class AddToTabSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False, read_only=True)
     class Meta:
         model = Tab
+        fields = '__all__'
+
+class MyTabSerializer(serializers.ModelSerializer):
+    drink = DrinkSmallSerializer(required=False, read_only=True)
+    garnish = GarnishSerializer(many=True)
+    ice = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Tab
+        fields = ('drink','ice','garnish','quantity')
+
+    def get_ice(self,obj):
+        return obj.get_ice_display()
+
+class OrderSerializer(serializers.ModelSerializer):
+    user = UserSerializer(required=False, read_only=True)
+    products = MyTabSerializer(many=True)
+    class Meta:
+        model = Order
         fields = '__all__'

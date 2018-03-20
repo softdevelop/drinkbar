@@ -1,15 +1,16 @@
 from django.db.utils import IntegrityError
-from django.db.models import Q
+from django.db.models import Q, Sum
 
 from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import generics, status, exceptions, permissions, viewsets
+from rest_framework import generics, status, exceptions, permissions, viewsets, mixins
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from serializer import *
 from models import *
 import tasks
+import payments
 from django.conf import settings
 from Manager.models import UserBase
 from django.core.mail import send_mail, EmailMessage
@@ -201,10 +202,56 @@ class AddToTab(generics.CreateAPIView):
 class MyTab(generics.ListAPIView):
     queryset = Tab
     permission_classes = [IsAuthenticated]
-    serializer_class = AddToTabSerializer
+    serializer_class = MyTabSerializer
 
     def get_queryset(self):
         return Tab.objects.filter(user=self.request.user)
+
+class UpdateTab(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Tab
+    permission_classes = [IsAuthenticated]
+    serializer_class = MyTabSerializer
+
+class UserOrder(generics.ListCreateAPIView):
+    queryset = Order.objects.order_by('-creation_date')
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = OrderSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.validated_data['user']=request.user
+        stripe_token = self.request.data.get('stripe_token', None)
+
+        tabs = request.user.tab.filter(order__isnull=True, quantity__gt=0)
+        if not tabs:
+            raise api_utils.BadRequest("YOU HAVE NOT ADD TO TAB ANY THING")
+        temp = tabs.aggregate(sum_quantity=Sum('quantity'))
+        if temp['sum_quantity'] > 5:
+            raise api_utils.BadRequest("OVER 5 QUANTITY, PLEASE REMOVE SOME!")
+        total_bill = 0
+        for tab in tabs:
+            total_bill += int(tab.quantity)*float(tab.drink.price)
+        if not stripe_token:
+            raise api_utils.BadRequest("INVALID_STRIPE_TOKEN")
+        try:
+            total_bill = float(total_bill)
+            amount = int(round(total_bill*100))
+            stripe_payment = payments.StripePayment()
+            charge = stripe_payment.charge(amount=amount, currency=currency, token=stripe_token)
+            serializer.validated_data['transaction_code'] = stripe_token
+            serializer.validated_data['transaction_id'] = charge.id
+            serializer.validated_data['amount'] = float(amount/100)
+            serializer.validated_data['channel'] = Order.CHANNEL_STRIPE
+        except payments.StripePayment.StripePaymentException:
+            raise api_utils.BadRequest('STRIPE_ERROR')
+        except Exception as e:
+            raise api_utils.BadRequest(e.message)
+        # serializer.validated_data['amount'] = float(total_bill)
+        order = serializer.create(serializer.validated_data)
+        tabs.update(order=order)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 '''
 Drink API:
@@ -324,18 +371,24 @@ class IngredientTypeDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = IngredientBrandSerializer
     permission_classes = [IsAuthenticated]
 
-class IngredientBrandList(generics.ListCreateAPIView):
-    queryset = IngredientBrand.objects.all().order_by('id')
+class IngredientBrandTypeList(generics.ListAPIView):
+    queryset = IngredientBrand.objects.all().order_by('name')
     serializer_class = IngredientTypeSerializer
     permission_classes = [IsAuthenticated]
     paginator = None
 
     def get_queryset(self):
-        ret = self.queryset.all()
-        type = self.request.GET.get('type', None)
-        if type:
-            ret = ret.filter(ingredient_brands__type=type)
+        try:
+            type = self.request.GET.get('type', None)
+            ret = self.queryset.filter(ingredient_brands__type=type)
+        except Exception as e:
+            raise api_utils.BadRequest("INVALID_TYPE")
         return ret
+
+class IngredientBrandList(generics.ListCreateAPIView):
+    queryset = IngredientBrand.objects.all().order_by('id')
+    serializer_class = IngredientTypeSerializer
+    permission_classes = [IsAuthenticated]
     
 class IngredientBrandDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = IngredientBrand

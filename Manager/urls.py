@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^user/send/email/$', api_views.SendVerificationEmail.as_view(), name='user-send-verify-email'), 
     url(r'^user/add/tab/$', api_views.AddToTab.as_view(), name='user-add-tab'), 
     url(r'^user/me/tab/$', api_views.MyTab.as_view(), name='user-me-tab'), 
+    url(r'^user/me/tab/(?P<pk>[0-9]+)$', api_views.UpdateTab.as_view(), name='user-update-tab'), 
+    url(r'^user/order/$', api_views.UserOrder.as_view(), name='user-order'), 
 
     url(r'^drink/$',api_views.DrinkList.as_view(), name='drink-list'),
     url(r'^drink/(?P<pk>[0-9]+)/$',api_views.DrinkDetial.as_view(), name='drink-detail'),
@@ -32,6 +34,7 @@ urlpatterns = [
     url(r'^ingredient/type/$', api_views.IngredientTypeList.as_view(), name="ingredient-type-list"),
     url(r'^ingredient/type/(?P<pk>[0-9]+)/$', api_views.IngredientTypeDetail.as_view(), name="ingredient-type-detail"),
     url(r'^ingredient/brand/$', api_views.IngredientBrandList.as_view(), name="ingredient-brand-list"),
+    url(r'^ingredient/brand/type/$', api_views.IngredientBrandTypeList.as_view(), name="ingredient-brand-type-list"),
     url(r'^ingredient/brand/(?P<pk>[0-9]+)/$', api_views.IngredientBrandDetail.as_view(), name="ingredient-brand-detail"),
     
 ]
