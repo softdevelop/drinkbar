@@ -22,7 +22,7 @@
 		'BlurAdmin.pages.create-separate-glass',
 		'BlurAdmin.pages.list-separate-glass',
 		'BlurAdmin.pages.detail-separate-glass',
-		// ============ ingredient ==========
+		// ============ manager ingredient ==========
 		// -------- ingredient types --------
 		'BlurAdmin.pages.list-ingredient-types',
 		'BlurAdmin.pages.create-ingredient-types',
@@ -39,10 +39,15 @@
 		'BlurAdmin.pages.list-garnish',
 		'BlurAdmin.pages.create-garnish',
 		'BlurAdmin.pages.detail-garnish',
-		// ============ drink ================
+		// ============ manager drink ================
+		// ------------ drink type -------------
 		'BlurAdmin.pages.list-drink-types',
 		'BlurAdmin.pages.create-drink-types',
 		'BlurAdmin.pages.detail-drink-types',
+		// ----------- drink ------------
+		'BlurAdmin.pages.list-drink',
+		'BlurAdmin.pages.create-drink',
+		'BlurAdmin.pages.detail-drink',
 		// ============ categories ================
 		'BlurAdmin.pages.list-categories',
 		'BlurAdmin.pages.create-categories',
@@ -144,6 +149,19 @@
 					stateRef: 'detail-garnish/:id'
 				},
 				// ============= Drink ===============
+				{
+					title: 'Drink List',
+					stateRef: 'list-drink'
+				},
+				{
+					title: 'Drink Create',
+					stateRef: 'create-drink'
+				},
+				{
+					title: 'Drink Detail',
+					stateRef: 'detail-drink/:id'
+				},
+				// ============= Drink Types ===============
 				{
 					title: 'Drink Types List',
 					stateRef: 'list-drink-types'

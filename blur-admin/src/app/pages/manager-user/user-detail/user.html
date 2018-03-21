@@ -7,9 +7,9 @@
     </div> -->
     <form name="linkForm">
         <div class="modalProfile">
-                <button id="close_btn" type="button" class="close" ng-click="$dismiss()" aria-label="Close">
-                        <em class="ion-ios-close-empty sn-link-close"></em>
-                    </button>
+            <button id="close_btn" type="button" class="close" ng-click="$dismiss()" aria-label="Close">
+                <em class="ion-ios-close-empty sn-link-close"></em>
+            </button>
             <div ba-panel ba-panel-class="profile-page">
                 <h3 class="with-line">Information</h3>
                 <div class="row">
@@ -23,7 +23,9 @@
                                         <img style="width: 100% !important;" ng-src="{{ picture }}" ng-click="uploadPicture()">
                                     </div>
                                     <div ng-show="!isChangeAvatar" class="userpic-wrapper">
-                                        <img style="width: 100% !important;" ng-src="{{ data_profile.avatar }}" ng-click="uploadPicture()">
+                                        <img ng-if="data_profile.avatar" style="width: 100% !important;" ng-src="{{ data_profile.avatar }}" ng-click="uploadPicture()"> -
+                                        <img ng-if="!data_profile.profile" style="width: 100% !important;" ng-src="{{ data_profile.avatar_url }}"
+                                            ng-click="uploadPicture()">
                                     </div>
                                     <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i>
                                     <a href class="change-userpic" ng-click="uploadPicture()">Change Profile Picture</a>

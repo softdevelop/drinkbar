@@ -69,10 +69,24 @@
 						]
 					},
 					{
-						stateRef: "drinks",
+						stateRef: "drink",
 						title: "Drinks",
-						name: 'drinks',
-						level: 1
+						name: 'drink',
+						level: 1,
+						subMenu : [
+							{
+								stateRef: "create-drink",
+								title: "Create",
+								level: 2,
+								name: 'create-drink'
+							},
+							{
+								stateRef: "list-drink",
+								title: "List",
+								name: 'list-drink',
+								level: 2
+							}
+						]
 					},
 					{
 						stateRef: "separate-glass",

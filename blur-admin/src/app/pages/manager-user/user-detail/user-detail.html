@@ -11,7 +11,10 @@
                             <img style="width: 100% !important;" ng-src="{{ picture }}" ng-click="uploadPicture()">
                         </div>
                         <div ng-show="!isChangeAvatar" class="userpic-wrapper">
-                            <img style="width: 100% !important;" ng-src="{{ data_profile.avatar }}" ng-click="uploadPicture()">
+                            <!-- <img style="width: 100% !important;" ng-src="{{ data_profile.avatar }}" ng-click="uploadPicture()"> -->
+                            <img ng-if="data_profile.avatar" style="width: 100% !important;" ng-src="{{ data_profile.avatar }}" ng-click="uploadPicture()"> -
+                            <img ng-if="!data_profile.avatar" style="width: 100% !important;" ng-src="{{ data_profile.avatar_url }}"
+                            ng-click="uploadPicture()">
                         </div>
                         <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i>
                         <a href class="change-userpic" ng-click="uploadPicture()">Change Profile Picture</a>
@@ -33,7 +36,7 @@
 
                 <div class="col-sm-9">
                     <input type="text" class="form-control" id="inputFirstName" placeholder="" value="data_profile.first_name" ng-model="data_profile.first_name"
-                        ng-change="updateProfile('first_name', data_profile.first_name)">
+                    ng-change="updateProfile('first_name', data_profile.first_name)">
                 </div>
             </div>
             <div class="form-group row clearfix">
@@ -41,7 +44,7 @@
 
                 <div class="col-sm-9">
                     <input type="text" class="form-control" id="inputLastName" placeholder="" value="data_profile.last_name" ng-model="data_profile.last_name"
-                        ng-change="updateProfile('last_name', data_profile.last_name)">
+                    ng-change="updateProfile('last_name', data_profile.last_name)">
                 </div>
             </div>
         </div>
@@ -52,8 +55,8 @@
                 <div class="col-sm-9">
                     <p class="input-group">
                         <input type="text" class="form-control" uib-datepicker-popup="{{format}}" value="birthday" ng-model="birthday" is-open="popupDatePicker.openBirthday"
-                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
-                            ng-change="changeBirthday(birthday)" />
+                        datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                        ng-change="changeBirthday(birthday)" />
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="openDatePicker('birthday')">
                                 <i class="glyphicon glyphicon-calendar"></i>
@@ -86,7 +89,7 @@
                 <div class="col-sm-9">
                     <p class="input-group">
                         <input disabled type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="last_login" is-open="popupDatePicker.openLastLogin"
-                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                        datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
                         />
                         <span class="input-group-btn">
                             <button disabled type="button" class="btn btn-default" ng-click="openDatePicker('lastLogin')">
@@ -103,7 +106,7 @@
                 <div class="col-sm-9">
                     <p class="input-group">
                         <input disabled type="text" class="form-control" uib-datepicker-popup="{{format}}" ng-model="date_joined" is-open="popupDatePicker.openDateJoined"
-                            datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
+                        datepicker-options="dateOptions" ng-required="true" close-text="Close" alt-input-formats="altInputFormats"
                         />
                         <span class="input-group-btn">
                             <button disabled type="button" class="btn btn-default" ng-click="openDatePicker('dataJoined')">
