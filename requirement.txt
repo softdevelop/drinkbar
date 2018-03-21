@@ -1,4 +1,3 @@
---upgrade pip
 facepy
 django==1.11
 djangorestframework

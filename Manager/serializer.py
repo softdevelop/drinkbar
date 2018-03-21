@@ -103,7 +103,7 @@ class DrinkSmallSerializer(serializers.ModelSerializer):
 
 class DrinkSerializer(serializers.ModelSerializer):
     numbers_bought = serializers.IntegerField(read_only=True)
-    category = DrinkCategorySmallSerializer(read_only=True)
+    category = DrinkCategorySmallSerializer(many=True, read_only=True)
     glass = SeparateGlassSerializer(read_only=True)
     ingredients = DrinkIngredientSerializer(many=True, read_only=True)
     garnishes = serializers.SerializerMethodField('_garnishes')
@@ -138,7 +138,15 @@ class IngredientListSerializer(IngredientCreateSerializer):
     brand = IngredientBrandSerializer(read_only=True)
 
 
-
+class IngredientHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = IngredientHistory
+        fields = '__all__'
+        
+class RobotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Robot
+        fields = '__all__'
 
 class AddToTabSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False, read_only=True)

@@ -41,8 +41,8 @@ class UserBase(AbstractUser):
     @property
     def qr_code(self):
         datetime_format = '%Y-%m-%d %H:%M:%S'
-        today = (self.last_login).strftime(datetime_format)
-        data = u'User:{} {} Login time:{}'.format(self.first_name, self.last_name, today)
+        # today = (self.last_login).strftime(datetime_format)
+        data = u'User:{} {} Id:{}'.format(self.first_name, self.last_name, self.id)
         data = urllib.quote_plus(data)
         return u'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={}'.format(data)
 
@@ -50,7 +50,7 @@ class UserBase(AbstractUser):
     def get_or_create_user_from_facebook(self, fb_token, should_create=True):
         new_user = UserBase()
         try:
-            graph = facebook.GraphAPI(access_token=fb_token, version="2.11")
+            graph = facebook.GraphAPI(access_token=fb_token,version=2.11)
             user = graph.get_object(id="me",fields="email, first_name, last_name, birthday")
 
             fb_uid = user.get('id')
@@ -63,8 +63,8 @@ class UserBase(AbstractUser):
             new_user = self.objects.filter(username=email,fb_uid=fb_uid).first()
             if not new_user:
                 new_user = UserBase(username=email, email=email, fb_uid=fb_uid,
-                            first_name=first_name,last_name=last_name, is_email_verified=True,
-                            birthday=birthday.date(),avatar_url=avatar_url,
+                            first_name=first_name, last_name=last_name, is_email_verified=True,
+                            birthday=birthday.date(), avatar_url=avatar_url,
                             fb_access_token=unicode(fb_token).encode('utf-8'))
                 new_user.save()
             else:
@@ -217,11 +217,34 @@ class DrinkIngredient(models.Model):
     ratio = models.FloatField(help_text=_('part'))
     unit = models.PositiveSmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_PART)
 
+    @property
+    def change_to_ml(self,total_part=None,glass=None):
+        if self.unit == CONST_UNIT_ML:
+            return self.ratio
+        ret = float(self.ratio/total_part*glass)
+        ret = fpformat.fix(ret, 2) 
+        return float(ret)
+
 class DrinkGarnish(models.Model):
     drink = models.ForeignKey(Drink, related_name='garnishes')
     garnish = models.ForeignKey(Garnish, related_name='drinks')
     ratio = models.FloatField(help_text=_('pcs'))
 
+class Robot(models.Model):
+    STATUS_ENABLE = 0
+    STATUS_DISABLAE = 10
+
+    CONST_STATUSES = (
+        (STATUS_ENABLE, _('Turn on')),
+        (STATUS_DISABLAE, _('Turn off')),
+    )
+
+    status = models.PositiveSmallIntegerField(choices=CONST_STATUSES, 
+                                        default=STATUS_DISABLAE)
+    creation_date = models.DateTimeField(auto_now_add=True)
+
+    def __unicode__(self):
+        return u'Robot-{}'.format(self.id)
 
 class Order(models.Model):
     CHANNEL_PAYPAL = 1
@@ -254,9 +277,25 @@ class Order(models.Model):
     payer_lastname = models.CharField(max_length=50, null=True, blank=True)
     payer_email = models.CharField(max_length=100, null=True, blank=True)
     tray_number = models.SmallIntegerField(null=True, blank=True)
-
+    robot = models.ForeignKey(Robot, default=1, related_name='do_orders')
     def __unicode__(self):
         return str(self.id)
+
+@receiver(post_save, sender=Order)
+def create_new_order(sender, instance=None, created=False, **kwargs):
+    if created:
+        drinks = instance.products.all()
+        for drink in drinks:
+            glass = drink.glass.change_to_ml
+
+            drink_ingredients = drink.ingredients.all()
+            temp = drink_ingredients_part.aggregate(sum_ratio=Sum('ratio')) 
+
+            for drink_ingredient in drink_ingredients:
+                ingredient = instance.robot.ingredients.filter(ingredient=drink_ingredient)
+                ingredient.remain_of_bottle -= drink_ingredient_ml.change_to_ml(temp['sum_ratio'],glass)
+                ingredient.save()
+
 
 class Tab(models.Model):
 
@@ -277,22 +316,6 @@ class Tab(models.Model):
     garnish = models.ManyToManyField(Garnish, blank =True)
     quantity = models.PositiveIntegerField(blank=True, null= True, default=0)
     order = models.ForeignKey(Order, related_name='products',blank=True, null= True,)
-
-class Robot(models.Model):
-    STATUS_ENABLE = 0
-    STATUS_DISABLAE = 10
-
-    CONST_STATUSES = (
-        (STATUS_ENABLE, _('Turn on')),
-        (STATUS_DISABLAE, _('Turn off')),
-    )
-
-    status = models.PositiveSmallIntegerField(choices=CONST_STATUSES, 
-                                        default=STATUS_DISABLAE)
-    creation_date = models.DateTimeField(auto_now_add=True)
-
-    def __unicode__(self):
-        return u'Robot-{}'.format(self.id)
 
 class RobotIngredient(models.Model):
 

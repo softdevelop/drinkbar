@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-
+import stripe
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -154,6 +154,14 @@ EMAIL_HOST_PASSWORD = 'A123123Z'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_FROM='user123example@gmail.com'
+
+#Payment setting.
+
+STRIPE_KEYS = {
+  'SECRET_KEY': 'sk_test_PHRmdPKDLOKagzUJciB8Bi8T',
+  'PUBLISHABLE_KEY': 'pk_test_KSMESnZKrSyuNxek4u6JmQPb'
+}
+stripe.api_key = STRIPE_KEYS['SECRET_KEY']
 
 
 # Static files (CSS, JavaScript, Images)
