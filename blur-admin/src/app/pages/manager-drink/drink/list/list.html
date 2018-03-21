@@ -9,6 +9,9 @@
                 <tr>
                     <th class="table-id">#</th>
                     <th>Name</th>
+                    <th>Glass</th>
+                    <th>Numbers bought</th>
+                    <th>Price</th>
                     <th>Active</th>
                     <th>Action</th>
                 </tr>
@@ -18,6 +21,16 @@
                     <td class="table-id ng-binding">{{item.id}}</td>
                     <td class="ng-binding">
                         <a href="#/manager-drink/drink/detail/{{item.id}}">{{item.name}}</a>
+                    </td>
+                    <td class="ng-binding">
+                        {{item.glass.name}}
+                    </td>
+                    <td class="ng-binding">
+                        {{item.numbers_bought}}
+                    </td>
+                    <td class="ng-binding">
+                        <span ng-if="item.price">{{item.price}}</span>
+                        <span ng-if="!item.price">0</span>
                     </td>
                     <td class="ng-binding">
                         <label class="checkbox-inline custom-checkbox nowrap">
