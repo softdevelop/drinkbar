@@ -30,7 +30,6 @@ class UserSignUp(generics.CreateAPIView):
         fb_token = request.data.get('fb_token')
         gp_token = request.data.get('gp_token')
         user = None
-
         try:
             if fb_token or gp_token:
                 # TODO can be dangerous here?!? (send a FB token w/o email and force use any other email)
@@ -426,4 +425,27 @@ class DrinkIngredientList(generics.ListCreateAPIView):
 class DrinkIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DrinkIngredient
     serializer_class = DrinkIngredientSerializer
+    permission_classes = [IsAuthenticated]
+
+class IngredientHistoryList(generics.ListCreateAPIView):
+    queryset = IngredientHistory.objects.all()
+    serializer_class = IngredientHistorySerializer
+    permission_classes = [IsAuthenticated]
+
+class IngredientHistoryDetail(generics.RetrieveDestroyAPIView):
+    # Change permission is not allowed.
+    queryset = IngredientHistory
+    serializer_class = IngredientHistorySerializer
+    permission_classes = [IsAuthenticated]
+
+# class RobotList(generics.ListAPIView):
+class RobotList(generics.ListCreateAPIView):
+    #Support 1 for now, cannot create new robot
+    queryset = Robot.objects.all()
+    serializer_class = RobotSerializer
+    permission_classes = [IsAuthenticated]
+
+class RobotDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Robot
+    serializer_class = RobotSerializer
     permission_classes = [IsAuthenticated]
