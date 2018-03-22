@@ -290,6 +290,20 @@ class DrinkList(generics.ListCreateAPIView):
     serializer_class = DrinkSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return DrinkSerializer
+        return DrinkCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.validated_data['creator']=request.user
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
     def get_queryset(self):
         is_admin = self.request.GET.get('admin', False)
         ret = self.queryset.exclude(Q(ingredients__ingredient__status=Ingredient.CONST_STATUS_BLOCKED)|\
@@ -444,6 +458,7 @@ class RobotList(generics.ListCreateAPIView):
     queryset = Robot.objects.all()
     serializer_class = RobotSerializer
     permission_classes = [IsAuthenticated]
+
 
 class RobotDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Robot

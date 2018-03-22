@@ -112,9 +112,7 @@ class Ingredient(models.Model):
     brand = models.ForeignKey(IngredientBrand, on_delete=models.SET_NULL, blank=True,
                         null=True, related_name='ingredient_brands')
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='ingredient', null=True, blank=True)
-    def __unicode__(self):
-        return "-".join([self.type.name, self.brand.name, self.name,  "".join([str(self.quanlity_of_bottle), "mL"])])
-
+    
 class DrinkCategory(CategoryBase):
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),null=True, blank=True, upload_to='categories')
 
@@ -186,7 +184,7 @@ def get_admin():
 
 class Drink(models.Model):
 
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=200, unique=True)
     category = models.ManyToManyField(DrinkCategory)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),
                         blank=True, null=True, upload_to='drink')
@@ -198,7 +196,7 @@ class Drink(models.Model):
     key_word = models.CharField(max_length=200, blank=True, null=True)
     estimate_time = models.PositiveIntegerField(help_text=_('seconds'), default=0)
     is_have_ice = models.BooleanField(default=True)
-    creator = models.ForeignKey(UserBase,related_name='creative_drinks', default=1)
+    creator = models.ForeignKey(UserBase,related_name='creative_drinks', default=get_admin())
     creation_date = models.DateTimeField(auto_now_add=True)
     def __unicode__(self):
         return self.name
@@ -254,16 +252,19 @@ class Order(models.Model):
         (CHANNEL_STRIPE, _('Stripe')),
     )
     STATUS_NEW = 0
-    STATUS_PROCESSING = 10
-    STATUS_FINISHED = 20
-    STATUS_TOOK = 30
-    STATUS_NOT_TAKE = 40
+    STATUS_READY = 10
+    STATUS_PROCESSING = 20
+    STATUS_FINISHED = 30
+    STATUS_TOOK = 40
+    STATUS_NOT_TAKE = 50
+    STATUS_NOT_DO = 60
     STATUSES = (
         (STATUS_NEW, _("New")),
         (STATUS_PROCESSING, _("Processing")),
         (STATUS_FINISHED, _("Finished")),
         (STATUS_TOOK, _("Took")),
         (STATUS_NOT_TAKE, _("Not take")),
+        (STATUS_NOT_DO, _("Not do due to ingredient")),
     )
 
     status = models.SmallIntegerField(choices=STATUSES, default=STATUS_NEW, null=True, blank=True)
@@ -286,15 +287,26 @@ def create_new_order(sender, instance=None, created=False, **kwargs):
     if created:
         drinks = instance.products.all()
         for drink in drinks:
+            # Drink is a tab.
             glass = drink.glass.change_to_ml
 
             drink_ingredients = drink.ingredients.all()
-            temp = drink_ingredients_part.aggregate(sum_ratio=Sum('ratio')) 
+            temp = drink.ingredients.filter(unit=DrinkIngredient.CONST_UNIT_PART).aggregate(sum_ratio=Sum('ratio')) 
 
             for drink_ingredient in drink_ingredients:
                 ingredient = instance.robot.ingredients.filter(ingredient=drink_ingredient)
-                ingredient.remain_of_bottle -= drink_ingredient_ml.change_to_ml(temp['sum_ratio'],glass)
+                ratio = drink_ingredient.change_to_ml(temp['sum_ratio'],glass)
+                if ingredient.remain_of_bottle < 100:
+                    # send email
+                    if ingredient.remain_of_bottle < ratio:
+                        instance.status = Order.STATUS_NOT_DO
+                        #send email
+                        raise api_utils.BadRequest("NOT ENOUGH INGREDIENT ON THIS ROBOT")
+                ingredient.remain_of_bottle -= ratio
                 ingredient.save()
+            drink.status = Tab.STATUS_READY
+            drink.save()
+
 
 
 class Tab(models.Model):
@@ -308,7 +320,17 @@ class Tab(models.Model):
         (CONST_50_ICE, _('50% Ice')),
         (CONST_100_ICE, _('100% Ice')),
     )
-
+    STATUS_NEW = 0
+    STATUS_READY = 10
+    STATUS_PROCESSING = 20
+    STATUS_FINISHED = 30
+    STATUSES = (
+        (STATUS_NEW, _("New")),
+        (STATUS_READY, _("Ready")),
+        (STATUS_PROCESSING, _("Processing")),
+        (STATUS_FINISHED, _("Finished")),
+    )
+    status = models.SmallIntegerField(choices=STATUSES, default=STATUS_NEW, null=True, blank=True)
     user = models.ForeignKey(UserBase, related_name='tab')
     drink = models.ForeignKey(Drink)
     ice = models.PositiveSmallIntegerField(_('ice'), choices=CONST_ICE_CHOICE, 
@@ -316,7 +338,6 @@ class Tab(models.Model):
     garnish = models.ManyToManyField(Garnish, blank =True)
     quantity = models.PositiveIntegerField(blank=True, null= True, default=0)
     order = models.ForeignKey(Order, related_name='products',blank=True, null= True,)
-
 class RobotIngredient(models.Model):
 
     robot = models.ForeignKey(Robot, related_name='ingredients')

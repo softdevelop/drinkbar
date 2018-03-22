@@ -86,6 +86,12 @@ class IngredientSmallSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = ('name',)
+        
+class DrinkGarnishSerializer(serializers.ModelSerializer):
+    garnish = GarnishSerializer(read_only=True)
+    class Meta:
+        model = DrinkGarnish
+        fields = ('garnish','ratio')
 
 class DrinkIngredientSerializer(serializers.ModelSerializer):
     ingredient = IngredientSmallSerializer(read_only=True)
@@ -107,16 +113,54 @@ class DrinkSerializer(serializers.ModelSerializer):
     glass = SeparateGlassSerializer(read_only=True)
     ingredients = DrinkIngredientSerializer(many=True, read_only=True)
     garnishes = serializers.SerializerMethodField('_garnishes')
+    creator = UserSerializer(read_only=True)
     class Meta:
         model = Drink
         fields = ('id','numbers_bought','category','glass','ingredients',
-            'garnishes','name','image','price')
+            'garnishes','name','image','price','creator','creation_date')
         # depth = 1
 
     def _garnishes(self, obj):
         qs = Garnish.objects.filter(drinks__drink=obj, active=True)
         serializer = GarnishSerializer(instance=qs, many=True)
         return serializer.data
+
+class DrinkCreateSerializer(serializers.ModelSerializer):
+    ingredients = DrinkIngredientSerializer(many=True, required=False, read_only=True)
+    garnishes = DrinkGarnishSerializer(many=True, required=False, read_only=True)
+    class Meta:
+        model = Drink
+        fields = ('id','numbers_bought','category','glass','ingredients',
+            'garnishes','name','image','price','creator','creation_date')
+
+
+    def create(self, validated_data):
+        ret = super(DrinkCreateSerializer,self).create(validated_data)
+
+        ingredients = self.initial_data.get('ingredients')
+        for ingredient in ingredients:
+            try:
+                ingre = DrinkIngredient(drink=ret, ingredient=Ingredient.objects.get(id=ingredient['ingredient']),
+                                ratio=ingredient['ratio'],
+                                unit=ingredient['unit'])
+                ingre.save()
+            except Exception as e:
+                DrinkIngredient.objects.filter(drink=ret).delete()
+                ret.delete()
+                raise e
+
+        garnishes = self.initial_data.get('garnishes')
+        for garnish in garnishes:
+            try:
+                garn = DrinkGarnish(drink=ret, garnish=Garnish.objects.get(id=garnish['garnish']),
+                                ratio=garnish['ratio'],)
+                garn.save()
+            except Exception as e:
+                DrinkIngredient.objects.filter(drink=ret).delete()
+                DrinkGarnish.objects.filter(drink=ret).delete()
+                ret.delete()
+                raise e
+        return ret
 
 class IngredientTypeSerializer(serializers.ModelSerializer):
     class Meta:
