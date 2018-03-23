@@ -12,10 +12,16 @@
                     });
                 },
                 created: function (data, token) {
+                    var _arr = [];
+                    data.category.forEach(el => {
+                        _arr.push(el.id)
+                    });
+                    data.category = _arr;
                     var fd = new FormData();
                     for (var key in data) {
                         fd.append(key, data[key])
                     }
+                    
                     return $http.post(AppSetting.BASE_URL + '/api/drink/', fd, {
                         headers: {
                             'Content-Type': undefined,
@@ -35,41 +41,41 @@
                     var fd = new FormData();
 
                     for (var key in data) {
-                        if(key === 'image'){
-							if(data[key])
-								fd.append(key, data[key]);
-						}
-						 else{
-							fd.append(key, data[key]);
-						}
+                        if (key === 'image') {
+                            if (data[key])
+                                fd.append(key, data[key]);
+                        }
+                        else {
+                            fd.append(key, data[key]);
+                        }
                     }
-                    return $http.patch(AppSetting.BASE_URL + '/api/drink/' + data.id + '/', fd , {
+                    return $http.patch(AppSetting.BASE_URL + '/api/drink/' + data.id + '/', fd, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
                         }
                     })
                 },
-                changed: function(data, token){
+                changed: function (data, token) {
                     var fd = new FormData();
                     fd.append('status', data.status);
 
-                    return $http.patch(AppSetting.BASE_URL + '/api/drink/'+ data.id + '/', fd, {
+                    return $http.patch(AppSetting.BASE_URL + '/api/drink/' + data.id + '/', fd, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
                         }
                     })
                 },
-                getElement : function(id, token){
-                    return $http.get(AppSetting.BASE_URL + '/api/drink/'+ id + '/', {
+                getElement: function (id, token) {
+                    return $http.get(AppSetting.BASE_URL + '/api/drink/' + id + '/', {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
                         }
                     })
                 },
-                getCategories : function(token){
+                getCategories: function (token) {
                     return $http.get(AppSetting.BASE_URL + '/api/drink/category/', {
                         headers: {
                             'Content-Type': undefined,

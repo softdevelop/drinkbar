@@ -68,6 +68,7 @@
 		// ========== function change from ===============
 		$scope.changeInfo = function(field, value){
 			$scope.data_detail[field] = value;
+			console.log($scope.data_detail)
 			$scope.isChange = true;
 		}
 		
