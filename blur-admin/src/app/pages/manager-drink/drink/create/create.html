@@ -7,19 +7,59 @@
                     required>
             </div>
 
-            <!-- <div class="form-group">
+            <div class="form-group">
                 <label for="">Category</label>
-                <select class="form-control" name="multipleSelect" id="multipleSelect" ng-model="data.multipleSelect" multiple>
+                <select style="height : 200px;" class="form-control" name="category" id="category" ng-model="data_create.category" multiple>
                     <option ng-repeat="item in list_categories" value="{{ item.id }}">{{ item.link }}</option>
                   </select>
-            </div> -->
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Image</label>
+                <input type='file' id="uploadFile" class="form-control" ng-model="data_create.image" onchange="angular.element(this).scope().imageUpload(event, 'image')"
+                />
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Image Background</label>
+                <input type='file' id="uploadFile" class="form-control" ng-model="data_create.image_background" onchange="angular.element(this).scope().imageUpload(event, 'image_background')"
+                />
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Price</label>
+                <input class="form-control" type="number" min="0" name="price" placeholder="Price" ng-model="data_create.price" ng-change="changeInfo('price', data_create.price)"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Glass</label>
+
+                <select class="form-control" name="glass" ng-model="data_create.glass" ng-change="changeInfo('glass', data_create.glass)">
+                    <option ng-repeat="item in list_glass" class="form-control" value="{{item.id}}">{{item.name}} - {{item.size}} </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Keyword</label>
+                <input class="form-control" type="text" name="key_word" placeholder="Keyword" ng-model="data_create.key_word" ng-change="changeInfo('key_word', data_create.key_word)"
+                    required>
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Estimate time</label>
+                <input class="form-control" type="number" min="0" name="estimate_time" placeholder="Estimate time" ng-model="data_create.estimate_time" ng-change="changeInfo('estimate_time', data_create.estimate_time)"
+                    required>
+            </div>
+
 
             <div class="form-group">
                 <label class="checkbox-inline custom-checkbox nowrap">
-                    <input type="checkbox" ng-model="data_create.active" ng-click="changeInfo('active', data_create.active)">
-                    <span>Active</span>
+                    <input type="checkbox" ng-model="data_create.is_have_ice" ng-click="changeInfo('is_have_ice', data_create.is_have_ice)">
+                    <span>Is have ice</span>
                 </label>
             </div>
+
             <button ng-disabled="form.$invalid" type="button" class="btn btn-primary" ng-click="create()">Create</button>
         </form>
     </div>

@@ -12,7 +12,7 @@
                     <th>Glass</th>
                     <th>Numbers bought</th>
                     <th>Price</th>
-                    <th>Active</th>
+                    <!-- <th>Is have ice</th> -->
                     <th>Action</th>
                 </tr>
             </thead>
@@ -32,12 +32,12 @@
                         <span ng-if="item.price">{{item.price}}</span>
                         <span ng-if="!item.price">0</span>
                     </td>
-                    <td class="ng-binding">
+                    <!-- <td class="ng-binding">
                         <label class="checkbox-inline custom-checkbox nowrap">
 							<input type="checkbox" ng-checked="item.active" ng-model="item.active" ng-click="changeActive(item)">
 							<span></span>
 						</label>
-                    </td>
+                    </td> -->
                     <td class="ng-binding" style="width: 30px; text-align : center;">
                         <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">
                             <i class="ion-android-delete"></i>
@@ -46,5 +46,9 @@
                 </tr>
             </tbody>
         </table>
+        <div class="align-right" ng-show="bigTotalItems > 10">
+            <ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" ng-click="changePage(bigCurrentPage)"
+                class="pagination-sm" boundary-link-numbers="true"></ul>
+        </div>
     </div>
 </div>

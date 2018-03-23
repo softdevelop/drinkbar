@@ -15,11 +15,48 @@
 		$scope.data_detail = {
 			id : $scope.paramt_id
 		};
+		$scope.isChange = false;
+
+		$scope.list_categories = [];
+		$scope.list_glass = [];
+
+		// ========== function get list categories ===========
+		function getCategories(){
+			DrinkService.getCategories($rootScope.userLogin.token).success(function(res){
+				$scope.list_categories = res;
+			}).error(function(err, stt, res){
+				console.log(res)
+				toastr.error('Error!');
+			})
+		}
+
+		getCategories();
+
+		// ============ get list glass ====================
+		function getListGlass(){
+			DrinkService.getListGlass($rootScope.userLogin.token).success(function(res){
+				$scope.list_glass = res;
+			}).error(function(err, stt, res){
+				console.log(res)
+				toastr.error('Error!');
+			})
+		}
+
+		getListGlass();
 		
 		// ========= function get data glass by id ===========
 		function getElement(){
 			DrinkService.getElement($scope.paramt_id, $rootScope.userLogin.token).success(function(res){
 				$scope.detail = res;
+				$scope.detail.glass = String(res.glass.id);
+				var _category = res.category;
+				var _arr = [];
+				_category.forEach(el => {
+					_arr.push(String(el.id));
+				});
+
+				$scope.detail.category = _arr;
+
 			}).error(function(err, status, res){
 				console.log(err);
 				toastr.error('Error!');
@@ -31,6 +68,7 @@
 		// ========== function change from ===============
 		$scope.changeInfo = function(field, value){
 			$scope.data_detail[field] = value;
+			$scope.isChange = true;
 		}
 		
 		// =========== function create =================

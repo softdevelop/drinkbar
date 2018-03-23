@@ -12,11 +12,23 @@
 	/** @ngInject */
 	function DrinkListCtrl($scope, toastr, DrinkService, $rootScope, $location, $window, $uibModal) {
 		$rootScope.listData = [];
+
+		$scope.maxSize = 10;
+		$scope.bigTotalItems = 0;
+		$scope.bigCurrentPage = 1;
+		$rootScope.offset = 0;
+
+		// ================ pagination ====================
+		$scope.changePage = function (page_index) {
+			$rootScope.offset = page_index > 1 ? ((page_index - 1) * 10) : 0;
+			getList();
+		}
 		
 		// ================= get list ===============
 		function getList(){
-			DrinkService.getList($rootScope.userLogin.token).success(function(res){
+			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listData = res.results;
+				$scope.bigTotalItems = res.count;
 			}).error(function(err, status, res){
 				console.log(res)
 				toastr.error('Error!');

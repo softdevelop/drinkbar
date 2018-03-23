@@ -45,7 +45,5 @@
   "scripts": {
     "postinstall": "bower install"
   },
-  "dependencies": {
-    "angular-multiple-select": "^1.1.3"
-  }
+  "dependencies": {}
 }

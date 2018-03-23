@@ -1,18 +1,66 @@
-<div ba-panel="" ba-panel-title="Detail Drink" ba-panel-class="with-scroll">
+<div ba-panel="" ba-panel-title="Create Drink" ba-panel-class="with-scroll">
     <div class="panel-body">
         <form name="form" class="form_create">
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Name</label>
                 <input class="form-control" type="text" name="name" placeholder="Name" ng-model="detail.name" ng-change="changeInfo('name', detail.name)"
-                    required>
+                    >
             </div>
+
+            <div class="form-group">
+                <label for="">Category</label>
+                <select style="height : 200px;" class="form-control" name="category" id="category" ng-model="detail.category" ng-change="changeInfo('category', detail.category)" multiple>
+                    <option ng-repeat="item in list_categories" value="{{ item.id }}">{{ item.link }}</option>
+                  </select>
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Image</label>
+                <input type='file' id="uploadFile" class="form-control" ng-model="detail.image" onchange="angular.element(this).scope().imageUpload(event, 'image')"
+                />
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Image Background</label>
+                <input type='file' id="uploadFile" class="form-control" ng-model="detail.image_background" onchange="angular.element(this).scope().imageUpload(event, 'image_background')"
+                />
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Price</label>
+                <input class="form-control" type="number" min="0" name="price" placeholder="Price" ng-model="detail.price" ng-change="changeInfo('price', detail.price)"
+                    >
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Glass</label>
+
+                <select class="form-control" name="glass" ng-model="detail.glass" ng-change="changeInfo('glass', detail.glass)">
+                    <option ng-repeat="item in list_glass" class="form-control" value="{{item.id}}">{{item.name}} - {{item.size}} </option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Keyword</label>
+                <input class="form-control" type="text" name="key_word" placeholder="Keyword" ng-model="detail.key_word" ng-change="changeInfo('key_word', detail.key_word)"
+                    >
+            </div>
+
+            <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Estimate time</label>
+                <input class="form-control" type="number" min="0" name="estimate_time" placeholder="Estimate time" ng-model="detail.estimate_time" ng-change="changeInfo('estimate_time', detail.estimate_time)"
+                    >
+            </div>
+
+
             <div class="form-group">
                 <label class="checkbox-inline custom-checkbox nowrap">
-                    <input type="checkbox" ng-checked="detail.active" ng-model="detail.active" ng-click="changeInfo('active', detail.active)">
-                    <span>Avtive</span>
+                    <input type="checkbox" ng-model="detail.is_have_ice" ng-click="changeInfo('is_have_ice', detail.is_have_ice)">
+                    <span>Is have ice</span>
                 </label>
             </div>
-            <button ng-disabled="form.$invalid" type="button" class="btn btn-primary" ng-click="save()">Save</button>
+
+            <button ng-disabled="!isChange" type="button" class="btn btn-primary" ng-click="save()">Save</button>
         </form>
     </div>
 </div>
