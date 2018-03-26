@@ -94,6 +94,40 @@
                 </table>
             </div>
 
+            <!-- Garnish -->
+            <div class="drink_ingredient">
+                <h3 class="with-line ng-scope">Garnish</h3>
+
+                <div class="add-row-editable-table">
+                    <button class="btn btn-primary" data-toggle="modal" ng-click="openCreateGarnish('md')" ><i class="ion-plus-round"></i> Add Garnish</button>
+                </div>
+
+                <table ng-if="garnishs.length > 0" class="table table-striped" st-table="smartTableData">
+                    <thead>
+                        <tr class="sortable ">
+                            <th class="" style="text-align : left;">Garnish</th>
+                            <th>Ratio</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in garnishs" class="ng-scope">
+                            <td class="ng-binding" style="text-align : left;">
+                                {{item.garnish.name}}
+                            </td>
+                            <td class="ng-binding">
+                                {{ item.ratio }}
+                            </td>
+                            <td class="ng-binding" style="width: 30px; text-align : center;">
+                                <a href="" data-toggle="modal" ng-click="confirmDeleteGarnish(item)" style="color : #e85555;">
+                                    <i class="ion-android-delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <div style="text-align: center; margin-top: 15px;">
                 <hr>
                     <button ng-disabled="form.$invalid" type="button" class="btn btn-primary" ng-click="create()">Create</button>

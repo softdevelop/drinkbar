@@ -7,7 +7,8 @@
 
 	angular.module('BlurAdmin.pages.create-drink')
 		.controller('DrinkCreateCtrl', DrinkCreateCtrl)
-		.controller('DrinkDeleteIngredientCtrl', DrinkDeleteIngredientCtrl);
+		.controller('DrinkDeleteIngredientCtrl', DrinkDeleteIngredientCtrl)
+		.controller('DrinkDeleteGarnishCtrl', DrinkDeleteGarnishCtrl);
 
 	/** @ngInject */
 	function DrinkCreateCtrl($scope, DrinkService, toastr, $rootScope, $location, $window, $uibModal) {
@@ -18,6 +19,7 @@
 		$scope.list_categories = [];
 		$scope.list_glass = [];
 		$rootScope.ingredients = [];
+		$rootScope.garnishs = [];
 
 		// ============ load data ==========
 		function loadData() {
@@ -56,8 +58,6 @@
 
 		// ========== function change from ===============
 		$scope.changeInfo = function (field, value) {
-			console.log(value)
-
 			$scope.data_create[field] = value;
 		}
 
@@ -75,6 +75,13 @@
 				el.ingredient = el.ingredient.id;
 			});
 			$scope.data_create.ingredients = _arr;
+
+			var _arr_garnish = $rootScope.garnishs;
+			_arr_garnish.forEach(function(el){
+				el.garnish = el.garnish.id;
+			});
+			$scope.data_create.garnishs = _arr_garnish;
+
 			DrinkService.created($scope.data_create, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Created success!');
 				setTimeout(function () {
@@ -97,7 +104,18 @@
 			});
 		}
 
-		// =========== open modal confirm delete Glass ===========
+		// =========== open modal create garnish ============
+		$scope.openCreateGarnish = function (size) {
+			var page = 'app/pages/manager-drink/drink/create/garnish/add.html';
+			$uibModal.open({
+				animation: true,
+				templateUrl: page,
+				size: size,
+				controller: 'DrinkCreateGarnishCtrl',
+			});
+		}
+
+		// =========== open modal confirm delete Ingredient ===========
 		$scope.confirmDelete = function (data) {
 			var page = 'app/pages/manager-drink/drink/create/ingredient/delete.html';
 			$uibModal.open({
@@ -113,11 +131,26 @@
 			});
 		}
 
+		// =========== open modal confirm delete garnish ===========
+		$scope.confirmDeleteGarnish = function (data) {
+			var page = 'app/pages/manager-drink/drink/create/garnish/delete.html';
+			$uibModal.open({
+				animation: true,
+				templateUrl: page,
+				size: 'sm',
+				resolve: {
+					items: function () {
+						return data;
+					}
+				},
+				controller: 'DrinkDeleteGarnishCtrl',
+			});
+		}
+
 	}
 
 	// controler DrinkDeleteIngredientCtrl
 	function DrinkDeleteIngredientCtrl($scope, toastr, DrinkService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance) {
-		console.log(items)
 		$scope.item_del = items;
 
 		// =========== function delete glass =============
@@ -126,11 +159,30 @@
 
 			for (var i = _arr.length; i--;) {
 				if (_arr[i].ingredient.id === items.ingredient.id) {
-					console.log('===> YES')
 					_arr.splice(i, 1);
 				}
 			}
 			$rootScope.ingredients = _arr;
+			toastr.success('Remove success!');
+			$uibModalInstance.close();
+
+		}
+	}
+
+	// controler DrinkDeleteGarnishCtrl
+	function DrinkDeleteGarnishCtrl($scope, toastr, DrinkService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance) {
+		$scope.item_del = items;
+
+		// =========== function delete glass =============
+		$scope.remove = function (data) {
+			var _arr = $rootScope.garnishs;
+
+			for (var i = _arr.length; i--;) {
+				if (_arr[i].garnish.id === items.garnish.id) {
+					_arr.splice(i, 1);
+				}
+			}
+			$rootScope.garnishs = _arr;
 			toastr.success('Remove success!');
 			$uibModalInstance.close();
 
