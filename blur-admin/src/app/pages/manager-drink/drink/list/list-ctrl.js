@@ -50,7 +50,7 @@
 
 		// =========== open modal confirm delete Glass ===========
 		$scope.confirmDelete = function(data){
-			var page = 'app/pages/manager-drink/drink/list/confirm.html';
+			var page = 'app/pages/manager-drink/drink/list/confirm/confirm.html';
             $uibModal.open({
                 animation: true,
                 templateUrl: page,

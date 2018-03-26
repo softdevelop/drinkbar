@@ -13,7 +13,7 @@
                 },
                 created: function (data, token) {
                     var _arr = [];
-                    data.category.forEach(el => {
+                    data.category.forEach(function(el){
                         _arr.push(el.id)
                     });
                     data.category = _arr;

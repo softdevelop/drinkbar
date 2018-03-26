@@ -51,8 +51,8 @@
 				$scope.detail.glass = String(res.glass.id);
 				var _category = res.category;
 				var _arr = [];
-				_category.forEach(el => {
-					_arr.push(String(el.id));
+				_category.forEach(function(el){
+					_arr.push(String(el.id))
 				});
 
 				$scope.detail.category = _arr;
