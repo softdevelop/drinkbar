@@ -22,7 +22,7 @@ Order
 '''
 class TabInline(admin.TabularInline):
     model = Tab
-    extra = 1
+    extra = 0
 
 class TabAdmin(admin.ModelAdmin):
     list_display = ('user','drink', 'ice', 'quantity', 'order')

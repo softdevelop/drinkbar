@@ -1,6 +1,7 @@
 
 from rest_framework import fields, serializers
 from models import *
+from pprint import pprint
 
 class UserSignupSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
@@ -49,6 +50,11 @@ class UserWithTokenSerializer(UserSerializer):
         fields = UserSerializer.Meta.fields + ('token',)
 
 
+'''
+    Drink
+'''
+
+
 class DrinkCategorySerializer(serializers.ModelSerializer):
     link = serializers.SerializerMethodField('_name')
     main_level = serializers.SerializerMethodField('_main')
@@ -85,13 +91,13 @@ class GarnishSerializer(serializers.ModelSerializer):
 class IngredientSmallSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
-        fields = ('name',)
+        fields = ('id','name',)
         
 class DrinkGarnishSerializer(serializers.ModelSerializer):
     garnish = GarnishSerializer(read_only=True)
     class Meta:
         model = DrinkGarnish
-        fields = ('garnish','ratio')
+        fields = ('id','garnish','ratio')
 
 class DrinkIngredientSerializer(serializers.ModelSerializer):
     ingredient = IngredientSmallSerializer(read_only=True)
@@ -103,10 +109,14 @@ class DrinkIngredientSerializer(serializers.ModelSerializer):
     def get_unit(self,obj):
         return obj.get_unit_display()
 class DrinkSmallSerializer(serializers.ModelSerializer):
+    ingredients = DrinkIngredientSerializer(many=True, read_only=True)
+    glass_ml = serializers.SerializerMethodField()
     class Meta:
         model = Drink
-        fields = ('name','image','price')
+        fields = ('name','image','price','ingredients','total_part','glass_ml','ml_per_part')
 
+    def get_glass_ml(self,obj):
+        return obj.glass.change_to_ml
 class DrinkSerializer(serializers.ModelSerializer):
     numbers_bought = serializers.IntegerField(read_only=True)
     category = DrinkCategorySmallSerializer(many=True, read_only=True)
@@ -117,27 +127,40 @@ class DrinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Drink
         fields = ('id','numbers_bought','category','glass','ingredients',
-            'garnishes','name','image','price','creator','creation_date')
+            'garnishes','name','image','image_background','price','creator','creation_date',
+            'key_word','estimate_time','is_have_ice')
         # depth = 1
 
     def _garnishes(self, obj):
-        qs = Garnish.objects.filter(drinks__drink=obj, active=True)
-        serializer = GarnishSerializer(instance=qs, many=True)
+        qs = DrinkGarnish.objects.filter(drink=obj, garnish__active=True)
+        serializer = DrinkGarnishSerializer(instance=qs, many=True)
         return serializer.data
 
 class DrinkCreateSerializer(serializers.ModelSerializer):
     ingredients = DrinkIngredientSerializer(many=True, required=False, read_only=True)
     garnishes = DrinkGarnishSerializer(many=True, required=False, read_only=True)
+    category = DrinkCategorySmallSerializer(many=True, read_only=True)
     class Meta:
         model = Drink
         fields = ('id','numbers_bought','category','glass','ingredients',
-            'garnishes','name','image','price','creator','creation_date')
+            'garnishes','name','image','image_background','price','creator',
+            'creation_date','key_word','estimate_time','is_have_ice')
 
 
     def create(self, validated_data):
-        ret = super(DrinkCreateSerializer,self).create(validated_data)
+        ret = Drink(**validated_data)
+        ret.save()
 
-        ingredients = self.initial_data.get('ingredients')
+        categories = self.initial_data.get('category')
+        categories = categories.split(",")
+        for category in categories:
+            try:
+                ret.category.add(DrinkCategory.objects.get(id=category))
+            except Exception as e:
+                ret.delete()
+                raise e
+
+        ingredients = self.initial_data.getlist('ingredients')
         for ingredient in ingredients:
             try:
                 ingre = DrinkIngredient(drink=ret, ingredient=Ingredient.objects.get(id=ingredient['ingredient']),
@@ -149,7 +172,9 @@ class DrinkCreateSerializer(serializers.ModelSerializer):
                 ret.delete()
                 raise e
 
-        garnishes = self.initial_data.get('garnishes')
+        garnishes = self.initial_data.getlist('garnishs')
+        print garnishes
+        pprint(vars(garnishes))
         for garnish in garnishes:
             try:
                 garn = DrinkGarnish(drink=ret, garnish=Garnish.objects.get(id=garnish['garnish']),
@@ -186,11 +211,37 @@ class IngredientHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = IngredientHistory
         fields = '__all__'
-        
+
+
+'''
+    Robot
+'''
+
+class RobotIngredientSerializer(serializers.ModelSerializer):
+    ingredient = IngredientSmallSerializer(read_only=True)
+    class Meta:
+        model = RobotIngredient
+        fields = '__all__'
+
+    def create(self, validated_data):
+        ret = RobotIngredient(**validated_data)
+        ret.ingredient = Ingredient.objects.filter(id=self.initial_data['ingredient'])
+        ret.save()
+        return ret
+
+    def update(self, validated_data):
+        ret = super(RobotIngredientSerializer,self).update(validated_data)
+        ret.ingredient = Ingredient.objects.filter(id=self.initial_data['ingredient'])
+        ret.save()
+        return ret
+
 class RobotSerializer(serializers.ModelSerializer):
+    ingredients = RobotIngredientSerializer(many=True, read_only=True)
     class Meta:
         model = Robot
         fields = '__all__'
+
+
 
 class AddToTabSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False, read_only=True)
@@ -200,18 +251,18 @@ class AddToTabSerializer(serializers.ModelSerializer):
 
 class MyTabSerializer(serializers.ModelSerializer):
     drink = DrinkSmallSerializer(required=False, read_only=True)
-    garnish = GarnishSerializer(many=True)
+    garnishes = DrinkGarnishSerializer(many=True)
     ice = serializers.SerializerMethodField()
 
     class Meta:
         model = Tab
-        fields = ('drink','ice','garnish','quantity')
+        fields = ('drink','status','ice','garnishes','quantity')
 
     def get_ice(self,obj):
         return obj.get_ice_display()
 
 class OrderSmallSerializer(serializers.ModelSerializer):
-    products = MyTabSerializer(many=True, required=False)
+    products = MyTabSerializer(many=True, required=False, read_only=True)
     class Meta:
         model = Order
         fields = ('id','status','creation_date','amount',
@@ -221,10 +272,12 @@ class OrderSmallSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(OrderSmallSerializer):
     user = UserSerializer(required=False, read_only=True)
-    products = MyTabSerializer(many=True, required=False)
     class Meta:
         model = Order
-        fields = '__all__'
+        fields = ('id','status','creation_date','amount',
+            'channel','transaction_code','transaction_id',
+            'payer_firstname','payer_lastname','payer_email',
+            'tray_number','products','robot','user')
 
 
 class UserWithOrderSerializer(UserSerializer):

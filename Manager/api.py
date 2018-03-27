@@ -7,10 +7,10 @@ from rest_framework.response import Response
 from rest_framework import generics, status, exceptions, permissions, viewsets, mixins
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import IsAuthenticated
-from serializer import *
-from models import *
-import tasks
-import payments
+from .serializer import *
+from .models import *
+from . import tasks
+from . import payments
 from django.conf import settings
 from Manager.models import UserBase
 from django.core.mail import send_mail, EmailMessage
@@ -154,7 +154,7 @@ class UserForgetPassword(APIView):
             try:
                 code = user.opt[:8]
                 expired_time = user.opt[8:]
-                print expired_time
+                print (expired_time)
                 if reset_code != code:
                     raise api_utils.BadRequest('INVALID_RESET_CODE')
             except:
@@ -230,42 +230,69 @@ class UserOrder(generics.ListCreateAPIView):
         if is_admin:
             return self.queryset.all()
         ret = self.queryset.filter(user=self.request.user)
-        # is_current = self.request.GET.get('admin', False)
         return ret
 
     def create(self, request, *args, **kwargs):
+        reorder_id = self.request.data.get('order_id', None)
+        reorder = None
+        # stripe_token = self.request.data.get('stripe_token', None)
+        # if not stripe_token:
+        #     raise api_utils.BadRequest("INVALID_STRIPE_TOKEN")
+
+        tabs = request.user.tab.filter(order__isnull=True, quantity__gt=0)
+        if reorder_id:
+            try:
+                reorder = Order.objects.get(id=reorder_id, user=request.user)
+            except Exception as e:
+                raise api_utils.BadRequest("INVALID_ORDER_ID")
+            tabs = reorder.products.all()
+
+        # Get data for new order
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.validated_data['user']=request.user
-        stripe_token = self.request.data.get('stripe_token', None)
 
-        tabs = request.user.tab.filter(order__isnull=True, quantity__gt=0)
+        # Check out tab for new order
         if not tabs:
-            raise api_utils.BadRequest("YOU HAVE NOT ADD TO TAB ANY THING")
+            raise api_utils.BadRequest("YOU HAVE NOT ADDED TO TAB ANY THING")
         temp = tabs.aggregate(sum_quantity=Sum('quantity'))
         if temp['sum_quantity'] > 5:
             raise api_utils.BadRequest("OVER 5 QUANTITY, PLEASE REMOVE SOME!")
         total_bill = 0
         for tab in tabs:
             total_bill += int(tab.quantity)*float(tab.drink.price)
-        if not stripe_token:
-            raise api_utils.BadRequest("INVALID_STRIPE_TOKEN")
-        try:
-            total_bill = float(total_bill)
-            amount = int(round(total_bill*100))
-            stripe_payment = payments.StripePayment()
-            charge = stripe_payment.charge(amount=amount, currency=currency, token=stripe_token)
-            serializer.validated_data['transaction_code'] = stripe_token
-            serializer.validated_data['transaction_id'] = charge.id
-            serializer.validated_data['amount'] = float(amount/100)
-            serializer.validated_data['channel'] = Order.CHANNEL_STRIPE
-        except payments.StripePayment.StripePaymentException:
-            raise api_utils.BadRequest('STRIPE_ERROR')
-        except Exception as e:
-            raise api_utils.BadRequest(e.message)
-        # serializer.validated_data['amount'] = float(total_bill)
+
+        # Payment with stripe
+        # try:
+        #     total_bill = float(total_bill)
+        #     amount = int(round(total_bill*100))
+        #     stripe_payment = payments.StripePayment()
+        #     charge = stripe_payment.charge(amount=amount, currency=currency, token=stripe_token)
+        #     serializer.validated_data['transaction_code'] = stripe_token
+        #     serializer.validated_data['transaction_id'] = charge.id
+        #     serializer.validated_data['amount'] = float(amount/100)
+        #     serializer.validated_data['channel'] = Order.CHANNEL_STRIPE
+        # except payments.StripePayment.StripePaymentException:
+        #     raise api_utils.BadRequest('STRIPE_ERROR')
+        # except Exception as e:
+        #     raise api_utils.BadRequest(e.message)
+
+        # Create new order
+        serializer.validated_data['amount'] = float(total_bill)
         order = serializer.create(serializer.validated_data)
-        tabs.update(order=order)
+        if reorder:
+            for tab in tabs:
+                garnishes = tab.garnish.all()
+                new_tab = tab
+                new_tab.pk = None
+                new_tab.order=order
+                new_tab.status=Tab.STATUS_NEW
+                new_tab.save()
+                for garnish in garnishes:
+                    new_tab.garnish.add(garnish)
+        else:
+            tabs.update(order=order)
+        # pprint(vars(serializer.data))
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
@@ -309,7 +336,7 @@ class DrinkList(generics.ListCreateAPIView):
         ret = self.queryset.exclude(Q(ingredients__ingredient__status=Ingredient.CONST_STATUS_BLOCKED)|\
                     Q(glass__status=SeparateGlass.CONST_STATUS_BLOCKED))
         if is_admin:
-            print is_admin
+            print (is_admin)
             ret = self.queryset.all()
 
         search_query = self.request.GET.get('search', None)
@@ -330,6 +357,11 @@ class DrinkDetial(generics.RetrieveUpdateDestroyAPIView):
     queryset = Drink
     serializer_class = DrinkSerializer
     permission_classes = [IsAuthenticated]
+
+    # def patch(self,request, *args, **kwargs):
+    #     data = self.get_serializer(data=request.data)
+    #     data.is_valid(raise_exception=True)
+        
 
 class SeparateGlassList(generics.ListCreateAPIView):
     queryset = SeparateGlass.objects.all()
@@ -365,7 +397,7 @@ Ingredient API
 '''
 
 class IngredientList(generics.ListCreateAPIView):
-    queryset = Ingredient.objects.all()
+    queryset = Ingredient.objects.all().order_by('name')
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
@@ -397,7 +429,7 @@ class IngredientDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 class IngredientTypeList(generics.ListCreateAPIView):
-    queryset = IngredientType.objects.all()
+    queryset = IngredientType.objects.all().order_by('name')
     serializer_class = IngredientTypeSerializer
     permission_classes = [IsAuthenticated]
     paginator = None
@@ -422,7 +454,7 @@ class IngredientBrandTypeList(generics.ListAPIView):
         return ret
 
 class IngredientBrandList(generics.ListCreateAPIView):
-    queryset = IngredientBrand.objects.all().order_by('id')
+    queryset = IngredientBrand.objects.all().order_by('name')
     serializer_class = IngredientTypeSerializer
     permission_classes = [IsAuthenticated]
     
@@ -432,7 +464,7 @@ class IngredientBrandDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 class DrinkIngredientList(generics.ListCreateAPIView):
-    queryset = DrinkIngredient.objects.all()
+    queryset = DrinkIngredient.objects.all().order_by('name')
     serializer_class = DrinkIngredientSerializer
     permission_classes = [IsAuthenticated]
 
@@ -442,7 +474,7 @@ class DrinkIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 class IngredientHistoryList(generics.ListCreateAPIView):
-    queryset = IngredientHistory.objects.all()
+    queryset = IngredientHistory.objects.all().order_by('-creation_date')
     serializer_class = IngredientHistorySerializer
     permission_classes = [IsAuthenticated]
 
@@ -452,6 +484,7 @@ class IngredientHistoryDetail(generics.RetrieveDestroyAPIView):
     serializer_class = IngredientHistorySerializer
     permission_classes = [IsAuthenticated]
 
+#Robot
 # class RobotList(generics.ListAPIView):
 class RobotList(generics.ListCreateAPIView):
     #Support 1 for now, cannot create new robot
@@ -463,4 +496,14 @@ class RobotList(generics.ListCreateAPIView):
 class RobotDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Robot
     serializer_class = RobotSerializer
+    permission_classes = [IsAuthenticated]
+
+class RobotIngredientList(generics.CreateAPIView):
+    queryset = RobotIngredient.objects.all()
+    serializer_class = RobotIngredientSerializer
+    permission_classes = [IsAuthenticated]
+
+class RobotIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = RobotIngredient
+    serializer_class = RobotIngredientSerializer
     permission_classes = [IsAuthenticated]
