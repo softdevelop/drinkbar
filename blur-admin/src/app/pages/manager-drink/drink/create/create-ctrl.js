@@ -70,17 +70,8 @@
 
 		// =========== function create =================
 		$scope.create = function () {
-			var _arr = $rootScope.ingredients;
-			_arr.forEach(function(el){
-				el.ingredient = el.ingredient.id;
-			});
-			$scope.data_create.ingredients = _arr;
-
-			var _arr_garnish = $rootScope.garnishs;
-			_arr_garnish.forEach(function(el){
-				el.garnish = el.garnish.id;
-			});
-			$scope.data_create.garnishs = _arr_garnish;
+			$scope.data_create.garnishes = $rootScope.garnishs;
+			$scope.data_create.ingredients = $rootScope.ingredients;
 
 			DrinkService.created($scope.data_create, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Created success!');

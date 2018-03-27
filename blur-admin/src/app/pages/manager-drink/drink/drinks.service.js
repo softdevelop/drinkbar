@@ -13,15 +13,16 @@
                 },
                 created: function (data, token) {
                     var _arr = [];
-                    data.category.forEach(function(el){
+                    data.category.forEach(function (el) {
                         _arr.push(el.id)
                     });
                     data.category = _arr;
+
                     var fd = new FormData();
                     for (var key in data) {
                         fd.append(key, data[key])
                     }
-                    
+
                     return $http.post(AppSetting.BASE_URL + '/api/drink/', fd, {
                         headers: {
                             'Content-Type': undefined,
@@ -85,6 +86,14 @@
                 },
                 getListGlass: function (token) {
                     return $http.get(AppSetting.BASE_URL + '/api/glass/?admin=true', {
+                        headers: {
+                            'Content-Type': undefined,
+                            'Authorization': 'Token ' + token
+                        }
+                    });
+                },
+                getListIngredient: function (token, type, brand) {
+                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/?type=' + type + '&brand=' + brand, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
