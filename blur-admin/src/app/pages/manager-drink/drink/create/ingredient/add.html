@@ -43,7 +43,6 @@
         <div class="form-group">
             <label for="" class="label_black">Ingredient</label>
             <select class="form-control" name="ingredient" ng-disabled="isDisableIngredient" ng-model="ingredient" ng-change="changeInfo('ingredient', ingredient)">
-                <option value="">Select Ingredient</option>
                 <option ng-repeat="item in list_ingredient" class="form-control" value="{{item.id}}">{{item.name}} - {{item.type.name}} </option>
             </select>
         </div>

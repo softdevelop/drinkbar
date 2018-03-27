@@ -200,7 +200,7 @@
 					},
 					{
 						stateRef: "ingredient-history",
-						title: "Ingredient History",
+						title: "History",
 						name: 'ingredient-history',
 						level: 1,
 						subMenu : [

@@ -10,7 +10,7 @@
 					<th class="table-id">#</th>
 					<th>Name</th>
 					<th>Status</th>
-					<th>Image</th>
+					<th style="text-align : center;">Image</th>
 					<th>Size</th>
 					<th>Unit</th>
 					<th>Action</th>
@@ -18,11 +18,11 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="item in listGalss" class="ng-scope">
-					<td class="table-id ng-binding">{{item.id}}</td>
-					<td class="ng-binding">
+					<td class="table-id ng-binding align-items-center">{{item.id}}</td>
+					<td class="ng-binding  align-items-center">
 						<a href="#/manager-drink/separate-glass/detail/{{item.id}}">{{item.name}}</a>
 					</td>
-					<td class="ng-binding">
+					<td class="ng-binding align-items-center">
 						<!-- <input ng-show="item.status === 0" type="checkbox" name="status" checked>
 						<input ng-show="item.status === 10" type="checkbox" name="status"> -->
 						<label class="checkbox-inline custom-checkbox nowrap">
@@ -30,10 +30,15 @@
 							<span></span>
 						</label>
 					</td>
-					<td class="ng-binding"><a href="{{item.image}}">{{item.image}}</a></td>
-					<td class="ng-binding">{{item.size}}</td>
-					<td class="ng-binding">{{item.unit_view}}</td>
-					<td class="ng-binding">
+					<td class="ng-binding align-items-center" style="text-align : center;">
+						<!-- <a href="{{item.image}}">{{item.image}}</a> -->
+						<div class="_image">
+							<img ng-if="item.image" ng-src="{{ item.image }}" alt="{{item.image}}">
+						</div>
+					</td>
+					<td class="ng-binding align-items-center">{{item.size}}</td>
+					<td class="ng-binding align-items-center">{{item.unit_view}}</td>
+					<td class="ng-binding align-items-center">
 						<a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">
 							<i class="ion-android-delete"></i>
 						</a>
