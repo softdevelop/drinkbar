@@ -3,15 +3,15 @@
         <form name="form" class="form_create">
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Name</label>
-                <input class="form-control" type="text" name="name" placeholder="Name" ng-model="detail.name" ng-change="changeInfo('name', detail.name)"
-                    >
+                <input class="form-control" type="text" name="name" placeholder="Name" ng-model="detail.name" ng-change="changeInfo('name', detail.name)">
             </div>
 
             <div class="form-group">
                 <label for="">Category</label>
-                <select style="height : 200px;" class="form-control" name="category" id="category" ng-model="detail.category" ng-change="changeInfo('category', detail.category)" multiple>
+                <select style="height : 200px;" class="form-control" name="category" id="category" ng-model="detail.category" ng-change="changeInfo('category', detail.category)"
+                    multiple>
                     <option ng-repeat="item in list_categories" value="{{ item.id }}">{{ item.link }}</option>
-                  </select>
+                </select>
             </div>
 
             <div class="form-group">
@@ -28,8 +28,7 @@
 
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Price</label>
-                <input class="form-control" type="number" min="0" name="price" placeholder="Price" ng-model="detail.price" ng-change="changeInfo('price', detail.price)"
-                    >
+                <input class="form-control" type="number" min="0" name="price" placeholder="Price" ng-model="detail.price" ng-change="changeInfo('price', detail.price)">
             </div>
 
             <div class="form-group">
@@ -42,14 +41,13 @@
 
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Keyword</label>
-                <input class="form-control" type="text" name="key_word" placeholder="Keyword" ng-model="detail.key_word" ng-change="changeInfo('key_word', detail.key_word)"
-                    >
+                <input class="form-control" type="text" name="key_word" placeholder="Keyword" ng-model="detail.key_word" ng-change="changeInfo('key_word', detail.key_word)">
             </div>
 
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Estimate time</label>
-                <input class="form-control" type="number" min="0" name="estimate_time" placeholder="Estimate time" ng-model="detail.estimate_time" ng-change="changeInfo('estimate_time', detail.estimate_time)"
-                    >
+                <input class="form-control" type="number" min="0" name="estimate_time" placeholder="Estimate time" ng-model="detail.estimate_time"
+                    ng-change="changeInfo('estimate_time', detail.estimate_time)">
             </div>
 
 
@@ -60,7 +58,85 @@
                 </label>
             </div>
 
-            <button ng-disabled="!isChange" type="button" class="btn btn-primary" ng-click="save()">Save</button>
+            <!-- Ingredient -->
+            <div class="drink_ingredient">
+                <h3 class="with-line ng-scope">Ingredient</h3>
+
+                <div class="add-row-editable-table">
+                    <button class="btn btn-primary" data-toggle="modal" ng-click="openCreateIngredient('md')">
+                        <i class="ion-plus-round"></i> Add Ingredient</button>
+                </div>
+
+                <table ng-if="ingredients.length > 0" class="table table-striped" st-table="smartTableData">
+                    <thead>
+                        <tr class="sortable ">
+                            <th class="" style="text-align : left;">Ingredient</th>
+                            <th>Ratio</th>
+                            <th>Unit</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in ingredients" class="ng-scope">
+                            <td class="ng-binding" style="text-align : left;">
+                                {{item.ingredient.name}}
+                            </td>
+                            <td class="ng-binding">
+                                {{ item.ratio }}
+                            </td>
+                            <td class="ng-binding">
+                                {{ item.unit }}
+                            </td>
+                            <td class="ng-binding" style="width: 30px; text-align : center;">
+                                <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">
+                                    <i class="ion-android-delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Garnish -->
+            <div class="drink_ingredient">
+                <h3 class="with-line ng-scope">Garnish</h3>
+
+                <div class="add-row-editable-table">
+                    <button class="btn btn-primary" data-toggle="modal" ng-click="openCreateGarnish('md')">
+                        <i class="ion-plus-round"></i> Add Garnish</button>
+                </div>
+
+                <table ng-if="garnishs.length > 0" class="table table-striped" st-table="smartTableData">
+                    <thead>
+                        <tr class="sortable ">
+                            <th class="" style="text-align : left;">Garnish</th>
+                            <th>Ratio</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in garnishs" class="ng-scope">
+                            <td class="ng-binding" style="text-align : left;">
+                                {{item.garnish.name}}
+                            </td>
+                            <td class="ng-binding">
+                                {{ item.ratio }}
+                            </td>
+                            <td class="ng-binding" style="width: 30px; text-align : center;">
+                                <a href="" data-toggle="modal" ng-click="confirmDeleteGarnish(item)" style="color : #e85555;">
+                                    <i class="ion-android-delete"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="text-align: center; margin-top: 60px;">
+                <hr>
+                <button ng-disabled="!isChange" type="button" class="btn btn-primary" ng-click="save()">Save</button>
+            </div>
+
         </form>
     </div>
 </div>
