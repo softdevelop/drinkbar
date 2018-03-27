@@ -77,10 +77,10 @@
         // ============== add ingredient =============
         $scope.add = function () {
             console.log($scope.data_create)
-            // toastr.success('Add Ingredient success!');
-            // $rootScope.ingredients.push($scope.data_create);
-            // $uibModalInstance.close();
-            // $rootScope.loadPageDrinkCreate(true);
+            toastr.success('Add Ingredient success!');
+            $rootScope.ingredients.push($scope.data_create);
+            $uibModalInstance.close();
+            $rootScope.loadPageDrinkCreate(true);
         }
     }
 
