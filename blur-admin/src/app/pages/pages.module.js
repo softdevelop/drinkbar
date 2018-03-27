@@ -27,6 +27,10 @@
 		'BlurAdmin.pages.list-ingredient-types',
 		'BlurAdmin.pages.create-ingredient-types',
 		'BlurAdmin.pages.detail-ingredient-types',
+		// -------- ingredient history --------
+		'BlurAdmin.pages.list-history',
+		'BlurAdmin.pages.create-history',
+		'BlurAdmin.pages.detail-history',
 		// ------- ingredient brand ---------
 		'BlurAdmin.pages.list-ingredient-brand',
 		'BlurAdmin.pages.create-ingredient-brand',

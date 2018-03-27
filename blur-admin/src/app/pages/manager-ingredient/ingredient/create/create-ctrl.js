@@ -42,9 +42,7 @@
                 var _arr = [
                     $rootScope.create_new_brand
                 ];
-                console.log(_arr)
                 $rootScope.brands = _arr;
-                console.log($rootScope.brands)
                 $scope.data_create.brand = String($rootScope.create_new_brand.id);
             }
 
@@ -93,7 +91,7 @@
         // ============ function get list brand ===========
         function getListBrand(type){
             IngredientService.getListBrand($rootScope.userLogin.token, type).success(function(res){
-                $rootScope.brands = res;
+                $rootScope.brands = res.results;
 
                 $rootScope.brands.length === 0 && ($scope.isAddElement.brand = true);
             }).error(function(err, stt, res){

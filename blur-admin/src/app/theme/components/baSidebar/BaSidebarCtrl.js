@@ -197,6 +197,26 @@
 								level: 2
 							}
 						]
+					},
+					{
+						stateRef: "ingredient-history",
+						title: "Ingredient History",
+						name: 'ingredient-history',
+						level: 1,
+						subMenu : [
+							{
+								stateRef: "create-history",
+								title: "Create",
+								level: 2,
+								name: 'create-history'
+							},
+							{
+								stateRef: "list-history",
+								title: "List",
+								name: 'list-history',
+								level: 2
+							}
+						]
 					}
 				]
 			}

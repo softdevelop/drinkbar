@@ -6,9 +6,43 @@
         <h4 class="modal-title" id="myModalLabel">Add Ingredient</h4>
     </div>
     <div class="modal-body">
+
+        <div class="form-group">
+            <label class="label_black" for="">Ingredient Type</label>
+
+            <div ng-class=" {'row' : isAddElement.type} ">
+                <div ng-class=" {'col-md-11' : isAddElement.type} ">
+                    <select class="form-control" name="status" ng-model="type" ng-change="changeInfo('type', type)">
+                        <option ng-repeat="item in types" class="form-control" value="{{item.id}}">{{item.name}}</option>
+                    </select>
+                </div>
+                <div ng-if="isAddElement.type" class="col-md-1">
+                    <button class="btn btn-primary form-control" data-toggle="modal" ng-click="openAddType('md')">
+                        <i class="ion-plus-round"></i> Add</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="label_black" for="">Ingredient Brand</label>
+
+            <div ng-class=" {'row' : isAddElement.brand} ">
+                <div ng-class=" {'col-md-11' : isAddElement.brand} ">
+                    <select ng-disabled="isDisableBrand" class="form-control" name="brand" ng-model="brand" ng-change="changeInfo('brand', brand)"
+                        required>
+                        <option ng-repeat="item in brands" class="form-control" value="{{item.id}}">{{item.name}}</option>
+                    </select>
+                </div>
+                <div ng-if="isAddElement.brand" class="col-md-1">
+                    <button class="btn btn-primary form-control" data-toggle="modal" ng-click="openAddBrand('md')">
+                        <i class="ion-plus-round"></i> Add</button>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <label for="" class="label_black">Ingredient</label>
-            <select class="form-control" name="ingredient" ng-model="ingredient" ng-change="changeInfo('ingredient', ingredient)">
+            <select class="form-control" name="ingredient" ng-disabled="isDisableIngredient" ng-model="ingredient" ng-change="changeInfo('ingredient', ingredient)">
                 <option value="">Select Ingredient</option>
                 <option ng-repeat="item in list_ingredient" class="form-control" value="{{item.id}}">{{item.name}} - {{item.type.name}} </option>
             </select>
