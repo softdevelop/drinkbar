@@ -4,8 +4,8 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView
-from models import *
-from api import SendVerificationEmail
+from .models import *
+from .api import SendVerificationEmail
 import hashlib
 
 class VerificationEmail(TemplateView):

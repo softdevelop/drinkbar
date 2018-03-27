@@ -1,4 +1,6 @@
 facepy
+channels==1.1.8
+channels-api==0.4.0
 django==1.11
 djangorestframework
 django_cleanup
@@ -7,6 +9,7 @@ django-cors-headers
 django-import-export
 django-redis
 facebook-sdk
+-e git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
 mysqlclient
 Pillow
 stripe

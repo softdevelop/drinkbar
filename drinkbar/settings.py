@@ -45,9 +45,34 @@ INSTALLED_APPS = [
     'corsheaders',
     'import_export',
     'django_cleanup',
+    'channels',
+    'channels_api',
 
     'Manager',
 ]
+
+ASGI_APPLICATION = "drinkbar.routing.application"
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "asgiref.inmemory.ChannelLayer",
+#         "ROUTING": "drinkbar.routing.channel_routing",
+#     },
+# }
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+        "ROUTING": "drinkbar.routing.channel_routing",
+    },
+}
+
+CHANNELS_API = {
+  'DEFAULT_PAGE_SIZE': 25
+}
 
 MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -175,6 +200,6 @@ MEDIA_URL = SITE_URL+"/media/"
 
 
 try:
-    from settings_local import *
+    from .settings_local import *
 except ImportError as e:
-    print e
+    print(e)

@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from django.db.models import F
+from django.db.models import F, Sum
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
@@ -13,7 +13,7 @@ from categories.base import CategoryBase
 from django.urls import reverse
 from facepy import GraphAPI
 from datetime import datetime, date
-import api_utils
+from . import api_utils
 import facebook
 import urllib
 from django.utils import timezone
@@ -21,7 +21,7 @@ from django.conf import settings
 
 
 class UserBase(AbstractUser):
-    email = models.EmailField(_('email address'), blank=True, unique=True)
+    email = models.EmailField(_('email address'), unique=True)
     birthday = models.DateField(null=True, blank=True)
     avatar = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='avatars',
                                  null=True, blank=True)
@@ -73,7 +73,7 @@ class UserBase(AbstractUser):
                             last_name=last_name, birthday=birthday.date(),
                             fb_access_token=unicode(fb_token).encode('utf-8'))
         except Exception as e:
-            print ">>> get_or_create_user_from_facebook ::", e
+            print (">>> get_or_create_user_from_facebook ::", e)
             pass
         return new_user
 
@@ -112,7 +112,9 @@ class Ingredient(models.Model):
     brand = models.ForeignKey(IngredientBrand, on_delete=models.SET_NULL, blank=True,
                         null=True, related_name='ingredient_brands')
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='ingredient', null=True, blank=True)
-    
+
+    def __unicode__(self):
+        return self.name
 class DrinkCategory(CategoryBase):
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),null=True, blank=True, upload_to='categories')
 
@@ -164,8 +166,8 @@ class SeparateGlass(models.Model):
     @property
     def change_to_ml(self):
         if self.unit is self.CONST_UNIT_OZ:
-            return self.size*29.57
-        return self.size
+            return float(self.size*29.57)
+        return float(self.size)
 
     def __unicode__(self):
         return '-'.join([self.name, str(self.size)])
@@ -198,6 +200,21 @@ class Drink(models.Model):
     is_have_ice = models.BooleanField(default=True)
     creator = models.ForeignKey(UserBase,related_name='creative_drinks', default=get_admin())
     creation_date = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def total_part(self):
+        temp = self.ingredients.filter(unit=DrinkIngredient.CONST_UNIT_PART).aggregate(sum_ratio=Sum('ratio'))
+        if temp['sum_ratio'] == None:
+            return 0
+        return int(temp['sum_ratio'])
+
+    @property
+    def ml_per_part(self): 
+        try:
+            return round(float(self.glass.change_to_ml/self.total_part),2)
+        except Exception as e:
+            return 0
+
     def __unicode__(self):
         return self.name
 
@@ -279,6 +296,7 @@ class Order(models.Model):
     payer_email = models.CharField(max_length=100, null=True, blank=True)
     tray_number = models.SmallIntegerField(null=True, blank=True)
     robot = models.ForeignKey(Robot, default=1, related_name='do_orders')
+    # reorder = models.ForeignKey('self', blank=True, null=True)
     def __unicode__(self):
         return str(self.id)
 
@@ -291,11 +309,10 @@ def create_new_order(sender, instance=None, created=False, **kwargs):
             glass = drink.glass.change_to_ml
 
             drink_ingredients = drink.ingredients.all()
-            temp = drink.ingredients.filter(unit=DrinkIngredient.CONST_UNIT_PART).aggregate(sum_ratio=Sum('ratio')) 
 
             for drink_ingredient in drink_ingredients:
                 ingredient = instance.robot.ingredients.filter(ingredient=drink_ingredient)
-                ratio = drink_ingredient.change_to_ml(temp['sum_ratio'],glass)
+                ratio = drink_ingredient.change_to_ml(drink.total_part,glass)
                 if ingredient.remain_of_bottle < 100:
                     # send email
                     if ingredient.remain_of_bottle < ratio:
@@ -335,7 +352,7 @@ class Tab(models.Model):
     drink = models.ForeignKey(Drink)
     ice = models.PositiveSmallIntegerField(_('ice'), choices=CONST_ICE_CHOICE, 
                                         default=CONST_100_ICE)
-    garnish = models.ManyToManyField(Garnish, blank =True)
+    garnishes = models.ManyToManyField(DrinkGarnish, blank =True)
     quantity = models.PositiveIntegerField(blank=True, null= True, default=0)
     order = models.ForeignKey(Order, related_name='products',blank=True, null= True,)
 class RobotIngredient(models.Model):
