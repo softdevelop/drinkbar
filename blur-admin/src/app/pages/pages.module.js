@@ -56,6 +56,14 @@
 		'BlurAdmin.pages.list-categories',
 		'BlurAdmin.pages.create-categories',
 		'BlurAdmin.pages.detail-categories',
+		// ============ order ================
+		'BlurAdmin.pages.list-order',
+		'BlurAdmin.pages.create-order',
+		'BlurAdmin.pages.detail-order',
+		// ============ robot ================
+		'BlurAdmin.pages.list-robot',
+		// 'BlurAdmin.pages.create-robot',
+		// 'BlurAdmin.pages.detail-robot',
 	])
 		.config(routeConfig);
 
@@ -191,6 +199,33 @@
 					title: 'Categories Detail',
 					stateRef: 'detail-categories/:id'
 				},
+				// ============= Order ===============
+				{
+					title: 'Order List',
+					stateRef: 'list-order'
+				},
+				{
+					title: 'Order Create',
+					stateRef: 'create-order'
+				},
+				{
+					title: 'Order Detail',
+					stateRef: 'detail-order/:id'
+				},
+				// ============= Robot ===============
+				{
+					title: 'Robot List',
+					stateRef: 'list-robot'
+				},
+				// {
+				// 	title: 'Robot Create',
+				// 	stateRef: 'create-robot'
+				// },
+				// {
+				// 	title: 'Robot Detail',
+				// 	stateRef: 'detail-robot/:id'
+				// },
+				// ===================================
 				{
 					title: '404 Page',
 					fixedHref: '404.html',

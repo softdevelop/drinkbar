@@ -40,6 +40,14 @@
                         'Authorization': 'Token ' + token
                     }
                 })
+            },
+            getUserOrder : function(id, token){
+                return $http.get(AppSetting.BASE_URL + '/api/user/' + id + '/?order=1', {
+                    headers: {
+                        'Content-Type': undefined,
+                        'Authorization': 'Token ' + token
+                    }
+                })
             }
         }
     });

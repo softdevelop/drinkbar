@@ -219,7 +219,47 @@
 						]
 					}
 				]
-			}
+			},
+			{
+				icon: "ion-clipboard",
+				name: "order",
+				level: 0,
+				subMenu: [
+					{
+						stateRef: "create-order",
+						title: "Create",
+						level: 1,
+						name: 'create-order'
+					},
+					{
+						stateRef: "list-order",
+						title: "List",
+						name: 'list-order',
+						level: 1
+					}
+				],
+				title: "Order"
+			},
+			{
+				icon: "ion-social-reddit-outline",
+				name: "Robot",
+				level: 0,
+				subMenu: [
+					// {
+					// 	stateRef: "create-robot",
+					// 	title: "Create",
+					// 	level: 1,
+					// 	name: 'create-robot'
+					// },
+					{
+						stateRef: "list-robot",
+						title: "List",
+						name: 'list-robot',
+						level: 1
+					}
+				],
+				title: "Robot"
+			},
 		];
 
 		$scope.defaultSidebarState = $scope.menuItems[0].stateRef;

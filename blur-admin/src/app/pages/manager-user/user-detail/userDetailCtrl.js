@@ -18,8 +18,27 @@
         $scope.isChangeAvatar = false;
         $scope.data_update = {};
         $scope.isUpdated = false;
-        // $scope.picture = $filter('profilePicture')('Nasta');
+        $scope.user_order = [];
 
+        // ============ open modal info user order ==========
+        $scope.openInfoOrder = function(data){
+            var page = 'app/pages/manager-user/user-detail/order/index.html';
+
+            $uibModal.open({
+                animation: true,
+                templateUrl: page,
+                size: 'lg',
+                resolve: {
+                    token: function () {
+                        return $scope.currentUser.token;
+                    },
+                    items : function(){
+                        return data;
+                    }
+                },
+                controller: 'UserOrderCtrl',
+            });
+        }
 
         // ============= get user detail =================
         function getUser(){
@@ -32,6 +51,18 @@
         }
 
         getUser();
+
+        // =========== get user order ===============
+        function getUserOrder(){
+            ManagerUserService.getUserOrder($scope.user_id, $rootScope.userLogin.token).success(function(res){
+                $scope.user_order = res.orders;
+            }).error(function(err, stt, res){
+                console.log(res)
+                toastr.error('Error!');
+            })
+        }
+
+        getUserOrder();
 
         // ================ delete user ====================
         $scope.deleteUser = function(id){
