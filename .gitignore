@@ -15,6 +15,7 @@ db.sql
 /uploads/
 /static/
 /Manager/migrations/
+/logs/
 
 .project
 .metadata/

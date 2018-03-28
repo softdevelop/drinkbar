@@ -53,6 +53,15 @@ class UserList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
 
+    def get_queryset(self):
+        ret = self.queryset
+        search = self.request.GET.get('search', False)
+        if search:
+            ret = self.queryset.filter(Q(username__icontains=search)|\
+                Q(email__icontains=search)|Q(id__icontains=search))
+        return ret
+
+
 # User login and get their profile
 class UserProfile(generics.GenericAPIView):
     serializer_class = UserWithTokenSerializer
@@ -210,7 +219,7 @@ class AddToTab(generics.CreateAPIView):
 class MyTab(generics.ListAPIView):
     queryset = Tab
     permission_classes = [IsAuthenticated]
-    serializer_class = MyTabSerializer
+    serializer_class = OrderTabSerializer
 
     def get_queryset(self):
         return Tab.objects.filter(user=self.request.user)
@@ -218,7 +227,7 @@ class MyTab(generics.ListAPIView):
 class UpdateTab(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tab
     permission_classes = [IsAuthenticated]
-    serializer_class = MyTabSerializer
+    serializer_class = OrderTabSerializer
 
 class UserOrder(generics.ListCreateAPIView):
     queryset = Order.objects.order_by('-creation_date')
@@ -497,13 +506,17 @@ class RobotDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Robot
     serializer_class = RobotSerializer
     permission_classes = [IsAuthenticated]
+    '''
+        update robot and ingredient robot contain
+    '''
+
 
 class RobotIngredientList(generics.CreateAPIView):
     queryset = RobotIngredient.objects.all()
     serializer_class = RobotIngredientSerializer
     permission_classes = [IsAuthenticated]
 
-class RobotIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
+class RobotIngredientDetail(generics.RetrieveDestroyAPIView):
     queryset = RobotIngredient
     serializer_class = RobotIngredientSerializer
     permission_classes = [IsAuthenticated]
