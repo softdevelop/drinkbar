@@ -8,7 +8,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
+A step by step series of examples that tell you have to get a development env running.
+
 0. install global:
 ```
 	sudo apt-get install redis-server
