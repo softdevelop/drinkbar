@@ -13,8 +13,12 @@
 	/** @ngInject */
 	function DrinkCreateCtrl($scope, DrinkService, toastr, $rootScope, $location, $window, $uibModal) {
 		$scope.data_create = {
-			name: '',
+			name: '123123',
 			active: false,
+			price : 0,
+			key_word : 0,
+			estimate_time : 0,
+
 		};
 		$scope.list_categories = [];
 		$scope.list_glass = [];
@@ -73,11 +77,15 @@
 			$scope.data_create.garnishes = $rootScope.garnishs;
 			$scope.data_create.ingredients = $rootScope.ingredients;
 
-			DrinkService.created($scope.data_create, $rootScope.userLogin.token).success(function (res) {
+			var _data = $scope.data_create;
+
+			console.log($scope.data_create)
+
+			DrinkService.created(_data, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Created success!');
-				setTimeout(function () {
-					res.id > 0 && ($window.location.href = '#/manager-drink/drink/detail/' + res.id);
-				}, 300);
+				// setTimeout(function () {
+				// 	res.id > 0 && ($window.location.href = '#/manager-drink/drink/detail/' + res.id);
+				// }, 300);
 			}).error(function (err, status, res) {
 				console.log(err)
 				toastr.error('Error!');

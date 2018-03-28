@@ -12,7 +12,8 @@
     function DrinkCreateGarnishCtrl($scope, DrinkService, GarnishService, toastr, $rootScope, $location, $window, $uibModalInstance) {
         $scope.list_garnish = [];
         $scope.data_create = {
-            unit: '0'
+            unit: '0',
+            ratio : 0
         };
         $scope.garnish = null;
 

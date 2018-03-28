@@ -12,14 +12,19 @@
                     });
                 },
                 created: function (data, token) {
-
-                    data.ingredients.forEach(function(el){
+                    var fd = new FormData();
+                    
+                    data.ingredients.forEach(function (el) {
                         el.ingredient = el.ingredient.id;
+                        fd.append('ingredient', JSON.stringify(el))
                     });
-
+                    
                     data.garnishes.forEach(el => {
                         el.garnish = el.garnish.id;
+                        fd.append('garnishes', JSON.stringify(el))
                     });
+
+                    console.log(fd)
 
                     var _arr = [];
                     data.category.forEach(function (el) {
@@ -27,12 +32,13 @@
                     });
                     data.category = _arr;
 
-                    var fd = new FormData();
+
                     for (var key in data) {
-                        if(key === 'garnishes' || key === 'ingredients'){
-                            data[key] = JSON.stringify(data[key])
+                        if(!(key === 'garnishes' || key == 'ingredients')){
+                            fd.append(key, data[key])
                         }
-                        fd.append(key, data[key])
+                            
+                        
                     }
 
                     return $http.post(AppSetting.BASE_URL + '/api/drink/', fd, {
@@ -112,8 +118,8 @@
                         }
                     });
                 },
-                getListBrand : function(token, type){
-                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/brand/type/?type=' + type , {
+                getListBrand: function (token, type) {
+                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/brand/type/?type=' + type, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token

@@ -13,7 +13,8 @@
         $scope.offset = 0;
         $scope.list_ingredient = [];
         $scope.data_create = {
-            unit: '0'
+            unit: '0',
+            ratio : 0
         };
         $scope.ingredient = null;
         $scope.isDisableBrand = $scope.isDisableIngredient = true;
