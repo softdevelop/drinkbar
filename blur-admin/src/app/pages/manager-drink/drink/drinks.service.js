@@ -12,6 +12,15 @@
                     });
                 },
                 created: function (data, token) {
+
+                    data.ingredients.forEach(function(el){
+                        el.ingredient = el.ingredient.id;
+                    });
+
+                    data.garnishes.forEach(el => {
+                        el.garnish = el.garnish.id;
+                    });
+
                     var _arr = [];
                     data.category.forEach(function (el) {
                         _arr.push(el.id)
