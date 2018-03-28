@@ -269,12 +269,11 @@ class Order(models.Model):
         (CHANNEL_STRIPE, _('Stripe')),
     )
     STATUS_NEW = 0
-    STATUS_READY = 10
-    STATUS_PROCESSING = 20
-    STATUS_FINISHED = 30
-    STATUS_TOOK = 40
-    STATUS_NOT_TAKE = 50
-    STATUS_NOT_DO = 60
+    STATUS_PROCESSING = 10
+    STATUS_FINISHED = 20
+    STATUS_TOOK = 30
+    STATUS_NOT_TAKE = 40
+    STATUS_NOT_DO = 50
     STATUSES = (
         (STATUS_NEW, _("New")),
         (STATUS_PROCESSING, _("Processing")),
@@ -339,12 +338,38 @@ class Tab(models.Model):
     )
     STATUS_NEW = 0
     STATUS_READY = 10
-    STATUS_PROCESSING = 20
-    STATUS_FINISHED = 30
+    STATUS_GLASS_READY = 20
+    STATUS_ICE_READY = 30
+    STATUS_INGREDIENT_1 = 31
+    STATUS_INGREDIENT_2 = 32
+    STATUS_INGREDIENT_3 = 33
+    STATUS_INGREDIENT_4 = 34
+    STATUS_INGREDIENT_5 = 35
+    STATUS_INGREDIENT_6 = 36
+    STATUS_INGREDIENT_7 = 37
+    STATUS_INGREDIENT_8 = 38
+    STATUS_INGREDIENT_READY = 40
+    STATUS_GARNISH = 41
+    STATUS_GARNISH = 42
+    STATUS_GARNISH = 43
+    STATUS_FINISHED = 50
     STATUSES = (
         (STATUS_NEW, _("New")),
         (STATUS_READY, _("Ready")),
-        (STATUS_PROCESSING, _("Processing")),
+        (STATUS_GLASS_READY, _("Glass ready")),
+        (STATUS_ICE_READY, _("Ice ready")),
+        (STATUS_INGREDIENT_1, _("Ingredient 1 finish")),
+        (STATUS_INGREDIENT_2, _("Ingredient 2 finish")),
+        (STATUS_INGREDIENT_3, _("Ingredient 3 finish")),
+        (STATUS_INGREDIENT_4, _("Ingredient 4 finish")),
+        (STATUS_INGREDIENT_5, _("Ingredient 5 finish")),
+        (STATUS_INGREDIENT_6, _("Ingredient 6 finish")),
+        (STATUS_INGREDIENT_7, _("Ingredient 7 finish")),
+        (STATUS_INGREDIENT_8, _("Ingredient 8 finish")),
+        (STATUS_INGREDIENT_READY, _("Ingredient finish")),
+        (STATUS_GARNISH, _("Garnish 1 finish")),
+        (STATUS_GARNISH, _("Garnish 1 finish")),
+        (STATUS_GARNISH, _("Garnish 1 finish")),
         (STATUS_FINISHED, _("Finished")),
     )
     status = models.SmallIntegerField(choices=STATUSES, default=STATUS_NEW, null=True, blank=True)
