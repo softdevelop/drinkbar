@@ -78,18 +78,18 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="item in ingredients" class="ng-scope">
+                        <tr ng-repeat="ing in ingredients" class="ng-scope">
                             <td class="ng-binding" style="text-align : left;">
-                                {{item.ingredient.name}}
+                                {{ing.ingredient.name}}
                             </td>
                             <td class="ng-binding">
-                                {{ item.ratio }}
+                                {{ ing.ratio }}
                             </td>
                             <td class="ng-binding">
-                                {{ item.unit }}
+                                {{ ing.unit }}
                             </td>
                             <td class="ng-binding" style="width: 30px; text-align : center;">
-                                <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">
+                                <a href="" data-toggle="modal" ng-click="confirmDelete(ing)" style="color : #e85555;">
                                     <i class="ion-android-delete"></i>
                                 </a>
                             </td>
@@ -116,15 +116,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="item in garnishs" class="ng-scope">
+                        <tr ng-repeat="gar in garnishs" class="ng-scope">
                             <td class="ng-binding" style="text-align : left;">
-                                {{item.garnish.name}}
+                                {{gar.garnish.name}}
                             </td>
                             <td class="ng-binding">
-                                {{ item.ratio }}
+                                {{ gar.ratio }}
                             </td>
                             <td class="ng-binding" style="width: 30px; text-align : center;">
-                                <a href="" data-toggle="modal" ng-click="confirmDeleteGarnish(item)" style="color : #e85555;">
+                                <a href="" data-toggle="modal" ng-click="confirmDeleteGarnish(gar)" style="color : #e85555;">
                                     <i class="ion-android-delete"></i>
                                 </a>
                             </td>

@@ -21,7 +21,7 @@
                     var fd = new FormData();
                     for (var key in data) {
                         if(key === 'garnishes' || key === 'ingredients'){
-                            data[key] = JSON.stringify(data)
+                            data[key] = JSON.stringify(data[key])
                         }
                         fd.append(key, data[key])
                     }
