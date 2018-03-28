@@ -28,12 +28,15 @@
         // getListIngredient();
 
         // ========== function get list type ============
-        function getListType(){
-            IngredientService.getListType($rootScope.userLogin.token).success(function(res){
+        function getListType() {
+            $scope.types = [];
+            $scope.list_ingredient = [];
+            $rootScope.brands = [];
+            IngredientService.getListType($rootScope.userLogin.token).success(function (res) {
                 $scope.types = res;
 
                 $scope.types.length === 0 && ($scope.isAddElement.type = true);
-            }).error(function(err, stt, res){
+            }).error(function (err, stt, res) {
                 console.log(res)
                 toastr.error('Error!');
             });
@@ -42,12 +45,13 @@
         getListType();
 
         // ============ function get list brand ===========
-        function getListBrand(type){
-            IngredientService.getListBrand($rootScope.userLogin.token, type).success(function(res){
-                $rootScope.brands = res.results;
-
+        function getListBrand(type) {
+            $scope.list_ingredient = [];
+            $rootScope.brands = [];
+            DrinkService.getListBrand($rootScope.userLogin.token, type).success(function (res) {
+                $rootScope.brands = res;
                 $rootScope.brands.length === 0 && ($scope.isAddElement.brand = true);
-            }).error(function(err, stt, res){
+            }).error(function (err, stt, res) {
                 console.log(res)
                 toastr.error('Error!');
             });
@@ -62,11 +66,14 @@
                     return String(el.id) === value;
                 })[0];
                 $scope.data_create.ingredient = _val;
-            } else if(field === 'type'){
+            } else if (field === 'type') {
                 $scope.isDisableBrand = false;
-                getListBrand($scope.data_create.type)
-            } else if(field === 'brand'){
+                $rootScope.brands = [];
+                $scope.list_ingredient = [];
+                getListBrand(value)
+            } else if (field === 'brand') {
                 $scope.isDisableIngredient = false;
+                $scope.list_ingredient = [];
                 getListIngredient($scope.type, $scope.brand);
             }
             else {

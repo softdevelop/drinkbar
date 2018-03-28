@@ -112,6 +112,15 @@
                         }
                     });
                 },
+                getListBrand : function(token, type){
+                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/brand/type/?type=' + type , {
+                        headers: {
+                            'Content-Type': undefined,
+                            'Authorization': 'Token ' + token
+                        }
+                    });
+                }
+
             }
         });
 })();
