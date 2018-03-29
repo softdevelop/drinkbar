@@ -8,4 +8,4 @@ class OrderBinding(ResourceBinding):
     model = Order
     stream = "orders"
     serializer_class = OrderMachineSerializer
-    queryset = Order.objects.filter(status=Order.STATUS_NEW).order_by('creation_date')
+    queryset = Order.objects.exclude(status=Order.STATUS_TOOK).order_by('creation_date')

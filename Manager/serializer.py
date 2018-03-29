@@ -2,6 +2,9 @@
 from rest_framework import fields, serializers
 from models import *
 from pprint import pprint
+import ast
+import api_utils
+
 
 class UserSignupSerializer(serializers.ModelSerializer):
 	password = serializers.CharField(write_only=True, style={'input_type': 'password'})
@@ -126,6 +129,52 @@ class DrinkOrdersSerializer(DrinkUserOrdersSerializer):
 		fields = DrinkUserOrdersSerializer.Meta.fields+('ingredients',\
 			'total_part','glass_ml','ml_per_part')
 
+def drink_add_on(self, ret=None):
+	categories = self.initial_data.get('category',None)
+	if categories:
+		categories = categories.split(",")
+		for category in categories:
+			try:
+				ret.category.add(DrinkCategory.objects.get(id=category))
+			except Exception as e:
+				ret.delete()
+				raise e
+
+	ingredients = self.initial_data.getlist('ingredients',None)
+	if ingredients:
+		for ingredient in ingredients:
+			print ingredient
+			print type(ingredient)
+			ingredient = ast.literal_eval(ingredient)
+			try:
+				ingre = DrinkIngredient(drink=ret, ingredient=Ingredient.objects.get(id=ingredient['ingredient']),
+								ratio=ingredient['ratio'],
+								unit=ingredient['unit'])
+				ingre.save()
+			except Exception as e:
+				DrinkIngredient.objects.filter(drink=ret).delete()
+				ret.delete()
+				raise e
+	else:
+		ret.delete()
+		raise api_utils.BadRequest("NOT INCLUDE ANY INGREDIENT, ADD ONE!")
+
+	garnishes = self.initial_data.getlist('garnishes',None)
+	if garnishes:
+		for garnish in garnishes:
+			print garnish
+			garnish = ast.literal_eval(garnish)
+			try:
+				garn = DrinkGarnish(drink=ret, garnish=Garnish.objects.get(id=garnish['garnish']),
+								ratio=garnish['ratio'],)
+				garn.save()
+			except Exception as e:
+				DrinkIngredient.objects.filter(drink=ret).delete()
+				DrinkGarnish.objects.filter(drink=ret).delete()
+				ret.delete()
+				raise e
+	return ret
+
 
 class DrinkSerializer(serializers.ModelSerializer):
 	numbers_bought = serializers.IntegerField(read_only=True)
@@ -146,6 +195,15 @@ class DrinkSerializer(serializers.ModelSerializer):
 		serializer = DrinkGarnishSerializer(instance=qs, many=True)
 		return serializer.data
 
+	def update(self, instance, validated_data):
+		ret = super(DrinkSerializer,self).update(instance, validated_data)
+		print ret
+		ret.category.all().delete()
+		ret.ingredients.all().delete()
+		ret.garnishes.all().delete()
+		ret = drink_add_on(self, ret)
+		return ret
+
 class DrinkCreateSerializer(serializers.ModelSerializer):
 	ingredients = DrinkIngredientSerializer(many=True, required=False, read_only=True)
 	garnishes = DrinkGarnishSerializer(many=True, required=False, read_only=True)
@@ -160,49 +218,9 @@ class DrinkCreateSerializer(serializers.ModelSerializer):
 	def create(self, validated_data):
 		ret = Drink(**validated_data)
 		ret.save()
-		print self.initial_data
-		print "here"
-		categories = self.initial_data.get('category',None)
-		if categories:
-			categories = categories.split(",")
-			for category in categories:
-				try:
-					ret.category.add(DrinkCategory.objects.get(id=category))
-				except Exception as e:
-					ret.delete()
-					raise e
-
-		# ingredients = self.initial_data.get('ingredients',None)
-		# if ingredients:
-		# 	print ingredients
-		# 	for ingredient in ingredients:
-		# 		try:
-		# 			ingre = DrinkIngredient(drink=ret, ingredient=Ingredient.objects.get(id=ingredient['ingredient']),
-		# 							ratio=ingredient['ratio'],
-		# 							unit=ingredient['unit'])
-		# 			ingre.save()
-		# 		except Exception as e:
-		# 			DrinkIngredient.objects.filter(drink=ret).delete()
-		# 			ret.delete()
-		# 			raise e
-
-		garnishes = self.initial_data.get('garnishes',None)
-		if garnishes:
-			print garnishes
-			garnishes = garnishes.split(",")
-			# pprint(vars(garnishes))
-			print garnishes
-			for garnish in garnishes:
-				try:
-					garn = DrinkGarnish(drink=ret, garnish=Garnish.objects.get(id=garnish['garnish']),
-									ratio=garnish['ratio'],)
-					garn.save()
-				except Exception as e:
-					DrinkIngredient.objects.filter(drink=ret).delete()
-					DrinkGarnish.objects.filter(drink=ret).delete()
-					ret.delete()
-					raise e
+		ret = drink_add_on(self, ret)
 		return ret
+
 '''
 	Ingredient
 '''
@@ -288,13 +306,19 @@ class OrderTabSerializer(UserOrderTabSerializer):
 '''
 
 class OrderSmallSerializer(serializers.ModelSerializer):
+	# For user
 	products = UserOrderTabSerializer(many=True, required=False, read_only=True)
+	qr_code = serializers.SerializerMethodField(read_only=True)
+
 	class Meta:
 		model = Order
 		fields = ('id','status','creation_date','amount',
 			'channel','transaction_code','transaction_id',
 			'payer_firstname','payer_lastname','payer_email',
-			'tray_number','products')
+			'tray_number','products','qr_code')
+
+	def get_qr_code(self,obj):
+		return obj.qr_code
 
 class OrderSerializer(OrderSmallSerializer):
 	user = UserSerializer(required=False, read_only=True)

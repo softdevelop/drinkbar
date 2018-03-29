@@ -299,6 +299,14 @@ class Order(models.Model):
     def __unicode__(self):
         return str(self.id)
 
+    @property
+    def qr_code(self):
+        datetime_format = '%Y-%m-%d %H:%M:%S'
+        # today = (self.last_login).strftime(datetime_format)
+        data = u'User:{} Id:{} Order_id:{}'.format(self.user.full_name, self.user.id, self.id)
+        data = urllib.quote_plus(data)
+        return u'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={}'.format(data)
+
 @receiver(post_save, sender=Order)
 def create_new_order(sender, instance=None, created=False, **kwargs):
     if created:

@@ -235,10 +235,21 @@ class UserOrder(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
 
     def get_queryset(self):
+        is_machine = self.request.GET.get('machine', False)
+        if is_machine:
+            return ret.exclude(status=Order.STATUS_TOOK).order_by('creation_date')
+
         is_admin = self.request.GET.get('admin', False)
-        if is_admin:
-            return self.queryset.all()
-        ret = self.queryset.filter(user=self.request.user)
+        if not is_admin:
+            # user order history
+            return self.queryset.filter(user=self.request.user)
+
+        ret = self.queryset.all()        
+        search = self.request.GET.get('search', False)
+        if search:
+            ret = ret.filter(Q(user__username__icontains=search)|\
+                Q(user__email__icontains=search)|Q(id__icontains=search))
+        
         return ret
 
     def create(self, request, *args, **kwargs):
@@ -457,7 +468,7 @@ class IngredientBrandTypeList(generics.ListAPIView):
     def get_queryset(self):
         try:
             type = self.request.GET.get('type', None)
-            ret = self.queryset.filter(ingredient_brands__type=type)
+            ret = self.queryset.filter(ingredient_brands__type=type).distinct()
         except Exception as e:
             raise api_utils.BadRequest("INVALID_TYPE")
         return ret
