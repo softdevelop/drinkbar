@@ -235,9 +235,9 @@ class UserOrder(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
 
     def get_queryset(self):
-        is_machine = self.request.GET.get('machine', False)
-        if is_machine:
-            return ret.exclude(status=Order.STATUS_TOOK).order_by('creation_date')
+        is_robot = self.request.GET.get('robot', False)
+        if is_robot:
+            return self.queryset.exclude(status=Order.STATUS_TOOK).order_by('creation_date')
 
         is_admin = self.request.GET.get('admin', False)
         if not is_admin:
