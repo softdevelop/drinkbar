@@ -375,14 +375,9 @@ class DrinkList(generics.ListCreateAPIView):
 
 class DrinkDetial(generics.RetrieveUpdateDestroyAPIView):
     queryset = Drink
-    serializer_class = DrinkSerializer
+    serializer_class = DrinkUpdateSerializer
     permission_classes = [IsAuthenticated]
-
-    # def patch(self,request, *args, **kwargs):
-    #     data = self.get_serializer(data=request.data)
-    #     data.is_valid(raise_exception=True)
-        
-
+     
 class SeparateGlassList(generics.ListCreateAPIView):
     queryset = SeparateGlass.objects.all()
     serializer_class = SeparateGlassSerializer
@@ -520,14 +515,3 @@ class RobotDetail(generics.RetrieveUpdateDestroyAPIView):
     '''
         update robot and ingredient robot contain
     '''
-
-
-class RobotIngredientList(generics.CreateAPIView):
-    queryset = RobotIngredient.objects.all()
-    serializer_class = RobotIngredientSerializer
-    permission_classes = [IsAuthenticated]
-
-class RobotIngredientDetail(generics.RetrieveDestroyAPIView):
-    queryset = RobotIngredient
-    serializer_class = RobotIngredientSerializer
-    permission_classes = [IsAuthenticated]
