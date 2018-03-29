@@ -225,12 +225,12 @@
 				name: "order",
 				level: 0,
 				subMenu: [
-					{
-						stateRef: "create-order",
-						title: "Create",
-						level: 1,
-						name: 'create-order'
-					},
+					// {
+					// 	stateRef: "create-order",
+					// 	title: "Create",
+					// 	level: 1,
+					// 	name: 'create-order'
+					// },
 					{
 						stateRef: "list-order",
 						title: "List",

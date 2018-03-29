@@ -58,7 +58,7 @@
 		'BlurAdmin.pages.detail-categories',
 		// ============ order ================
 		'BlurAdmin.pages.list-order',
-		'BlurAdmin.pages.create-order',
+		// 'BlurAdmin.pages.create-order',
 		'BlurAdmin.pages.detail-order',
 		// ============ robot ================
 		'BlurAdmin.pages.list-robot',
@@ -204,10 +204,10 @@
 					title: 'Order List',
 					stateRef: 'list-order'
 				},
-				{
-					title: 'Order Create',
-					stateRef: 'create-order'
-				},
+				// {
+				// 	title: 'Order Create',
+				// 	stateRef: 'create-order'
+				// },
 				{
 					title: 'Order Detail',
 					stateRef: 'detail-order/:id'
