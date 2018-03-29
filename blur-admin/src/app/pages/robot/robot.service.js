@@ -4,7 +4,7 @@
         .factory('RobotService', function ($http, AppSetting) {
             return {
                 getList: function (token) {
-                    return $http.get(AppSetting.BASE_URL + '/api/drink/robot/', {
+                    return $http.get(AppSetting.BASE_URL + '/api/robot/', {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -16,7 +16,7 @@
                     for (var key in data) {
                         fd.append(key, data[key])
                     }
-                    return $http.post(AppSetting.BASE_URL + '/api/drink/robot/', fd, {
+                    return $http.post(AppSetting.BASE_URL + '/api/robot/', fd, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -24,7 +24,7 @@
                     });
                 },
                 removed: function (id, token) {
-                    return $http.delete(AppSetting.BASE_URL + '/api/drink/robot/' + id + '/', {
+                    return $http.delete(AppSetting.BASE_URL + '/api/robot/' + id + '/', {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -34,35 +34,36 @@
                 updated: function (data, token) {
                     var fd = new FormData();
 
+                    data.ingredients && data.ingredients.forEach(function (el) {
+                        el.ingredient = el.ingredient.id;
+                        fd.append('ingredients', JSON.stringify(el))
+                    });
+
                     for (var key in data) {
-                        if(key === 'image'){
-							if(data[key])
-								fd.append(key, data[key]);
-						}
-						 else{
-							fd.append(key, data[key]);
-						}
+                        if (key !== 'ingredients') {
+                            fd.append(key, data[key]);
+                        }
                     }
-                    return $http.patch(AppSetting.BASE_URL + '/api/drink/robot/' + data.id + '/', fd , {
+                    return $http.patch(AppSetting.BASE_URL + '/api/robot/' + data.id + '/', fd, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
                         }
                     })
                 },
-                changed: function(data, token){
+                changed: function (data, token) {
                     var fd = new FormData();
                     fd.append('status', data.status);
 
-                    return $http.patch(AppSetting.BASE_URL + '/api/drink/robot/'+ data.id + '/', fd, {
+                    return $http.patch(AppSetting.BASE_URL + '/api/robot/' + data.id + '/', fd, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
                         }
                     })
                 },
-                getElement : function(id, token){
-                    return $http.get(AppSetting.BASE_URL + '/api/drink/robot/'+ id + '/', {
+                getElement: function (id, token) {
+                    return $http.get(AppSetting.BASE_URL + '/api/robot/' + id + '/', {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token

@@ -15,7 +15,8 @@
 
 		$scope.maxSize = 10;
         $scope.bigTotalItems = 0;
-        $scope.bigCurrentPage = 1;
+		$scope.bigCurrentPage = 1;
+		$rootScope.ingredients = [];
 		
 		// ================ pagination ====================
         $scope.changePage =  function(page_index){
@@ -31,12 +32,13 @@
 
         // =============== fucntion change status ================
 		$scope.changeStatus = function (data) {
-			data.active === true ? data.active = false : data.active = true;
+			data.status === 0 ? data.status = 10 : data.status = 0;
 			var _obj = {
 				id: data.id,
-				active: data.active
+				status: data.status,
+				ingredients : $rootScope.ingredients
 			}
-			console.log(_obj)
+			
 			RobotService.updated(_obj, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Change status success!');
 				getList();
@@ -49,7 +51,7 @@
 		// ================= get list ===============
 		function getList(){
 			RobotService.getList($rootScope.userLogin.token).success(function(res){
-				$rootScope.listData = res;
+				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
 				console.log(res)
 				toastr.error('Error!');

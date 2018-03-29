@@ -9,14 +9,20 @@
 		.controller('OrderCreateCtrl', OrderCreateCtrl);
 
 	/** @ngInject */
-	function OrderCreateCtrl($scope, OrderService, toastr, $rootScope, $location, $window) {
+	function OrderCreateCtrl($scope, OrderService, ManagerUserService, RobotService, toastr, $rootScope, $location, $window) {
         $scope.data_create = {
-            name : '',
-            parent : '',
-            image : ''
+            transaction_code : '',
+            transaction_id : '',
+            payer_firstname : '',
+            payer_lastname : '',
+            payer_email : '',
+			tray_number : '',
+			slug : ''
         };
         $scope.isDisable = true;
-        $scope.list_categories = [];
+		$scope.list_categories = [];
+		$scope.list_users = [];
+		$scope.list_robot = [];
 
         // ========= fucntion upload image ===============
 		$scope.imageUpload = function(e){
@@ -37,6 +43,31 @@
 
 		getList();
 
+		// =========== list user =============
+		function getListUser(){
+			var offset = 0;
+			ManagerUserService.getAllUser($rootScope.userLogin.token, offset).success(function(res){
+				$scope.list_users = res.results;
+			}).error(function(err, stt, res){
+				console.log(res)
+				toastr('Error!');
+			})
+		}
+
+		getListUser();
+
+		// =========== list robot ================
+		function getListRobot() {
+			RobotService.getList($rootScope.userLogin.token).success(function(res){
+				$scope.list_robot = res.results;
+			}).error(function(err, stt, res){
+				console.log(res)
+				toastr.error('Error!');
+			})
+		}
+
+		getListRobot();
+
 		// ========== function change from ===============
 		$scope.changeInfo = function(field, value){
 			$scope.data_create[field] = value;
@@ -44,7 +75,7 @@
 
 		// =========== function create =================
 		$scope.create = function(){
-            $scope.data_create.slug = $scope.data_create.name;
+            $scope.data_create.slug = $scope.data_create.user;
 			OrderService.created($scope.data_create, $rootScope.userLogin.token).success(function(res){
 				toastr.success('Created success!');
 				setTimeout(function(){

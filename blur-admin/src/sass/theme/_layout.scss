@@ -341,3 +341,10 @@ multiselect .dropdown-menu > li > a {
   border-bottom: 1px solid !important;
   padding-bottom: 7px !important;
 }
+.table > thead > tr > th.border_top_1{
+  border: 1px solid rgba(93, 91, 91, 0.2) !important;
+  font-weight: bold;
+}
+.table > tbody > tr > td.border_top_1{
+  border: 1px solid rgba(93, 91, 91, 0.2) !important;
+}

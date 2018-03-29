@@ -88,7 +88,7 @@
             toastr.success('Add Ingredient success!');
             $rootScope.ingredients.push($scope.data_create);
             $uibModalInstance.close();
-            $rootScope.loadPageDrinkCreate(true);
+            // $rootScope.loadPageDrinkCreate(true);
         }
     }
 

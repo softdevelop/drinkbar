@@ -8,27 +8,27 @@
     <div class="modal-body"  style="background: #fff;">
         <div ba-panel-title="Products" ba-panel-class="with-scroll"  style="background: #fff;">
             <div class=""  style="background: #fff;">
-                <table class="table table-striped">
+                <table class="table table-bordered table-responsive">
                     <thead>
                         <tr>
-                            <th class="table-id">Drink Name</th>
-                            <th>Garnishes</th>
-                            <th>Ice</th>
-                            <th>Quantity</th>
+                            <th class="table-id border_top_1">Drink Name</th>
+                            <th class="border_top_1">Garnishes</th>
+                            <th class="border_top_1">Ice</th>
+                            <th class="border_top_1">Quantity</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="item in products" class="ng-scope">
-                            <td class="ng-binding" style="width : 30%; text-align : left;">
-                                <a href="#/manager-drink/garnish/detail/{{item.drink.id}}">{{item.drink.name}}</a>
+                        <tr ng-repeat="item in products">
+                            <td class="ng-binding border_top_1" style="width : 30%; text-align : left;">
+                                <a href="" ng-click="openDrinkDetail(item.drink.id)">{{item.drink.name}}</a>
                             </td>
-                            <td class="ng-binding">
-                                <p ng-repeat="garnish in item.garnishes">{{garnish.name}}</p>
+                            <td class="ng-binding border_top_1">
+                                <p style="margin-bottom : 0px;" ng-repeat="gar in item.garnishes">{{gar.garnish.name}}</p>
                             </td>
-                            <td class="ng-binding">
+                            <td class="ng-binding border_top_1">
                                 {{ item.ice }}
                             </td>
-                            <td class="ng-binding">
+                            <td class="ng-binding border_top_1">
                                 {{ item.quantity }}
                             </td>
                         </tr>

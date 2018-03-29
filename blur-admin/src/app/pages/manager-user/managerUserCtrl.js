@@ -6,12 +6,14 @@
     'use strict';
 
     angular.module('BlurAdmin.pages.list-user')
-        .controller('ManagerUserCtrl', ManagerUserCtrl);
+        .controller('ManagerUserCtrl', ManagerUserCtrl)
+        .controller('ManagerUserDeleteCtrl', ManagerUserDeleteCtrl);
 
     function ManagerUserCtrl($rootScope, ManagerUserService, $window, $scope, fileReader, $filter, $uibModal, ProfileService, baProgressModal, toastr) {
-        $scope.listUser = [];
+        $rootScope.listUser = [];
+        
         $scope.maxSize = 10;
-        $scope.bigTotalItems = 0;
+        $rootScope.bigTotalItems = 0;
         $scope.bigCurrentPage = 1;
         $rootScope.offset = 0;
 
@@ -79,29 +81,38 @@
 
         }
 
-        // ====================== delete user ================================
-        $scope.deleteUser = function (data) {
-            ManagerUserService.deleteUser(data.id, $scope.currentUser.token).success(function (res) {
-                toastr.success('', 'Deleted success!');
-                getAllUser();
-            }).error(function (err, status, response) {
-                console.log(response);
+        // // ====================== delete user ================================
+        // $scope.deleteUser = function (data) {
+        //     ManagerUserService.deleteUser(data.id, $scope.currentUser.token).success(function (res) {
+        //         toastr.success('', 'Deleted success!');
+        //         getAllUser();
+        //     }).error(function (err, status, response) {
+        //         console.log(response);
+        //     });
+        // }
+
+        // =========== open modal confirm delete Glass ===========
+		$scope.confirmDelete = function(data){
+			var page = 'app/pages/manager-user/confirm/index.html';
+            $uibModal.open({
+                animation: true,
+                templateUrl: page,
+				size: 'sm',
+				resolve: {
+                    items: function () {
+                        return data;
+                    }
+                },
+                controller: 'ManagerUserDeleteCtrl',
             });
-        }
+		}
 
         // ===================== function get list user ============================
         function getAllUser() {
             ManagerUserService.getAllUser($scope.currentUser.token, $rootScope.offset).success(function (res) {
-                $scope.listUser = res.results;
+                $rootScope.listUser = res.results;
 
-                $scope.bigTotalItems = res.count;
-                // var _pages_int = Math.floor(res.count / 10);
-                // var _pages_float = res.count % 10;
-                // console.log(_pages_int)
-                // console.log(_pages_float)
-                // $scope.pages = _pages_float > 0 ? (_pages_int + 1) : _pages_int;
-                // console.log($scope.pages)
-                // $scope.pages =  ;
+                $rootScope.bigTotalItems = res.count;
             }).error(function (err, status, response) {
                 console.log(response);
                 toastr.error('', 'Error!');
@@ -115,6 +126,35 @@
 
         getAllUser();
 
-    }
+    };
+
+    // controler managerUserDeleteCtrl
+	function ManagerUserDeleteCtrl($scope, toastr, ManagerUserService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
+		$scope.item_del = items;
+
+		// ===================== function get list user ============================
+        function getAllUser() {
+            ManagerUserService.getAllUser($rootScope.userLogin.token, $rootScope.offset).success(function (res) {
+                $rootScope.listUser = res.results;
+
+                $rootScope.bigTotalItems = res.count;
+            }).error(function (err, status, response) {
+                console.log(response);
+                toastr.error('', 'Error!');
+            });
+        }
+
+		// =========== function delete glass =============
+		$scope.remove = function(data){
+			ManagerUserService.deleteUser(data.id, $rootScope.userLogin.token).success(function(res){
+				toastr.success('Deleted success!');
+				$uibModalInstance.close();
+				getAllUser();
+			}).error(function(err, status, res){
+				console.log(err);
+				toastr.error('Error!');
+			})
+		}
+	}
 
 })();

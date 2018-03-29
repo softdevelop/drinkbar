@@ -101,7 +101,7 @@
 					<td class="ng-binding">{{item.last_name}}</td>
 					<td class="ng-binding">{{item.birthday | date:'MM/dd/yyyy'}}</td>
 					<td class="ng-binding" style="width: 30px; text-align : center;">
-						<a href="" ng-click="deleteUser(item)" style="color : #e85555;">
+						<a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">
 							<i class="ion-android-delete"></i>
 						</a>
 					</td>

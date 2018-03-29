@@ -63,7 +63,7 @@
 		// ============ robot ================
 		'BlurAdmin.pages.list-robot',
 		// 'BlurAdmin.pages.create-robot',
-		// 'BlurAdmin.pages.detail-robot',
+		'BlurAdmin.pages.detail-robot',
 	])
 		.config(routeConfig);
 
@@ -221,10 +221,10 @@
 				// 	title: 'Robot Create',
 				// 	stateRef: 'create-robot'
 				// },
-				// {
-				// 	title: 'Robot Detail',
-				// 	stateRef: 'detail-robot/:id'
-				// },
+				{
+					title: 'Robot Detail',
+					stateRef: 'detail-robot/:id'
+				},
 				// ===================================
 				{
 					title: '404 Page',
