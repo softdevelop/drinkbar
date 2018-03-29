@@ -20,16 +20,40 @@
                     change="selected()"></multiselect>
             </div>
 
-            <div class="form-group">
-                <label style="color : #fff; font-weight : bold;" for="">Image</label>
-                <input type='file' id="uploadFile" class="form-control" ng-model="detail.image" onchange="angular.element(this).scope().imageUpload(event, 'image')"
-                />
-            </div>
-
-            <div class="form-group">
-                <label style="color : #fff; font-weight : bold;" for="">Image Background</label>
-                <input type='file' id="uploadFile" class="form-control" ng-model="detail.image_background" onchange="angular.element(this).scope().imageUpload(event, 'image_background')"
-                />
+            <div class="form-group row">
+                <div class="form-group col-xs-6">
+                    <label style="color : #fff; font-weight : bold;" for="">Image</label>
+                    <div class="">
+                        <div class="userpic">
+                            <div class="userpic-wrapper">
+                                <img style="width: 100% !important;" ng-src="{{ detail.image }}" ng-click="uploadPicture('image')">
+                            </div>
+                            <!-- <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i> -->
+                            <a href class="change-userpic" ng-click="uploadPicture()">Change Image</a>
+    
+                            <input type='file' id="uploadImage" ng-show="false" ng-model-instant onchange="angular.element(this).scope().imageUpload(event, 'image')"
+                            />
+    
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="form-group col-xs-6">
+                    <label style="color : #fff; font-weight : bold;" for="">Image Background</label>
+                    <div class="">
+                        <div class="userpic">
+                            <div class="userpic-wrapper">
+                                <img style="width: 100% !important;" ng-src="{{ detail.image_background }}" ng-click="uploadPicture('image_background')">
+                            </div>
+                            <!-- <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i> -->
+                            <a href class="change-userpic" ng-click="uploadPicture()">Change Background Image</a>
+    
+                            <input type='file' id="uploadBackground" ng-show="false" ng-model-instant onchange="angular.element(this).scope().imageUpload(event, 'image_background')"
+                            />
+    
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group">

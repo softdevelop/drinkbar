@@ -83,9 +83,9 @@
 
 			DrinkService.created(_data, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Created success!');
-				// setTimeout(function () {
-				// 	res.id > 0 && ($window.location.href = '#/manager-drink/drink/detail/' + res.id);
-				// }, 300);
+				setTimeout(function () {
+					res.id > 0 && ($window.location.href = '#/manager-drink/drink/detail/' + res.id);
+				}, 300);
 			}).error(function (err, status, res) {
 				console.log(err)
 				toastr.error('Error!');
