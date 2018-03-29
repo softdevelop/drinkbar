@@ -295,7 +295,7 @@ class Order(models.Model):
     payer_email = models.CharField(max_length=100, null=True, blank=True)
     tray_number = models.SmallIntegerField(null=True, blank=True)
     robot = models.ForeignKey(Robot, default=1, related_name='do_orders')
-    # reorder = models.ForeignKey('self', blank=True, null=True)
+    photo = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='orders', null=True, blank=True)
     def __unicode__(self):
         return str(self.id)
 

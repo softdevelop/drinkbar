@@ -143,8 +143,6 @@ def drink_add_on(self, ret=None):
 	ingredients = self.initial_data.getlist('ingredients',None)
 	if ingredients:
 		for ingredient in ingredients:
-			print ingredient
-			print type(ingredient)
 			ingredient = ast.literal_eval(ingredient)
 			try:
 				ingre = DrinkIngredient(drink=ret, ingredient=Ingredient.objects.get(id=ingredient['ingredient']),
@@ -195,10 +193,12 @@ class DrinkSerializer(serializers.ModelSerializer):
 		serializer = DrinkGarnishSerializer(instance=qs, many=True)
 		return serializer.data
 
+class DrinkUpdateSerializer(DrinkSerializer):
+	garnishes = DrinkGarnishSerializer(many=True, required=False, read_only=True)
+
 	def update(self, instance, validated_data):
 		ret = super(DrinkSerializer,self).update(instance, validated_data)
-		print ret
-		ret.category.all().delete()
+		ret.category.clear()
 		ret.ingredients.all().delete()
 		ret.garnishes.all().delete()
 		ret = drink_add_on(self, ret)
@@ -253,30 +253,11 @@ class IngredientHistorySerializer(serializers.ModelSerializer):
 '''
 	Robot
 '''
-
-class RobotIngredientSerializer(serializers.ModelSerializer):
-	ingredient = IngredientSmallSerializer(read_only=True)
-	class Meta:
-		model = RobotIngredient
-		fields = '__all__'
-
-	def create(self, validated_data):
-		ret = RobotIngredient(**validated_data)
-		ret.ingredient = Ingredient.objects.filter(id=self.initial_data['ingredient'])
-		ret.save()
-		return ret
-
-	def update(self, validated_data):
-		ret = super(RobotIngredientSerializer,self).update(validated_data)
-		ret.ingredient = Ingredient.objects.filter(id=self.initial_data['ingredient'])
-		ret.save()
-		return ret
-
 class RobotSerializer(serializers.ModelSerializer):
-	ingredients = RobotIngredientSerializer(many=True, read_only=True)
 	class Meta:
 		model = Robot
-		fields = '__all__'
+		fields = ('status','creation_date','ingredients')
+		depth = 1
 '''
 	Tab
 '''
@@ -315,7 +296,7 @@ class OrderSmallSerializer(serializers.ModelSerializer):
 		fields = ('id','status','creation_date','amount',
 			'channel','transaction_code','transaction_id',
 			'payer_firstname','payer_lastname','payer_email',
-			'tray_number','products','qr_code')
+			'tray_number','products','qr_code','photo')
 
 	def get_qr_code(self,obj):
 		return obj.qr_code
