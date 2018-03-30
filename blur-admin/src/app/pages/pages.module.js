@@ -9,13 +9,15 @@
 		'ui.router',
 
 		'BlurAdmin.pages.dashboard',
-		'BlurAdmin.pages.ui',
-		'BlurAdmin.pages.components',
-		'BlurAdmin.pages.form',
-		'BlurAdmin.pages.tables',
-		'BlurAdmin.pages.charts',
-		'BlurAdmin.pages.maps',
+		// 'BlurAdmin.pages.ui',
+		// 'BlurAdmin.pages.components',
+		// 'BlurAdmin.pages.form',
+		// 'BlurAdmin.pages.tables',
+		// 'BlurAdmin.pages.charts',
+		// 'BlurAdmin.pages.maps',
+		// ============ user profile =============
 		'BlurAdmin.pages.profile',
+		// =============== manager user ===========
 		'BlurAdmin.pages.list-user',
 		'BlurAdmin.pages.create-user',
 		// ============= separate ===========
@@ -27,10 +29,6 @@
 		'BlurAdmin.pages.list-ingredient-types',
 		'BlurAdmin.pages.create-ingredient-types',
 		'BlurAdmin.pages.detail-ingredient-types',
-		// -------- ingredient history --------
-		'BlurAdmin.pages.list-history',
-		'BlurAdmin.pages.create-history',
-		'BlurAdmin.pages.detail-history',
 		// ------- ingredient brand ---------
 		'BlurAdmin.pages.list-ingredient-brand',
 		'BlurAdmin.pages.create-ingredient-brand',
@@ -64,6 +62,10 @@
 		'BlurAdmin.pages.list-robot',
 		// 'BlurAdmin.pages.create-robot',
 		'BlurAdmin.pages.detail-robot',
+		// -------- history --------
+		'BlurAdmin.pages.list-history',
+		'BlurAdmin.pages.create-history',
+		'BlurAdmin.pages.detail-history',
 	])
 		.config(routeConfig);
 
@@ -233,20 +235,20 @@
 				}
 			]
 		});
-		baSidebarServiceProvider.addStaticItem({
-			title: 'Menu Level 1',
-			icon: 'ion-ios-more',
-			subMenu: [{
-				title: 'Menu Level 1.1',
-				disabled: true
-			}, {
-				title: 'Menu Level 1.2',
-				subMenu: [{
-					title: 'Menu Level 1.2.1',
-					disabled: true
-				}]
-			}]
-		});
+		// baSidebarServiceProvider.addStaticItem({
+		// 	title: 'Menu Level 1',
+		// 	icon: 'ion-ios-more',
+		// 	subMenu: [{
+		// 		title: 'Menu Level 1.1',
+		// 		disabled: true
+		// 	}, {
+		// 		title: 'Menu Level 1.2',
+		// 		subMenu: [{
+		// 			title: 'Menu Level 1.2.1',
+		// 			disabled: true
+		// 		}]
+		// 	}]
+		// });
 	}
 
 })();
