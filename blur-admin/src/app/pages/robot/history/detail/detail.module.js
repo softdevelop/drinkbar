@@ -12,9 +12,9 @@
 	function routeConfig($stateProvider, $urlRouterProvider) {
 		
 		$stateProvider.state('detail-history', {
-			url: '/manager-ingredient/history/detail/:id',
+			url: '/robot/history/detail/:id',
 			title: 'Histories / Detail',
-			templateUrl: 'app/pages/manager-ingredient/history/detail/detail.html',
+			templateUrl: 'app/pages/robot/history/detail/detail.html',
 			controller: 'HistoriesDetailCtrl',
 		});
 		

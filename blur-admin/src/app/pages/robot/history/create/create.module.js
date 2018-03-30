@@ -12,9 +12,9 @@
 	function routeConfig($stateProvider, $urlRouterProvider) {
 		
 		$stateProvider.state('create-history', {
-			url: '/manager-ingredient/history/create',
+			url: '/order/history/create',
 			title: 'History / Create',
-			templateUrl: 'app/pages/manager-ingredient/history/create/create.html',
+			templateUrl: 'app/pages/robot/history/create/create.html',
 			controller: 'HistoriesCreateCtrl',
 		});
 	}

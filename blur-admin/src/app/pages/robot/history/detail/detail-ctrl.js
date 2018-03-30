@@ -60,7 +60,7 @@
 			HistoryService.updated($scope.data_detail, $rootScope.userLogin.token).success(function(res){
 				toastr.success('Updated success!');
 				setTimeout(function(){
-					res.id > 0 && ($window.location.href = '#/manager-drink/history/list');
+					res.id > 0 && ($window.location.href = '#/robot/history/list');
 				}, 300);
 			}).error(function(err, status, res){
 				console.log(err)
