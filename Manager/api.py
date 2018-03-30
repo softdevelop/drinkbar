@@ -312,6 +312,7 @@ class UserOrder(generics.ListCreateAPIView):
                 new_tab.pk = None
                 new_tab.order=order
                 new_tab.status=Tab.STATUS_NEW
+                new_tab.quantity_done=0
                 new_tab.save()
                 for garnish in garnishes:
                     new_tab.garnish.add(garnish)
@@ -552,17 +553,18 @@ class RobotChange(APIView):
         try:
             status = self.request.data.get('status_drink',None)
             if status:
-                drink = self.request.data.get('drink',0)
-                drink = order.products.filter(products=drink)
-                if not drink:
+                # drink = tab
+                tab = self.request.data.get('drink',0)
+                tab = order.products.filter(products=drink)
+                if not tab:
                     raise api_utils.BadRequest("INVALID_DRINK")
                 # Change ingredient status
                 if status>30 and status<40:
                     ingredient = self.request.data.get('ingredient',None)
-                    drink_ingredient = drink.ingredients.filter(id=ingredient)
+                    drink_ingredient = tab.drink.ingredients.filter(id=ingredient)
                     if not drink_ingredient:
                         raise api_utils.BadRequest("INVALID_INGREDIENT")
-                    ratio_require = drink_ingredient.change_to_ml(drink.total_part,drink.glass.change_to_ml)
+                    ratio_require = drink_ingredient.change_to_ml(tab.drink.total_part,tab.drink.glass.change_to_ml)
 
                     try:
                         robot_ingredient = robot.ingredients.get(ingredient=drink_ingredient)
@@ -586,14 +588,14 @@ class RobotChange(APIView):
                     drink.quantity_done +=1
                     if drink.quantity_done < drink.quantity:
                         status = Tab.STATUS_NEW
-                drink.status=status
-                drink.save()
+                tab.status=status
+                tab.save()
             if order.products.all().count() == \
                 order.products.filter(status=Tab.STATUS_FINISHED).count():
                 order.status = Order.STATUS_FINISHED
         except Exception as e:
             raise e
         order.save()
-        ret['drink'] = DrinkOrdersSerializer(drink).data
+        ret['drink'] = OrderTabSerializer(tab).data
         ret['order_status'] = order.status
         return Response(ret, status=status.HTTP_200_OK)
