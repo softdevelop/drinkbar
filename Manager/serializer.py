@@ -256,8 +256,31 @@ class IngredientHistorySerializer(serializers.ModelSerializer):
 class RobotSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Robot
-		fields = ('status','creation_date','ingredients')
+		fields = ('id','status','creation_date','ingredients')
 		depth = 1
+# 	def update(self, instance, validated_data):
+# 		print self.initial_data
+# 		ingredients = self.initial_data.getlist('ingredients',None)
+# 		if ingredients:
+# 			for ingredient in ingredients:
+# 			ingredient = ast.literal_eval(ingredient)
+# 			if ingredient['id']:ingredient
+# place_number
+# remain_of_bottle
+# last_bottle
+# 			else:
+# 				try:
+# 					ingre = RobotIngredient(ingredient=Ingredient.objects.get(id=ingredient['ingredient']),
+# 									place_number=ingredient['place_number'])
+# 					ingre.save()
+# 				except Exception as e:
+# 					DrinkIngredient.objects.filter(drink=ret).delete()
+# 					ret.delete()
+# 					raise e
+
+# 		print instance
+# 		print validated_data
+# 		return super(RobotSerializer,self).update(instance, validated_data)
 '''
 	Tab
 '''

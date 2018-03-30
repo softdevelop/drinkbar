@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^ingredient/brand/$', api_views.IngredientBrandList.as_view(), name="ingredient-brand-list"),
     url(r'^ingredient/brand/type/$', api_views.IngredientBrandTypeList.as_view(), name="ingredient-brand-type-list"),
     url(r'^ingredient/brand/(?P<pk>[0-9]+)/$', api_views.IngredientBrandDetail.as_view(), name="ingredient-brand-detail"),
+    url(r'^ingredient/history/$', api_views.IngredientHistoryList.as_view(), name="ingredient-history"),
 
     url(r'^robot/$', api_views.RobotList.as_view(), name="robot"),
     url(r'^robot/(?P<pk>[0-9]+)/$', api_views.RobotDetail.as_view(), name="robot"),

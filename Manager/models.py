@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.db.models import F, Sum
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, post_delete, pre_save
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
@@ -391,10 +391,11 @@ class Tab(models.Model):
 class RobotIngredient(models.Model):
 
     robot = models.ForeignKey(Robot, related_name='ingredients')
-    ingredient = models.ForeignKey(Ingredient)
+    ingredient = models.ForeignKey(Ingredient, related_name='robots')
     place_number = models.PositiveSmallIntegerField(null=True, blank=True, unique=True)
     remain_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
     last_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
+    last_ingredient = models.ForeignKey(Ingredient, on_delete=models.SET_NULL, null=True, blank=True)
 
 class IngredientHistory(models.Model):
     CONST_STATUS_IMPORT= 0
@@ -408,22 +409,31 @@ class IngredientHistory(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES)
     machine = models.ForeignKey(Robot, related_name='ingredient_histories',null=True, blank=True)
+    place_number = models.PositiveSmallIntegerField(null=True, blank=True)
     ingredient = models.ForeignKey(Ingredient, related_name='histories', on_delete=models.SET_NULL, null=True, blank=True)
     quantity = models.PositiveIntegerField(default=1)
 
-@receiver(post_save, sender=IngredientHistory)
-def create_ingredient_history(sender, instance=None, created=False, **kwargs):
-    if created:
-        if instance.status is IngredientHistory.CONST_STATUS_IMPORT:
-            instance.ingredient.bottles += instance.quantity
-        else:
-            if instance.ingredient.bottles<instance.quantity:
-                raise api_utils.BadRequest('OVER THE BOTTEL IN STORAGE')
-            instance.ingredient.bottles -= instance.quantity
-            instance.machine.ingredients.filter(ingredient=instance.ingredient)\
-                .update(last_bottle=F('remain_of_bottle'), remain_of_bottle=instance.ingredient.quanlity_of_bottle)
+@receiver(pre_save, sender=IngredientHistory)
+def create_ingredient_history(sender, instance=None, **kwargs):
+    if instance.status is IngredientHistory.CONST_STATUS_IMPORT:
+        instance.ingredient.bottles += instance.quantity
+    else:
+        if instance.ingredient.bottles<instance.quantity:
+            raise api_utils.BadRequest('OVER THE BOTTEL IN STORAGE')
+        instance.ingredient.bottles -= instance.quantity
 
-        instance.ingredient.save()
+        if instance.place_number > 77 or instance.place_number<1 :
+            raise api_utils.BadRequest('PLACE IS NOT TRUE, DOUBLE CHECK!')
+        if not instance.machine.ingredients.filter(place_number=instance.place_number)\
+            .update(last_ingredient=F('ingredient'), ingredient=instance.ingredient,\
+                    last_bottle=F('remain_of_bottle'),\
+                    remain_of_bottle=instance.ingredient.quanlity_of_bottle):
+            temp = RobotIngredient(place_number=instance.place_number,\
+                                robot=instance.machine, ingredient=instance.ingredient,\
+                                remain_of_bottle=instance.ingredient.quanlity_of_bottle)
+            temp.save()
+
+    instance.ingredient.save()
     '''
         Not suppor update, change data, quantity, 
             must delete and add again!
@@ -435,8 +445,8 @@ def delete_ingredient_history(sender, instance=None, created=False, **kwargs):
         instance.ingredient.bottles -= instance.quantity
     else:
         instance.ingredient.bottles += instance.quantity
-        instance.machine.ingredients.filter(ingredient=instance.ingredient)\
-                .update(remain_of_bottle=F('last_bottle'))
+        instance.machine.ingredients.filter(place_number=instance.place_number)\
+                .update(remain_of_bottle=F('last_bottle'),ingredient=F('last_ingredient'))
     instance.ingredient.save()
 
 
