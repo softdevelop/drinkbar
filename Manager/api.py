@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, status, exceptions, permissions, viewsets, mixins
 from rest_framework.exceptions import PermissionDenied, ValidationError
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .serializer import *
 from .models import *
 from . import tasks
@@ -23,6 +23,11 @@ from pprint import pprint
 User API:
 '''
 # Create by user
+class IsSupperAdmin(IsAdminUser):
+    
+    def has_permission(self, request, view):
+        return request.user and request.user.is_staff and request.user.is_superuser
+
 class UserSignUp(generics.CreateAPIView):
     serializer_class = UserSignupSerializer
 
@@ -488,16 +493,7 @@ class DrinkIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DrinkIngredientSerializer
     permission_classes = [IsAuthenticated]
 
-class IngredientHistoryList(generics.ListCreateAPIView):
-    queryset = IngredientHistory.objects.all().order_by('-creation_date')
-    serializer_class = IngredientHistorySerializer
-    permission_classes = [IsAuthenticated]
 
-class IngredientHistoryDetail(generics.RetrieveDestroyAPIView):
-    # Change permission is not allowed.
-    queryset = IngredientHistory
-    serializer_class = IngredientHistorySerializer
-    permission_classes = [IsAuthenticated]
 
 #Robot
 # class RobotList(generics.ListAPIView):
@@ -515,3 +511,25 @@ class RobotDetail(generics.RetrieveUpdateDestroyAPIView):
     '''
         update robot and ingredient robot contain
     '''
+
+
+class IngredientHistoryList(generics.ListCreateAPIView):
+    queryset = IngredientHistory.objects.all().order_by('-creation_date')
+    serializer_class = IngredientHistorySerializer
+    permission_classes = [IsAuthenticated]
+
+
+class IngredientHistoryDetail(generics.RetrieveDestroyAPIView):
+    # Change permission is not allowed.
+    queryset = IngredientHistory
+    serializer_class = IngredientHistorySerializer
+    permission_classes = [IsSupperAdmin]
+
+# class RobotChange(APIView):
+#     permission_classes = [IsAuthenticated]
+#     '''
+#         update robot status
+#     '''
+#     def post(self, request, format=None):
+#         status = self.request.data.get('robot')
+#         if status:
