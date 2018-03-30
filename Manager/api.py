@@ -23,8 +23,8 @@ from pprint import pprint
 User API:
 '''
 # Create by user
-class IsSupperAdmin(IsAdminUser):
-    
+class IsSuperAdmin(IsAdminUser):
+
     def has_permission(self, request, view):
         return request.user and request.user.is_staff and request.user.is_superuser
 
@@ -55,7 +55,7 @@ class UserSignUp(generics.CreateAPIView):
 # Create by admin
 class UserList(generics.ListCreateAPIView):
     queryset = UserBase.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
     serializer_class = UserSerializer
 
     def get_queryset(self):
@@ -518,18 +518,82 @@ class IngredientHistoryList(generics.ListCreateAPIView):
     serializer_class = IngredientHistorySerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        ret = self.queryset
+        robot = self.request.GET.get('robot',None)
+        if robot:
+            ret = ret.filter(machine=robot)
+        return ret
+
 
 class IngredientHistoryDetail(generics.RetrieveDestroyAPIView):
     # Change permission is not allowed.
     queryset = IngredientHistory
     serializer_class = IngredientHistorySerializer
-    permission_classes = [IsSupperAdmin]
+    permission_classes = [IsSuperAdmin]
 
-# class RobotChange(APIView):
-#     permission_classes = [IsAuthenticated]
-#     '''
-#         update robot status
-#     '''
-#     def post(self, request, format=None):
-#         status = self.request.data.get('robot')
-#         if status:
+class RobotChange(APIView):
+    permission_classes = [IsAuthenticated]
+    '''
+        update robot status
+    '''
+    def post(self, request, format=None):
+        ret = {}
+        robot = self.request.data.get('robot',0)
+        robot = Order.objects.filter(id=robot)
+        if not robot:
+            raise api_utils.BadRequest("INVALID_MACHINE")
+
+        order = self.request.data.get('order',0)
+        order = Order.objects.filter(id=order)
+        if not order:
+            raise api_utils.BadRequest("INVALID_ORDER")
+        order.status = Order.STATUS_PROCESSING
+        try:
+            status = self.request.data.get('status_drink',None)
+            if status:
+                drink = self.request.data.get('drink',0)
+                drink = order.products.filter(products=drink)
+                if not drink:
+                    raise api_utils.BadRequest("INVALID_DRINK")
+                # Change ingredient status
+                if status>30 and status<40:
+                    ingredient = self.request.data.get('ingredient',None)
+                    drink_ingredient = drink.ingredients.filter(id=ingredient)
+                    if not drink_ingredient:
+                        raise api_utils.BadRequest("INVALID_INGREDIENT")
+                    ratio_require = drink_ingredient.change_to_ml(drink.total_part,drink.glass.change_to_ml)
+
+                    try:
+                        robot_ingredient = robot.ingredients.get(ingredient=drink_ingredient)
+                    except Exception as e:
+                        raise api_utils.BadRequest("THIS_ROBOT_DONT_HAVE_THIS_INGREDIENT")
+
+                    if robot_ingredient.remain_of_bottle < ratio_require:
+                        subject = 'Hi-Effeciency - Reset password requested'
+                        html_content = render_to_string('email/password_reset.html', {'user':user.full_name, 'reset_code':reset_code})
+                        tasks.send_email(subject, html_content, [email])
+                        raise api_utils.BadRequest("NOT ENOUGH INGREDIENT ON THIS ROBOT")
+                    if robot_ingredient.remain_of_bottle < 100:
+                        # warning
+                        subject = 'Hi-Effeciency - Reset password requested'
+                        html_content = render_to_string('email/password_reset.html', {'user':user.full_name, 'reset_code':reset_code})
+                        tasks.send_email(subject, html_content, UserBase.objects.filter(is_superuser=True).value_list('email',flat=True))
+                    robot_ingredient.remain_of_bottle -= ratio_require
+                    robot_ingredient.save()
+                    ret['place_number'] = robot_ingredient.place_number
+                if status == Tab.STATUS_FINISHED:
+                    drink.quantity_done +=1
+                    if drink.quantity_done < drink.quantity:
+                        status = Tab.STATUS_NEW
+                drink.status=status
+                drink.save()
+            if order.products.all().count() == \
+                order.products.filter(status=Tab.STATUS_FINISHED).count():
+                order.status = Order.STATUS_FINISHED
+        except Exception as e:
+            raise e
+        order.save()
+        ret['drink'] = DrinkOrdersSerializer(drink).data
+        ret['order_status'] = order.status
+        return Response(ret, status=status.HTTP_200_OK)

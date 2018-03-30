@@ -387,6 +387,7 @@ class Tab(models.Model):
                                         default=CONST_100_ICE)
     garnishes = models.ManyToManyField(DrinkGarnish, blank =True)
     quantity = models.PositiveIntegerField(blank=True, null= True, default=0)
+    quantity_done = models.PositiveIntegerField(blank=True, null= True, default=0)
     order = models.ForeignKey(Order, related_name='products',blank=True, null= True,)
 class RobotIngredient(models.Model):
 
