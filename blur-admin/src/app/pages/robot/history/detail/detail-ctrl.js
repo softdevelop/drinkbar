@@ -22,7 +22,6 @@
 		function getElement(){
 			HistoryService.getElement($scope.paramt_id, $rootScope.userLogin.token).success(function(res){
                 $scope.detail = res;
-                $scope.detail.parent = String(res.parent);
 			}).error(function(err, status, res){
 				console.log(err);
 				toastr.error('Error!');

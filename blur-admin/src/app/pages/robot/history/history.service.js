@@ -4,7 +4,7 @@
         .factory('HistoryService', function ($http, AppSetting) {
             return {
                 getList: function (token) {
-                    return $http.get(AppSetting.BASE_URL + '/api/drink/category/', {
+                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/history/', {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -16,7 +16,7 @@
                     for (var key in data) {
                         fd.append(key, data[key])
                     }
-                    return $http.post(AppSetting.BASE_URL + '/api/drink/category/', fd, {
+                    return $http.post(AppSetting.BASE_URL + '/api/ingredient/history/', fd, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -24,7 +24,7 @@
                     });
                 },
                 removed: function (id, token) {
-                    return $http.delete(AppSetting.BASE_URL + '/api/drink/category/' + id + '/', {
+                    return $http.delete(AppSetting.BASE_URL + '/api/ingredient/history/' + id + '/', {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -43,7 +43,7 @@
 							fd.append(key, data[key]);
 						}
                     }
-                    return $http.patch(AppSetting.BASE_URL + '/api/drink/category/' + data.id + '/', fd , {
+                    return $http.patch(AppSetting.BASE_URL + '/api/ingredient/history/' + data.id + '/', fd , {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -54,7 +54,7 @@
                     var fd = new FormData();
                     fd.append('status', data.status);
 
-                    return $http.patch(AppSetting.BASE_URL + '/api/drink/category/'+ data.id + '/', fd, {
+                    return $http.patch(AppSetting.BASE_URL + '/api/ingredient/history/'+ data.id + '/', fd, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -62,7 +62,7 @@
                     })
                 },
                 getElement : function(id, token){
-                    return $http.get(AppSetting.BASE_URL + '/api/drink/category/'+ id + '/', {
+                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/history/'+ id + '/', {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token

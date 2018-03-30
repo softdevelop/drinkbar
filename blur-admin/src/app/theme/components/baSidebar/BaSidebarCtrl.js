@@ -24,22 +24,9 @@
 			},
 			{
 				icon: "ion-person-stalker",
-				name: "manager",
+				name: "list-user",
 				level: 0,
-				subMenu: [
-					{
-						stateRef: "create-user",
-						title: "Create",
-						level: 1,
-						name: 'create-user'
-					},
-					{
-						stateRef: "list-user",
-						title: "List",
-						name: 'list-user',
-						level: 1
-					}
-				],
+				stateRef: "list-user",
 				title: "Manager User"
 			},
 			{
@@ -49,84 +36,28 @@
 				title: "Manager Drink",
 				subMenu: [
 					{
-						stateRef: "drink-categories",
+						stateRef: "list-categories",
 						title: "Categories",
 						level: 1,
-						name: 'drink-categories',
-						subMenu : [
-							{
-								stateRef: "create-categories",
-								title: "Create",
-								level: 2,
-								name: 'create-categories'
-							},
-							{
-								stateRef: "list-categories",
-								title: "List",
-								name: 'list-categories',
-								level: 2
-							}
-						]
+						name: 'list-categories',
 					},
 					{
-						stateRef: "drink",
+						stateRef: "list-drink",
 						title: "Drinks",
-						name: 'drink',
+						name: 'list-drink',
 						level: 1,
-						subMenu : [
-							{
-								stateRef: "create-drink",
-								title: "Create",
-								level: 2,
-								name: 'create-drink'
-							},
-							{
-								stateRef: "list-drink",
-								title: "List",
-								name: 'list-drink',
-								level: 2
-							}
-						]
 					},
 					{
-						stateRef: "separate-glass",
+						stateRef: "list-separate-glass",
 						title: "Separate Glass",
-						name: 'separate-glass',
+						name: 'list-separate-glass',
 						level: 1,
-						subMenu : [
-							{
-								stateRef: "create-separate-glass",
-								title: "Create",
-								level: 2,
-								name: 'create-separate-glass'
-							},
-							{
-								stateRef: "list-separate-glass",
-								title: "List",
-								name: 'list-separate-glass',
-								level: 2
-							}
-						]
 					},
 					{
-						stateRef: "garnish",
+						stateRef: "list-garnish",
 						title: "Garnish",
-						name: 'garnish',
+						name: 'list-garnish',
 						level: 1,
-						subMenu : [
-							{
-								stateRef: "create-garnish",
-								title: "Create",
-								level: 2,
-								name: 'create-garnish'
-							},
-							{
-								stateRef: "list-garnish",
-								title: "List",
-								name: 'list-garnish',
-								level: 2
-							}
-						]
 					},
 					
 					
@@ -139,85 +70,30 @@
 				title: "Manager Ingredient",
 				subMenu : [
 					{
-						stateRef: "ingredient-types",
+						stateRef: "list-ingredient-types",
 						title: "Types",
-						name: 'ingredient-types',
+						name: 'list-ingredient-types',
 						level: 1,
-						subMenu : [
-							{
-								stateRef: "create-ingredient-types",
-								title: "Create",
-								level: 2,
-								name: 'create-ingredient-types'
-							},
-							{
-								stateRef: "list-ingredient-types",
-								title: "List",
-								name: 'list-ingredient-types',
-								level: 2
-							}
-						]
 					},
 					{
-						stateRef: "ingredient-brand",
+						stateRef: "list-ingredient-brand",
 						title: "Brand",
-						name: 'ingredient-brand',
+						name: 'list-ingredient-brand',
 						level: 1,
-						subMenu : [
-							{
-								stateRef: "create-ingredient-brand",
-								title: "Create",
-								level: 2,
-								name: 'create-ingredient-brand'
-							},
-							{
-								stateRef: "list-ingredient-brand",
-								title: "List",
-								name: 'list-ingredient-brand',
-								level: 2
-							}
-						]
 					},
 					{
-						stateRef: "ingredient",
+						stateRef: "list-ingredient",
 						title: "Ingredient",
-						name: 'ingredient',
+						name: 'list-ingredient',
 						level: 1,
-						subMenu : [
-							{
-								stateRef: "create-ingredient",
-								title: "Create",
-								level: 2,
-								name: 'create-ingredient'
-							},
-							{
-								stateRef: "list-ingredient",
-								title: "List",
-								name: 'list-ingredient',
-								level: 2
-							}
-						]
 					},
 				]
 			},
 			{
 				icon: "ion-clipboard",
-				name: "order",
+				name: "list-order",
+				stateRef: "list-order",
 				level: 0,
-				subMenu: [
-					// {
-					// 	stateRef: "create-order",
-					// 	title: "Create",
-					// 	level: 1,
-					// 	name: 'create-order'
-					// },
-					{
-						stateRef: "list-order",
-						title: "List",
-						name: 'list-order',
-						level: 1
-					}
-				],
 				title: "Order"
 			},
 			{
