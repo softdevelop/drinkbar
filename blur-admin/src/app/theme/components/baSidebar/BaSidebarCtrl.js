@@ -98,43 +98,32 @@
 			},
 			{
 				icon: "ion-social-reddit-outline",
-				name: "Robot",
+				name: "list-robot",
+				stateRef: "list-robot",
+				title: "Robot",
 				level: 0,
-				subMenu: [
-					// {
-					// 	stateRef: "create-robot",
-					// 	title: "Create",
-					// 	level: 1,
-					// 	name: 'create-robot'
-					// },
-					{
-						stateRef: "list-robot",
-						title: "List",
-						name: 'list-robot',
-						level: 1
-					},
-					{
-						stateRef: "ingredient-history",
-						title: "History",
-						name: 'ingredient-history',
-						level: 1,
-						subMenu : [
-							{
-								stateRef: "create-history",
-								title: "Create",
-								level: 2,
-								name: 'create-history'
-							},
-							{
-								stateRef: "list-history",
-								title: "List",
-								name: 'list-history',
-								level: 2
-							}
-						]
-					}
-				],
-				title: "Robot"
+				// subMenu: [
+				// 	{
+				// 		stateRef: "ingredient-history",
+				// 		title: "History",
+				// 		name: 'ingredient-history',
+				// 		level: 1,
+				// 		subMenu : [
+				// 			{
+				// 				stateRef: "create-history",
+				// 				title: "Create",
+				// 				level: 2,
+				// 				name: 'create-history'
+				// 			},
+				// 			{
+				// 				stateRef: "list-history",
+				// 				title: "List",
+				// 				name: 'list-history',
+				// 				level: 2
+				// 			}
+				// 		]
+				// 	}
+				// ],
 			},
 		];
 

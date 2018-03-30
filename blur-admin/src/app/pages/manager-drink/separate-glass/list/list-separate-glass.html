@@ -23,12 +23,9 @@
 						<a href="#/manager-drink/separate-glass/detail/{{item.id}}">{{item.name}}</a>
 					</td>
 					<td class="ng-binding align-items-center">
-						<!-- <input ng-show="item.status === 0" type="checkbox" name="status" checked>
-						<input ng-show="item.status === 10" type="checkbox" name="status"> -->
-						<label class="checkbox-inline custom-checkbox nowrap">
-							<input type="checkbox" ng-checked="item.status === 0" ng-model="status" ng-click="changeStatus(item)">
-							<span></span>
-						</label>
+						<div class="_status">
+                            <ba-switcher switcher-style="success" switcher-value="item.status" ng-click="changeSwitch(item)"></ba-switcher>
+                        </div>
 					</td>
 					<td class="ng-binding align-items-center" style="text-align : center;">
 						<!-- <a href="{{item.image}}">{{item.image}}</a> -->

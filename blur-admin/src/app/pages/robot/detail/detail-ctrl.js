@@ -13,29 +13,33 @@
 		$scope.detail = {};
 		$scope.paramt_id = $stateParams.id;
 		$scope.data_detail = {
-			id : $scope.paramt_id
-        };
-        $scope.isDisable = true;
-        $rootScope.ingredients = [];
-		
+			id: $scope.paramt_id
+		};
+		$scope.isDisable = true;
+		$rootScope.ingredients = [];
+
 		// ========= function get data glass by id ===========
-		function getElement(){
-			RobotService.getElement($scope.paramt_id, $rootScope.userLogin.token).success(function(res){
-                res.status = String(res.status);
-                $scope.detail = res;
-			}).error(function(err, status, res){
+		function getElement() {
+			RobotService.getElement($scope.paramt_id, $rootScope.userLogin.token).success(function (res) {
+				// res.status = String(res.status);
+				res.status = res.status === 0 ? true : false;
+				$scope.detail = res;
+			}).error(function (err, status, res) {
 				console.log(err);
 				toastr.error('Error!');
 			})
 		}
 
-        getElement();
-        
+		getElement();
+
 		// ========== function change from ===============
-		$scope.changeInfo = function(field, value){
+		$scope.changeInfo = function (field, value) {
+			if(field === 'status'){
+				value = value ? 0 : 10;
+			}
 			$scope.data_detail[field] = value;
-        }
-        
+		}
+
 		// =========== open modal create ingredient ============
 		$scope.openCreateIngredient = function (size) {
 			var page = 'app/pages/manager-drink/drink/create/ingredient/add.html';
@@ -62,16 +66,16 @@
 				controller: 'DrinkDeleteIngredientCtrl',
 			});
 		}
-		
+
 		// =========== function create =================
-		$scope.save = function(){
-            $scope.data_detail.ingredients = $rootScope.ingredients;
-			RobotService.updated($scope.data_detail, $rootScope.userLogin.token).success(function(res){
+		$scope.save = function () {
+			$scope.data_detail.ingredients = $rootScope.ingredients;
+			RobotService.updated($scope.data_detail, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Updated success!');
-				setTimeout(function(){
+				setTimeout(function () {
 					res.id > 0 && ($window.location.href = '#/robot/list');
 				}, 300);
-			}).error(function(err, status, res){
+			}).error(function (err, status, res) {
 				console.log(err)
 				toastr.error('Error!');
 			})

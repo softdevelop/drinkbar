@@ -1,13 +1,15 @@
+<div class="" style="margin-bottom : 15px; text-align : right;">
+    <a class="btn btn-default" href="#/robot/history/list" style="margin-left : 15px;"><i class="ion-loop"></i> History</a>
+</div>
+
 <div ba-panel="" ba-panel-title="Detail Robot / {{detail.name}}" ba-panel-class="with-scroll">
     <div class="panel-body">
         <form name="form" class="form_create">
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Status</label>
-
-                <select class="form-control" name="status" ng-model="detail.status" ng-change="changeInfo('status', detail.status)" required>
-                    <option class="form-control" value="0">ON</option>
-                    <option class="form-control" value="10">OFF</option>
-                </select>
+                <div style="width: 100%; margin-top: 15px;">
+                    <ba-switcher switcher-style="success" switcher-value="detail.status" ng-click="changeInfo('status', detail.status)"></ba-switcher>
+                </div>
             </div>
 
             <!-- Ingredient -->

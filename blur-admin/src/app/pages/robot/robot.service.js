@@ -69,6 +69,21 @@
                             'Authorization': 'Token ' + token
                         }
                     })
+                },
+                // =========== import history =========
+                importHistoryRobo: function (data, token) {
+                    var fd = new FormData();
+
+                    for (var key in data) {
+                        fd.append(key, data[key]);
+                    }
+
+                    return $http.patch(AppSetting.BASE_URL + '/api/ingredient/history/' + data.id + '/', fd, {
+                        headers: {
+                            'Content-Type': undefined,
+                            'Authorization': 'Token ' + token
+                        }
+                    })
                 }
             }
         });

@@ -17,6 +17,7 @@
 		$scope.bigTotalItems = 0;
 		$scope.bigCurrentPage = 1;
 		$rootScope.offset = 0;
+
 		$scope.types = [];
 		$scope.filter_types = [];
 		$scope.brands = [];
@@ -70,6 +71,9 @@
 		// ================= get list ===============
 		function getList() {
 			IngredientService.getList($rootScope.userLogin.token, $rootScope.offset).success(function (res) {
+				res.results.forEach(function(el){
+					el.status = el.status === 0 ? true : false;
+				});
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
 			}).error(function (err, status, res) {
@@ -92,21 +96,25 @@
 
 		getListType();
 
-		// =============== fucntion change status ================
-		$scope.changeStatus = function (data) {
-			data.status === 0 ? data.status = 10 : data.status = 0;
-			var _obj = {
-				id: data.id,
-				status: data.status
+		// ============ change Switch ==============
+		$scope.countSwitch = 0;
+		$scope.changeSwitch = function (data) {
+			$scope.countSwitch ++;
+			if($scope.countSwitch == 2){
+				$scope.countSwitch = 0;
+				var _obj = {
+					id : data.id,
+					status : data.status ? 0 : 10
+				};
+
+				IngredientService.updated(_obj, $rootScope.userLogin.token).success(function(res){
+					toastr.success('Change status success!');
+					getList();
+				}).error(function(err, status, res){
+					console.log(err);
+					toastr.error('Error!');
+				})
 			}
-			console.log(_obj)
-			IngredientService.updated(_obj, $rootScope.userLogin.token).success(function (res) {
-				toastr.success('Change status success!');
-				getList();
-			}).error(function (err, status, res) {
-				console.log(err);
-				toastr.error('Error!');
-			})
 		}
 
 		// ============ function get list brand ===========
@@ -151,6 +159,9 @@
 		// ================= get list glass ===============
 		function getList() {
 			IngredientService.getList($rootScope.userLogin.token, $rootScope.offset).success(function (res) {
+				res.results.forEach(function(el){
+					el.status = el.status === 0 ? true : false;
+				});
 				$rootScope.listData = res.results;
 			}).error(function (err, status, res) {
 				console.log(res)

@@ -17,6 +17,9 @@
 		// ================= get list glass ===============
 		function getList(){
 			SeparateService.getList($rootScope.userLogin.token).success(function(res){
+				res.forEach(function(el){
+					el.status = el.status === 0 ? true : false;
+				});
 				$rootScope.listGalss = res;
 			}).error(function(err, status, res){
 				console.log(res)
@@ -42,16 +45,25 @@
             });
 		}
 
-		// =============== fucntion change status ================
-		$scope.changeStatus = function(data){
-			data.status === 0 ? data.status = 10 : data.status = 0;
-			SeparateService.changeStatusGlass(data, $rootScope.userLogin.token).success(function(res){
-				toastr.success('Change status success!');
-				getList();
-			}).error(function(err, status, res){
-				console.log(err);
-				toastr.error('Error!');
-			})
+		// ============ change Switch ==============
+		$scope.countSwitch = 0;
+		$scope.changeSwitch = function (data) {
+			$scope.countSwitch ++;
+			if($scope.countSwitch == 2){
+				$scope.countSwitch = 0;
+				var _obj = {
+					id : data.id,
+					status : data.status ? 0 : 10
+				};
+
+				SeparateService.changeStatusGlass(_obj, $rootScope.userLogin.token).success(function(res){
+					toastr.success('Change status success!');
+					getList();
+				}).error(function(err, status, res){
+					console.log(err);
+					toastr.error('Error!');
+				})
+			}
 		}
 		
 	};
@@ -66,6 +78,9 @@
 		// ================= get list glass ===============
 		function getList(){
 			SeparateService.getList($rootScope.userLogin.token).success(function(res){
+				res.forEach(function(el){
+					el.status = el.status === 0 ? true : false;
+				});
 				$rootScope.listGalss = res;
 			}).error(function(err, status, res){
 				console.log(res)

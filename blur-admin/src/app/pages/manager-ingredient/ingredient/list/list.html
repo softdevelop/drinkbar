@@ -8,12 +8,14 @@
             <div class="row">
                 <div class="col-md-2">
                     <div class="form-group">
-                        <h6>Filter Type:</h6>
+                        <h3>
+                            <i class="ion-funnel"></i> Filter Type:</h3>
                         <select class="form-control" name="status" ng-model="data_filter.filter_type" ng-change="changeFilter('filter_type', data_filter.filter_type)">
                             <option ng-repeat="item in filter_types" class="form-control" value="{{item.id}}">{{item.name}}</option>
                         </select>
                     </div>
                 </div>
+
                 <div ng-if="isShowFilterBrand" class="col-md-2">
                     <div class="form-group">
                         <h6>Filter Brand:</h6>
@@ -24,6 +26,7 @@
                 </div>
             </div>
         </div>
+
         <table class="table table-striped" st-table="smartTableData">
             <thead>
                 <tr class="sortable ">
@@ -51,10 +54,9 @@
                         </span>
                     </td>
                     <td class="ng-binding">
-                        <label class="checkbox-inline custom-checkbox nowrap">
-                            <input type="checkbox" ng-checked="item.status === 0" ng-model="status" ng-click="changeStatus(item)">
-                            <span></span>
-                        </label>
+                        <div class="_status">
+                            <ba-switcher switcher-style="success" switcher-value="item.status" ng-click="changeSwitch(item)"></ba-switcher>
+                        </div>
                     </td>
                     <td class="ng-binding" style="width: 30px; text-align : center;">
                         <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">
@@ -64,7 +66,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="align-right" ng-show="bigTotalItems > 10">
+        <div class="align-right border_top_0" ng-show="bigTotalItems > 10">
             <ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" ng-click="changePage(bigCurrentPage)"
                 class="pagination-sm" boundary-link-numbers="true"></ul>
         </div>

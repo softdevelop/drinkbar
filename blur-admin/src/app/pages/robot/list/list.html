@@ -1,13 +1,13 @@
-<!-- <div class="" style="margin-bottom : 15px;">
-    <a class="btn btn-primary" href="#/order/create" style="background: #209e91; border-color: #209e91;">Create</a>
-</div> -->
+<div class="" style="margin-bottom : 15px; text-align : right;">
+    <a class="btn btn-primary" href="#/robot/import/"  style="background: #209e91; border-color: #209e91;"><i class="ion-ios-download"></i> Import</a>
+</div>
 
 <div ba-panel="" ba-panel-title="Robots" ba-panel-class="with-scroll">
     <div class="panel-body">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th style="text-align : left;">id</th>
+                    <th style="text-align : left;">Id</th>
                     <th>Status</th>
                 </tr>
             </thead>
@@ -17,10 +17,9 @@
                         <a href="#/robot/detail/{{item.id}}">{{item.id}}</a>
                     </td>
                     <td class="ng-binding">
-                        <label class="checkbox-inline custom-checkbox nowrap">
-                            <input type="checkbox" ng-checked="item.status === 0 ? true : false" ng-model="item.active" ng-click="changeStatus(item)">
-                            <span></span>
-                        </label>
+                        <div class="_status">
+                            <ba-switcher switcher-style="success" switcher-value="item.status" ng-click="changeSwitch(item)"></ba-switcher>
+                        </div>
                     </td>
                 </tr>
             </tbody>

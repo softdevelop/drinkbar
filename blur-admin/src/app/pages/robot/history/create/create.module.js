@@ -12,7 +12,7 @@
 	function routeConfig($stateProvider, $urlRouterProvider) {
 		
 		$stateProvider.state('create-history', {
-			url: '/order/history/create',
+			url: '/robot/history/create',
 			title: 'History / Create',
 			templateUrl: 'app/pages/robot/history/create/create.html',
 			controller: 'HistoriesCreateCtrl',

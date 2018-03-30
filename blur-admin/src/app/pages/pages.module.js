@@ -60,7 +60,7 @@
 		'BlurAdmin.pages.detail-order',
 		// ============ robot ================
 		'BlurAdmin.pages.list-robot',
-		// 'BlurAdmin.pages.create-robot',
+		'BlurAdmin.pages.import-robot',
 		'BlurAdmin.pages.detail-robot',
 		// -------- history --------
 		'BlurAdmin.pages.list-history',
@@ -219,13 +219,26 @@
 					title: 'Robot List',
 					stateRef: 'list-robot'
 				},
-				// {
-				// 	title: 'Robot Create',
-				// 	stateRef: 'create-robot'
-				// },
+				{
+					title: 'Robot Import',
+					stateRef: 'import-robot'
+				},
 				{
 					title: 'Robot Detail',
 					stateRef: 'detail-robot/:id'
+				},
+				// ---------- history ---------
+				{
+					title: 'History List',
+					stateRef: 'list-history'
+				},
+				{
+					title: 'History Create',
+					stateRef: 'create-history'
+				},
+				{
+					title: 'History Detail',
+					stateRef: 'detail-history/:id'
 				},
 				// ===================================
 				{
@@ -235,20 +248,6 @@
 				}
 			]
 		});
-		// baSidebarServiceProvider.addStaticItem({
-		// 	title: 'Menu Level 1',
-		// 	icon: 'ion-ios-more',
-		// 	subMenu: [{
-		// 		title: 'Menu Level 1.1',
-		// 		disabled: true
-		// 	}, {
-		// 		title: 'Menu Level 1.2',
-		// 		subMenu: [{
-		// 			title: 'Menu Level 1.2.1',
-		// 			disabled: true
-		// 		}]
-		// 	}]
-		// });
 	}
 
 })();

@@ -26,7 +26,8 @@
                 res.status = String(res.status);
                 res.brand = String(res.brand);
                 $scope.detail = res;
-
+                $scope.detail.type = res.type.id;
+                console.log($scope.detail.type)
                 getListType();
                 getListBrand($scope.detail.type);
             }).error(function (err, status, res) {

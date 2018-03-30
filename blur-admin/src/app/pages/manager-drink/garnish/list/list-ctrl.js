@@ -25,17 +25,6 @@
 
         getList();
         
-        // =========== change active ==================
-        $scope.changeActive = function(data){
-            GarnishService.updated(data, $rootScope.userLogin.token).success(function(res){
-                toastr.success('Updated active success!');
-                getList();
-            }).error(function(err, stt, res){
-                console.log(res);
-                toastr.error('Error!');
-            })
-        }
-
 		// =========== open modal confirm delete Glass ===========
 		$scope.confirmDelete = function(data){
 			var page = 'app/pages/manager-drink/garnish/list/confirm.html';
@@ -50,6 +39,27 @@
                 },
                 controller: 'GarnishDeleteCtrl',
             });
+		}
+
+		// ============ change Switch ==============
+		$scope.countSwitch = 0;
+		$scope.changeSwitch = function (data) {
+			$scope.countSwitch ++;
+			if($scope.countSwitch == 2){
+				$scope.countSwitch = 0;
+				var _obj = {
+					id : data.id,
+					active : data.active
+				};
+
+				GarnishService.updated(_obj, $rootScope.userLogin.token).success(function(res){
+					toastr.success('Change status success!');
+					getList();
+				}).error(function(err, status, res){
+					console.log(err);
+					toastr.error('Error!');
+				})
+			}
 		}
 
 	};

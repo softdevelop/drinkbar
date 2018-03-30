@@ -20,10 +20,13 @@
                         <a href="#/manager-drink/garnish/detail/{{item.id}}">{{item.name}}</a>
                     </td>
                     <td class="ng-binding">
-                        <label class="checkbox-inline custom-checkbox nowrap">
+                        <!-- <label class="checkbox-inline custom-checkbox nowrap">
 							<input type="checkbox" ng-checked="item.active" ng-model="item.active" ng-click="changeActive(item)">
 							<span></span>
-						</label>
+                        </label> -->
+                        <div class="_status">
+                            <ba-switcher switcher-style="success" switcher-value="item.active" ng-click="changeSwitch(item)"></ba-switcher>
+                        </div>
                     </td>
                     <td class="ng-binding" style="width: 30px; text-align : center;">
                         <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">
