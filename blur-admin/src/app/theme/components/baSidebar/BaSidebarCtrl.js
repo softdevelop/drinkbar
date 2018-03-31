@@ -23,6 +23,14 @@
 				title: "Dashboard"
 			},
 			{
+				icon: "ion-monitor",
+				level: 0,
+				name: "tivishow",
+				order: 0,
+				stateRef: "tivi-showing",
+				title: "TV Showing"
+			},
+			{
 				icon: "ion-person-stalker",
 				name: "list-user",
 				level: 0,
@@ -49,7 +57,7 @@
 					},
 					{
 						stateRef: "list-separate-glass",
-						title: "Separate Glass",
+						title: "Glassware",
 						name: 'list-separate-glass',
 						level: 1,
 					},
@@ -94,7 +102,7 @@
 				name: "list-order",
 				stateRef: "list-order",
 				level: 0,
-				title: "Order"
+				title: "Orders"
 			},
 			{
 				icon: "ion-social-reddit-outline",
