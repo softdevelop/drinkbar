@@ -52,6 +52,14 @@
         // ========== import ==========
         $scope.import = function(){
             console.log($scope.data_create)
+            RobotService.importHistoryRobo($scope.data_create, $rootScope.userLogin.token).success(function(res){
+                toastr.success('Import robot success!');
+                $rootScope.robotId = $scope.data_create.machine;
+                $window.location.href = '#/robot/history/list';
+            }).error(function(err, stt, res){
+                console.log(res)
+                toastr.error('Error!');
+            })
         }
 
 	}

@@ -27,13 +27,13 @@
 				name: "list-user",
 				level: 0,
 				stateRef: "list-user",
-				title: "Manager User"
+				title: "User Manager"
 			},
 			{
 				icon: "ion-beer",
 				name: "drink",
 				level: 0,
-				title: "Manager Drink",
+				title: "Drink Manager",
 				subMenu: [
 					{
 						stateRef: "list-categories",
@@ -67,7 +67,7 @@
 				icon: "ion-waterdrop",
 				name: "manager-ingredient",
 				level: 0,
-				title: "Manager Ingredient",
+				title: "Ingredient Manager",
 				subMenu : [
 					{
 						stateRef: "list-ingredient-types",
