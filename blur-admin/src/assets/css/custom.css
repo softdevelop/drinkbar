@@ -112,10 +112,6 @@ body{
 	margin-right: 10px;
 	color: #dd5e45;
 }
-.ctn-drinks ul li:hover{
-	background: url(images/hover-icon1.png) #454a50 no-repeat center right 20px;
-	background-size: 7px;
-}
 .ctn-time h5{
 	font-weight: 500;
 	color: #3496ad;
