@@ -245,6 +245,8 @@ class IngredientListSerializer(IngredientCreateSerializer):
 
 
 class IngredientHistorySerializer(serializers.ModelSerializer):
+	ingredient_view = IngredientCreateSerializer(source='ingredient' ,read_only=True)
+
 	class Meta:
 		model = IngredientHistory
 		fields = '__all__'
