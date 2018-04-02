@@ -4,7 +4,9 @@ from models import *
 from pprint import pprint
 import ast
 import api_utils
-
+from datetime import datetime, timedelta
+from collections import Counter, OrderedDict
+from django.utils import timezone
 
 class UserSignupSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
@@ -336,10 +338,13 @@ class OrderMachineSerializer(OrderSerializer):
         temp = list() 
         for order in orders:
             temp += order.products.all().values_list('drink', flat=True)
-        ret = Counter(temp)
-        print ret
-        print type(ret)
-        return ret
+        ret = Counter(temp).most_common(3)
+        ret =  dict(ret)
+        ret = OrderedDict(sorted(ret.items(), key=lambda t: t[1], reverse=True))
+        temp = list()
+        for key, value in ret.items():
+            temp.append(Drink.objects.get(id=key))
+        return DrinkUserOrdersSerializer(instance=temp, many=True).data
         
 class UserWithOrderSerializer(UserSerializer):
     orders = OrderSmallSerializer(read_only=True, many=True, required=False,)
