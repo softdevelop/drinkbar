@@ -23,17 +23,25 @@
 				title: "Dashboard"
 			},
 			{
+				icon: "ion-monitor",
+				level: 0,
+				name: "tivishow",
+				order: 0,
+				stateRef: "tivi-showing",
+				title: "TV Showing"
+			},
+			{
 				icon: "ion-person-stalker",
 				name: "list-user",
 				level: 0,
 				stateRef: "list-user",
-				title: "Manager User"
+				title: "User Manager"
 			},
 			{
 				icon: "ion-beer",
 				name: "drink",
 				level: 0,
-				title: "Manager Drink",
+				title: "Drink Manager",
 				subMenu: [
 					{
 						stateRef: "list-categories",
@@ -49,7 +57,7 @@
 					},
 					{
 						stateRef: "list-separate-glass",
-						title: "Separate Glass",
+						title: "Glassware",
 						name: 'list-separate-glass',
 						level: 1,
 					},
@@ -67,7 +75,7 @@
 				icon: "ion-waterdrop",
 				name: "manager-ingredient",
 				level: 0,
-				title: "Manager Ingredient",
+				title: "Ingredient Manager",
 				subMenu : [
 					{
 						stateRef: "list-ingredient-types",
@@ -94,7 +102,7 @@
 				name: "list-order",
 				stateRef: "list-order",
 				level: 0,
-				title: "Order"
+				title: "Orders"
 			},
 			{
 				icon: "ion-social-reddit-outline",

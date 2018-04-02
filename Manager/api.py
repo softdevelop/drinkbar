@@ -312,6 +312,7 @@ class UserOrder(generics.ListCreateAPIView):
                 new_tab.pk = None
                 new_tab.order=order
                 new_tab.status=Tab.STATUS_NEW
+                new_tab.quantity_done=0
                 new_tab.save()
                 for garnish in garnishes:
                     new_tab.garnish.add(garnish)
@@ -552,48 +553,54 @@ class RobotChange(APIView):
         try:
             status = self.request.data.get('status_drink',None)
             if status:
-                drink = self.request.data.get('drink',0)
-                drink = order.products.filter(products=drink)
-                if not drink:
+                # drink = tab
+                tab = self.request.data.get('drink',0)
+                tab = order.products.filter(products=drink)
+                if not tab:
                     raise api_utils.BadRequest("INVALID_DRINK")
                 # Change ingredient status
                 if status>30 and status<40:
                     ingredient = self.request.data.get('ingredient',None)
-                    drink_ingredient = drink.ingredients.filter(id=ingredient)
+                    drink_ingredient = tab.drink.ingredients.filter(id=ingredient)
                     if not drink_ingredient:
                         raise api_utils.BadRequest("INVALID_INGREDIENT")
-                    ratio_require = drink_ingredient.change_to_ml(drink.total_part,drink.glass.change_to_ml)
+                    ratio_require = drink_ingredient.change_to_ml(tab.drink.total_part,tab.drink.glass.change_to_ml)
 
                     try:
                         robot_ingredient = robot.ingredients.get(ingredient=drink_ingredient)
                     except Exception as e:
+                        subject = "Hi-Effeciency - Robot {} don't have {}".format(robot.id, robot_ingredient.ingredient.name)
+                        html_content = render_to_string('email/robot_error_1.html')
+                        tasks.send_email(subject, html_content, UserBase.objects.filter(is_superuser=True).value_list('email',flat=True))
                         raise api_utils.BadRequest("THIS_ROBOT_DONT_HAVE_THIS_INGREDIENT")
 
-                    if robot_ingredient.remain_of_bottle < ratio_require:
-                        subject = 'Hi-Effeciency - Reset password requested'
-                        html_content = render_to_string('email/password_reset.html', {'user':user.full_name, 'reset_code':reset_code})
-                        tasks.send_email(subject, html_content, [email])
-                        raise api_utils.BadRequest("NOT ENOUGH INGREDIENT ON THIS ROBOT")
-                    if robot_ingredient.remain_of_bottle < 100:
-                        # warning
-                        subject = 'Hi-Effeciency - Reset password requested'
-                        html_content = render_to_string('email/password_reset.html', {'user':user.full_name, 'reset_code':reset_code})
+                    if robot_ingredient.ingredient.remain_of_bottle < ratio_require:
+                        subject = 'Hi-Effeciency - Robot {} out of {}'.format(robot.id, robot_ingredient.ingredient.name)
+                        html_content = render_to_string('email/robot_error_2.html',{'ingredient':robot_ingredient})
                         tasks.send_email(subject, html_content, UserBase.objects.filter(is_superuser=True).value_list('email',flat=True))
-                    robot_ingredient.remain_of_bottle -= ratio_require
-                    robot_ingredient.save()
+                        raise api_utils.BadRequest("NOT ENOUGH INGREDIENT ON THIS ROBOT")
+                        
+                    if robot_ingredient.ingredient.remain_of_bottle < 100:
+                        # warning
+                        subject = 'Hi-Effeciency - Robot {} almost out of {}'.format(robot.id, robot_ingredient.ingredient.name)
+                        html_content = render_to_string('email/robot_warning.html',{'ingredient':robot_ingredient})
+                        tasks.send_email(subject, html_content, UserBase.objects.filter(is_superuser=True).value_list('email',flat=True))
+
+                    robot_ingredient.ingredient.remain_of_bottle -= ratio_require
+                    robot_ingredient.ingredient.save()
                     ret['place_number'] = robot_ingredient.place_number
                 if status == Tab.STATUS_FINISHED:
                     drink.quantity_done +=1
                     if drink.quantity_done < drink.quantity:
                         status = Tab.STATUS_NEW
-                drink.status=status
-                drink.save()
+                tab.status=status
+                tab.save()
             if order.products.all().count() == \
                 order.products.filter(status=Tab.STATUS_FINISHED).count():
                 order.status = Order.STATUS_FINISHED
         except Exception as e:
             raise e
         order.save()
-        ret['drink'] = DrinkOrdersSerializer(drink).data
+        ret['drink'] = OrderTabSerializer(tab).data
         ret['order_status'] = order.status
         return Response(ret, status=status.HTTP_200_OK)

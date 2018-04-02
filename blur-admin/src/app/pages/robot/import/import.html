@@ -12,7 +12,7 @@
 
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Machine</label>
-                <select class="form-control" name="status" ng-model="data_create.robot" ng-change="changeInfo('machine', data_create.robot)">
+                <select class="form-control" name="status" ng-model="data_create.machine" ng-change="changeInfo('machine', data_create.machine)">
                     <option ng-repeat="item in list_robot" class="form-control" value="{{item.id}}">Robot - {{item.id}}</option>
                 </select>
             </div>

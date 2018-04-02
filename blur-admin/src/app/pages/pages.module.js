@@ -37,6 +37,10 @@
 		'BlurAdmin.pages.list-ingredient',
 		'BlurAdmin.pages.create-ingredient',
 		'BlurAdmin.pages.detail-ingredient',
+		// --------- ingredient import -----
+		'BlurAdmin.pages.import-ingredient',
+		// --------- ingredient list history -----
+		'BlurAdmin.pages.list-history-ingredient',
 		// ============ garnish ==============
 		'BlurAdmin.pages.list-garnish',
 		'BlurAdmin.pages.create-garnish',
@@ -148,6 +152,14 @@
 				{
 					title: 'Ingredient Detail',
 					stateRef: 'detail-ingredient/:id'
+				},
+				{
+					title: 'Ingredient Import',
+					stateRef: 'import-ingredient'
+				},
+				{
+					title: 'Ingredient History',
+					stateRef: 'list-history-ingredient'
 				},
 				// ============ Garnish ===============
 				{

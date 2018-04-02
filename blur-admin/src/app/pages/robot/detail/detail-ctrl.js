@@ -17,6 +17,7 @@
 		};
 		$scope.isDisable = true;
 		$rootScope.ingredients = [];
+		$rootScope.robotId = 0;
 
 		// ========= function get data glass by id ===========
 		function getElement() {
@@ -24,6 +25,7 @@
 				// res.status = String(res.status);
 				res.status = res.status === 0 ? true : false;
 				$scope.detail = res;
+				$rootScope.robotId = res.id;
 			}).error(function (err, status, res) {
 				console.log(err);
 				toastr.error('Error!');

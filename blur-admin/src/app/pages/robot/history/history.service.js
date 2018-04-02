@@ -3,8 +3,8 @@
     angular.module('BlurAdmin')
         .factory('HistoryService', function ($http, AppSetting) {
             return {
-                getList: function (token) {
-                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/history/', {
+                getList: function (token, id) {
+                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/history/?robot=' + id, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
