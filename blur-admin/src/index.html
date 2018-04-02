@@ -19,6 +19,8 @@
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/fontawesome.css" integrity="sha384-q3jl8XQu1OpdLgGFvNRnPdj5VIlCvgsDQTQB6owSOHWlAurxul7f+JpUOVdAiJ5P"
 	 crossorigin="anonymous">
 
+	<link rel="stylesheet" href="assets/css/custom.css">
+
 	<!-- build:css({.tmp/serve,src}) styles/vendor.css -->
 	<!-- bower:css -->
 	<!-- run `gulp inject` to automatically populate bower styles dependencies -->
@@ -38,14 +40,19 @@
 	<div class="body-bg"></div>
 	<main ng-if="$pageFinishedLoading" ng-class="{ 'menu-collapsed': $baSidebarService.isMenuCollapsed() && appState.current.name != 'login', 'auth-main': appState.current.name == 'login' }">
 
-		<ba-sidebar ng-if="appState.current.name != 'login'"></ba-sidebar>
-		<page-top ng-if="appState.current.name != 'login'"></page-top>
+		<ba-sidebar ng-if="appState.current.name != 'login' && appState.current.name !== 'tivi-showing'"></ba-sidebar>
+		<page-top ng-if="appState.current.name != 'login' && appState.current.name !== 'tivi-showing'"></page-top>
 
-		<div ng-class="{ 'al-main': appState.current.name != 'login', 'auth-block': appState.current.name == 'login'}">
+		<div ng-if="appState.current.name !== 'tivi-showing'" ng-class="{ 'al-main': appState.current.name != 'login', 'auth-block': appState.current.name == 'login'}">
 			<div class="al-content">
 				<content-top ng-if="appState.current.name != 'login'"></content-top>
-				<div ui-view autoscroll="true" autoscroll-body-top></div>
+				<!-- <div ui-view autoscroll="true" autoscroll-body-top></div> -->
+				<div ui-view></div>
 			</div>
+		</div>
+
+		<div ng-if="appState.current.name === 'tivi-showing'" class="tivi_showing">
+			<div ui-view ></div>
 		</div>
 
 		<!-- <footer ng-if="appState.current.name != 'login'" class="al-footer clearfix">

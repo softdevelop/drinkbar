@@ -54,7 +54,6 @@
 					el.status = el.status === 0 ? true : false;
 				});
 				$rootScope.listData = res.results;
-				console.log($rootScope.listData)
 			}).error(function(err, status, res){
 				console.log(res)
                 $window.location.href = '#/robot/list';
@@ -63,19 +62,6 @@
 		}
 
 		getList();
-
-		// ============ get list ingredient ==========
-        // function getListIngredient(){
-        //     var offset = 0;
-        //     IngredientService.getList($rootScope.userLogin.token, offset).success(function(res){
-        //         $scope.ingredients = res.results;
-        //     }).error(function(err, stt, res){
-        //         console.log(res)
-        //         toastr.error('Error!')
-        //     })
-        // }
-
-        // getListIngredient();
 
 		// =========== open modal confirm delete Glass ===========
 		$scope.confirmDelete = function(data){
@@ -103,6 +89,9 @@
 		// ================= get list glass ===============
 		function getList(){
 			HistoryService.getList($rootScope.userLogin.token).success(function(res){
+				res.results.forEach(function(el){
+					el.status = el.status === 0 ? true : false;
+				});
 				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
 				console.log(res)

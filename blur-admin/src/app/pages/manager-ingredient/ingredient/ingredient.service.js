@@ -78,7 +78,6 @@
                     });
                 },
                 getListBrand : function(token, type){
-                    console.log(type)
                     if(type){
                         return $http.get(AppSetting.BASE_URL + '/api/ingredient/brand/type/?type=' + type, {
                             headers: {

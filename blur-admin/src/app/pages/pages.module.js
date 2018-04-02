@@ -9,12 +9,8 @@
 		'ui.router',
 
 		'BlurAdmin.pages.dashboard',
-		// 'BlurAdmin.pages.ui',
-		// 'BlurAdmin.pages.components',
-		// 'BlurAdmin.pages.form',
-		// 'BlurAdmin.pages.tables',
-		// 'BlurAdmin.pages.charts',
-		// 'BlurAdmin.pages.maps',
+		// ============= tivi showing =========
+		'BlurAdmin.pages.tivi-showing',
 		// ============ user profile =============
 		'BlurAdmin.pages.profile',
 		// =============== manager user ===========
@@ -37,6 +33,10 @@
 		'BlurAdmin.pages.list-ingredient',
 		'BlurAdmin.pages.create-ingredient',
 		'BlurAdmin.pages.detail-ingredient',
+		// --------- ingredient import -----
+		'BlurAdmin.pages.import-ingredient',
+		// --------- ingredient list history -----
+		'BlurAdmin.pages.list-history-ingredient',
 		// ============ garnish ==============
 		'BlurAdmin.pages.list-garnish',
 		'BlurAdmin.pages.create-garnish',
@@ -85,6 +85,11 @@
 					title: 'Sign Up',
 					fixedHref: 'reg.html',
 					blank: true
+				},
+				// ============== tivi showing =======
+				{
+					title : 'Tivi Showing',
+					stateRef : 'tivi-showing'
 				},
 				// ============== user ===============
 				{
@@ -148,6 +153,14 @@
 				{
 					title: 'Ingredient Detail',
 					stateRef: 'detail-ingredient/:id'
+				},
+				{
+					title: 'Ingredient Import',
+					stateRef: 'import-ingredient'
+				},
+				{
+					title: 'Ingredient History',
+					stateRef: 'list-history-ingredient'
 				},
 				// ============ Garnish ===============
 				{
