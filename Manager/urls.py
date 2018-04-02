@@ -13,8 +13,9 @@ urlpatterns = [
     url(r'^user/send/email/$', api_views.SendVerificationEmail.as_view(), name='user-send-verify-email'), 
     url(r'^user/add/tab/$', api_views.AddToTab.as_view(), name='user-add-tab'), 
     url(r'^user/me/tab/$', api_views.MyTab.as_view(), name='user-me-tab'), 
-    url(r'^user/me/tab/(?P<pk>[0-9]+)$', api_views.UpdateTab.as_view(), name='user-update-tab'), 
+    url(r'^user/me/tab/(?P<pk>[0-9]+)/$', api_views.UpdateTab.as_view(), name='user-update-tab'), 
     url(r'^user/order/$', api_views.UserOrder.as_view(), name='user-order'), 
+    url(r'^user/order/(?P<pk>[0-9]+)/$', api_views.UserOrderDetail.as_view(), name='user-order-detail'), 
 
     url(r'^drink/$',api_views.DrinkList.as_view(), name='drink-list'),
     url(r'^drink/(?P<pk>[0-9]+)/$',api_views.DrinkDetial.as_view(), name='drink-detail'),
@@ -38,8 +39,8 @@ urlpatterns = [
     url(r'^ingredient/history/$', api_views.IngredientHistoryList.as_view(), name="ingredient-history"),
 
     url(r'^robot/$', api_views.RobotList.as_view(), name="robot"),
-    url(r'^robot/(?P<pk>[0-9]+)/$', api_views.RobotDetail.as_view(), name="robot"),
-    url(r'^robot/change/$', api_views.RobotChange.as_view(), name="robot"),
+    url(r'^robot/(?P<pk>[0-9]+)/$', api_views.RobotDetail.as_view(), name="robot-detail"),
+    url(r'^robot/change/$', api_views.RobotChange.as_view(), name="robot-change"),
 
     
 ]

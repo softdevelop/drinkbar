@@ -307,7 +307,7 @@ class UserOrder(generics.ListCreateAPIView):
         order = serializer.create(serializer.validated_data)
         if reorder:
             for tab in tabs:
-                garnishes = tab.garnish.all()
+                garnishes = tab.garnishes.all()
                 new_tab = tab
                 new_tab.pk = None
                 new_tab.order=order
@@ -320,7 +320,13 @@ class UserOrder(generics.ListCreateAPIView):
             tabs.update(order=order)
         # pprint(vars(serializer.data))
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(OrderSmallSerializer(order).data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class UserOrderDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Order
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = OrderSerializer
 
 '''
 Drink API:
@@ -360,7 +366,8 @@ class DrinkList(generics.ListCreateAPIView):
     def get_queryset(self):
         is_admin = self.request.GET.get('admin', False)
         ret = self.queryset.exclude(Q(ingredients__ingredient__status=Ingredient.CONST_STATUS_BLOCKED)|\
-                    Q(glass__status=SeparateGlass.CONST_STATUS_BLOCKED))
+                    Q(glass__status=SeparateGlass.CONST_STATUS_BLOCKED)|\
+                    Q(status=Drink.CONST_STATUS_BLOCKED))
         if is_admin:
             print (is_admin)
             ret = self.queryset.all()
@@ -564,7 +571,7 @@ class RobotChange(APIView):
                     drink_ingredient = tab.drink.ingredients.filter(id=ingredient)
                     if not drink_ingredient:
                         raise api_utils.BadRequest("INVALID_INGREDIENT")
-                    ratio_require = drink_ingredient.change_to_ml(tab.drink.total_part,tab.drink.glass.change_to_ml)
+                    ratio_require = drink_ingredient.change_to_ml(tab.drink.total_part, tab.drink.glass.change_to_ml)
 
                     try:
                         robot_ingredient = robot.ingredients.get(ingredient=drink_ingredient)

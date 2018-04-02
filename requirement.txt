@@ -1,5 +1,5 @@
 facepy
--U asgi_redis
+asgi_redis
 daphne
 channels==1.1.8
 channels-api==0.4.0

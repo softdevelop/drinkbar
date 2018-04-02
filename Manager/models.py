@@ -18,6 +18,7 @@ import facebook
 import urllib
 from django.utils import timezone
 from django.conf import settings
+from collections import Counter
 
 
 class UserBase(AbstractUser):
@@ -185,7 +186,16 @@ def get_admin():
         return 1
 
 class Drink(models.Model):
+    CONST_STATUS_ENABLED = 0
+    CONST_STATUS_BLOCKED = 10
 
+    CONST_STATUSES = (
+        (CONST_STATUS_ENABLED, _('On')),
+        (CONST_STATUS_BLOCKED, _('Off')),
+    )
+
+    status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
+                                              default=CONST_STATUS_ENABLED)
     name = models.CharField(max_length=200, unique=True)
     category = models.ManyToManyField(DrinkCategory)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),
@@ -301,37 +311,9 @@ class Order(models.Model):
 
     @property
     def qr_code(self):
-        datetime_format = '%Y-%m-%d %H:%M:%S'
-        # today = (self.last_login).strftime(datetime_format)
         data = u'User:{} Id:{} Order_id:{}'.format(self.user.full_name, self.user.id, self.id)
         data = urllib.quote_plus(data)
         return u'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={}'.format(data)
-
-@receiver(post_save, sender=Order)
-def create_new_order(sender, instance=None, created=False, **kwargs):
-    if created:
-        drinks = instance.products.all()
-        for drink in drinks:
-            # Drink is a tab.
-            glass = drink.glass.change_to_ml
-
-            drink_ingredients = drink.ingredients.all()
-
-            for drink_ingredient in drink_ingredients:
-                ingredient = instance.robot.ingredients.filter(ingredient=drink_ingredient)
-                ratio = drink_ingredient.change_to_ml(drink.total_part,glass)
-                if ingredient.remain_of_bottle < 100:
-                    # send email
-                    if ingredient.remain_of_bottle < ratio:
-                        instance.status = Order.STATUS_NOT_DO
-                        #send email
-                        raise api_utils.BadRequest("NOT ENOUGH INGREDIENT ON THIS ROBOT")
-                ingredient.remain_of_bottle -= ratio
-                ingredient.save()
-            drink.status = Tab.STATUS_READY
-            drink.save()
-
-
 
 class Tab(models.Model):
 
