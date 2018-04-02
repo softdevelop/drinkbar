@@ -7,6 +7,8 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th style="text-align : left;">Created Date</th>
+                    <th>Status</th>
                     <th style="text-align : left;">Amount</th>
                     <th>Action</th>
                 </tr>
@@ -14,7 +16,13 @@
             <tbody>
                 <tr ng-repeat="item in listData" class="ng-scope">
                     <td class="ng-binding" style="text-align : left;">
-                        <a href="#/order/detail/{{item.id}}">{{item.amount}}</a>
+                        <a href="#/order/detail/{{item.id}}">{{item.creation_date | date:'MM/dd/yyyy'}}</a>
+                    </td>
+                    <td class="ng-binding" style="text-align : left;">
+                        {{item.status}}
+                    </td>
+                    <td class="ng-binding" style="text-align : left;">
+                        {{item.amount}}
                     </td>
                     <td class="ng-binding" style="width: 30px; text-align : center;">
                         <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">

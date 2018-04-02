@@ -182,6 +182,7 @@
                     <thead>
                         <tr>
                             <th class="table-id">#</th>
+                            <th>Created Date</th>
                             <th>Status</th>
                             <th>Amount</th>
                             <th>Tray Number</th>
@@ -196,7 +197,12 @@
                         <tr ng-repeat="item in user_order" class="ng-scope">
                             <td class="table-id ng-binding">{{item.id}}</td>
                             <td class="ng-binding">
-                                {{item.status}}
+                                {{item.creation_date | date:'MM/dd/yyyy'}}
+                            </td>
+                            <td class="ng-binding">
+                                <div class="_status">
+                                    <ba-switcher data-ng-disabled="true" switcher-style="success" switcher-value="item.status" ></ba-switcher>
+                                </div>
                             </td>
                             <td class="ng-binding">
                                 {{ item.amount }}

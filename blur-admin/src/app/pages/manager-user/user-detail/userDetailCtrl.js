@@ -55,6 +55,9 @@
         // =========== get user order ===============
         function getUserOrder(){
             ManagerUserService.getUserOrder($scope.user_id, $rootScope.userLogin.token).success(function(res){
+                res.orders.forEach(function(el){
+                    el.status = el.status === 0 ? true : false;
+                });
                 $scope.user_order = res.orders;
             }).error(function(err, stt, res){
                 console.log(res)

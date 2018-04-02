@@ -110,28 +110,20 @@
 				stateRef: "list-robot",
 				title: "Robot",
 				level: 0,
-				// subMenu: [
-				// 	{
-				// 		stateRef: "ingredient-history",
-				// 		title: "History",
-				// 		name: 'ingredient-history',
-				// 		level: 1,
-				// 		subMenu : [
-				// 			{
-				// 				stateRef: "create-history",
-				// 				title: "Create",
-				// 				level: 2,
-				// 				name: 'create-history'
-				// 			},
-				// 			{
-				// 				stateRef: "list-history",
-				// 				title: "List",
-				// 				name: 'list-history',
-				// 				level: 2
-				// 			}
-				// 		]
-				// 	}
-				// ],
+			},
+			{
+				icon: "ion-social-reddit-outline",
+				name: "stats",
+				stateRef: "stats",
+				title: "Stats",
+				level: 0,
+			},
+			{
+				icon: "ion-social-reddit-outline",
+				name: "hmi",
+				stateRef: "hmi",
+				title: "HMI",
+				level: 0,
 			},
 		];
 

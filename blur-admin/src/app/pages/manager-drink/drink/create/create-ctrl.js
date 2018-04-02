@@ -18,7 +18,8 @@
 			price : 0,
 			key_word : 0,
 			estimate_time : 0,
-
+			ingredients : [],
+			garnishs : []
 		};
 		$scope.list_categories = [];
 		$scope.list_glass = [];

@@ -14,10 +14,12 @@
                 created: function (data, token) {
                     var fd = new FormData();
                     
-                    data.ingredients.forEach(function (el) {
+                    data.ingredients.length > 0 && data.ingredients.forEach(function (el) {
                         el.ingredient = el.ingredient.id;
                         fd.append('ingredients', JSON.stringify(el))
                     });
+
+                    data.ingredients.length === 0 && fd.append('ingredients', []);
                     
                     data.garnishes.forEach(function(el){
                         el.garnish = el.garnish.id;
