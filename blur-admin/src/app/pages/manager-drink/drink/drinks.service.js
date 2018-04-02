@@ -4,7 +4,7 @@
         .factory('DrinkService', function ($http, AppSetting) {
             return {
                 getList: function (token, offset) {
-                    return $http.get(AppSetting.BASE_URL + '/api/drink/?limit=10&offset=' + offset, {
+                    return $http.get(AppSetting.BASE_URL + '/api/drink/?limit=100&offset=' + offset, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
