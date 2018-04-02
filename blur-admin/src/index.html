@@ -38,14 +38,18 @@
 	<div class="body-bg"></div>
 	<main ng-if="$pageFinishedLoading" ng-class="{ 'menu-collapsed': $baSidebarService.isMenuCollapsed() && appState.current.name != 'login', 'auth-main': appState.current.name == 'login' }">
 
-		<ba-sidebar ng-if="appState.current.name != 'login'"></ba-sidebar>
-		<page-top ng-if="appState.current.name != 'login'"></page-top>
+		<ba-sidebar ng-if="appState.current.name != 'login' && appState.current.name != 'tivi-showing'"></ba-sidebar>
+		<page-top ng-if="appState.current.name != 'login' && appState.current.name !== 'tivi-showing'"></page-top>
 
-		<div ng-class="{ 'al-main': appState.current.name != 'login', 'auth-block': appState.current.name == 'login'}">
+		<div ng-if="appState.current.name !== 'tivi-showing'" ng-class="{ 'al-main': appState.current.name != 'login', 'auth-block': appState.current.name == 'login'}">
 			<div class="al-content">
 				<content-top ng-if="appState.current.name != 'login'"></content-top>
 				<div ui-view autoscroll="true" autoscroll-body-top></div>
 			</div>
+		</div>
+
+		<div ng-if="appState.current.name === 'tivi-showing'" class="_tivi_showing">
+			<div class="_tivi_container" ui-view autoscroll="true" autoscroll-body-top></div>
 		</div>
 
 		<!-- <footer ng-if="appState.current.name != 'login'" class="al-footer clearfix">

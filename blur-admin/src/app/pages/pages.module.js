@@ -15,6 +15,8 @@
 		// 'BlurAdmin.pages.tables',
 		// 'BlurAdmin.pages.charts',
 		// 'BlurAdmin.pages.maps',
+		// ============ tivi showing ============
+		'BlurAdmin.pages.tivi-showing',
 		// ============ user profile =============
 		'BlurAdmin.pages.profile',
 		// =============== manager user ===========
@@ -89,6 +91,11 @@
 					title: 'Sign Up',
 					fixedHref: 'reg.html',
 					blank: true
+				},
+				// ============= tivi showing ==========
+				{
+					title : 'Tivi Showing',
+					stateRef : 'tivi-showing'
 				},
 				// ============== user ===============
 				{

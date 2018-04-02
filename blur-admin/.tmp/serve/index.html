@@ -56,14 +56,18 @@
 	<div class="body-bg"></div>
 	<main ng-if="$pageFinishedLoading" ng-class="{ 'menu-collapsed': $baSidebarService.isMenuCollapsed() && appState.current.name != 'login', 'auth-main': appState.current.name == 'login' }">
 
-		<ba-sidebar ng-if="appState.current.name != 'login'"></ba-sidebar>
-		<page-top ng-if="appState.current.name != 'login'"></page-top>
+		<ba-sidebar ng-if="appState.current.name != 'login' && appState.current.name != 'tivi-showing'"></ba-sidebar>
+		<page-top ng-if="appState.current.name != 'login' && appState.current.name !== 'tivi-showing'"></page-top>
 
-		<div ng-class="{ 'al-main': appState.current.name != 'login', 'auth-block': appState.current.name == 'login'}">
+		<div ng-if="appState.current.name !== 'tivi-showing'" ng-class="{ 'al-main': appState.current.name != 'login', 'auth-block': appState.current.name == 'login'}">
 			<div class="al-content">
 				<content-top ng-if="appState.current.name != 'login'"></content-top>
 				<div ui-view autoscroll="true" autoscroll-body-top></div>
 			</div>
+		</div>
+
+		<div ng-if="appState.current.name === 'tivi-showing'" class="_tivi_showing">
+			<div class="_tivi_container" ui-view autoscroll="true" autoscroll-body-top></div>
 		</div>
 
 		<!-- <footer ng-if="appState.current.name != 'login'" class="al-footer clearfix">
@@ -172,23 +176,24 @@
 	<script src="app/pages/dashboard/dashboard.module.js"></script>
 	<script src="app/pages/manager-user/managerUser.module.js"></script>
 	<script src="app/pages/profile/profile.module.js"></script>
+	<script src="app/pages/tivi-showing/tivi.module.js"></script>
 	<script src="app/theme/components/components.module.js"></script>
 	<script src="app/theme/inputs/inputs.module.js"></script>
 	<script src="app/pages/manager-ingredient/import/import.module.js"></script>
-	<script src="app/pages/manager-user/user-create/userCreate.module.js"></script>
 	<script src="app/pages/order/create/create.module.js"></script>
 	<script src="app/pages/order/detail/detail.module.js"></script>
 	<script src="app/pages/order/list/list.module.js"></script>
+	<script src="app/pages/manager-user/user-create/userCreate.module.js"></script>
 	<script src="app/pages/robot/detail/detail.module.js"></script>
 	<script src="app/pages/robot/import/import.module.js"></script>
 	<script src="app/pages/robot/list/list.module.js"></script>
 	<script src="app/pages/manager-drink/categories/create/create.module.js"></script>
 	<script src="app/pages/manager-drink/categories/detail/detail.module.js"></script>
-	<script src="app/pages/manager-drink/categories/list/list.module.js"></script>
 	<script src="app/pages/manager-drink/drink/create/create.module.js"></script>
 	<script src="app/pages/manager-drink/drink/detail/detail.module.js"></script>
-	<script src="app/pages/manager-drink/drink/list/list.module.js"></script>
+	<script src="app/pages/manager-drink/categories/list/list.module.js"></script>
 	<script src="app/pages/manager-drink/drink-types/create/create.module.js"></script>
+	<script src="app/pages/manager-drink/drink/list/list.module.js"></script>
 	<script src="app/pages/manager-drink/drink-types/detail/detail.module.js"></script>
 	<script src="app/pages/manager-drink/drink-types/list/list.module.js"></script>
 	<script src="app/pages/manager-drink/garnish/create/create.module.js"></script>
@@ -203,9 +208,9 @@
 	<script src="app/pages/manager-ingredient/ingredient-brand/create/create.module.js"></script>
 	<script src="app/pages/manager-ingredient/ingredient-brand/detail/detail.module.js"></script>
 	<script src="app/pages/manager-ingredient/ingredient-brand/list/list.module.js"></script>
-	<script src="app/pages/manager-ingredient/ingredient-types/create/create.module.js"></script>
 	<script src="app/pages/manager-ingredient/ingredient-types/detail/detail.module.js"></script>
 	<script src="app/pages/manager-ingredient/ingredient-types/list/list-ingredient-types.module.js"></script>
+	<script src="app/pages/manager-ingredient/ingredient-types/create/create.module.js"></script>
 	<script src="app/pages/robot/history/create/create.module.js"></script>
 	<script src="app/pages/robot/history/detail/detail.module.js"></script>
 	<script src="app/pages/robot/history/list/list.module.js"></script>
@@ -221,12 +226,14 @@
 	<script src="app/theme/theme.run.js"></script>
 	<script src="app/theme/theme.service.js"></script>
 	<script src="app/pages/login/loginCtrl.js"></script>
+	<script src="app/pages/order/order.service.js"></script>
 	<script src="app/pages/manager-user/manager-user.service.js"></script>
 	<script src="app/pages/manager-user/managerUserCtrl.js"></script>
-	<script src="app/pages/order/order.service.js"></script>
+	<script src="app/pages/robot/robot.service.js"></script>
 	<script src="app/pages/profile/ProfileModalCtrl.js"></script>
 	<script src="app/pages/profile/ProfilePageCtrl.js"></script>
-	<script src="app/pages/robot/robot.service.js"></script>
+	<script src="app/pages/tivi-showing/tivi-ctrl.js"></script>
+	<script src="app/pages/tivi-showing/tivi.service.js"></script>
 	<script src="app/theme/components/toastrLibConfig.js"></script>
 	<script src="app/theme/directives/animatedChange.js"></script>
 	<script src="app/theme/directives/autoExpand.js"></script>
@@ -266,16 +273,16 @@
 	<script src="app/pages/manager-drink/drink-types/drink-types.service.js"></script>
 	<script src="app/pages/manager-drink/garnish/garnish.service.js"></script>
 	<script src="app/pages/manager-drink/separate-glass/separate-glass.service.js"></script>
-	<script src="app/pages/manager-ingredient/history/history.service.js"></script>
 	<script src="app/pages/manager-ingredient/import/import-ctrl.js"></script>
+	<script src="app/pages/manager-ingredient/history/history.service.js"></script>
 	<script src="app/pages/manager-ingredient/ingredient/ingredient.service.js"></script>
 	<script src="app/pages/manager-ingredient/ingredient-brand/ingredient-brand.service.js"></script>
 	<script src="app/pages/manager-ingredient/ingredient-types/service.js"></script>
-	<script src="app/pages/manager-user/user-create/userCreateCtrl.js"></script>
-	<script src="app/pages/manager-user/user-detail/userDetailCtrl.js"></script>
 	<script src="app/pages/order/create/create-ctrl.js"></script>
 	<script src="app/pages/order/detail/detail-ctrl.js"></script>
 	<script src="app/pages/order/list/list-ctrl.js"></script>
+	<script src="app/pages/manager-user/user-create/userCreateCtrl.js"></script>
+	<script src="app/pages/manager-user/user-detail/userDetailCtrl.js"></script>
 	<script src="app/pages/robot/detail/detail-ctrl.js"></script>
 	<script src="app/pages/robot/history/history.service.js"></script>
 	<script src="app/pages/robot/import/import-ctrl.js"></script>
@@ -300,18 +307,18 @@
 	<script src="app/theme/components/pageTop/pageTop.directive.js"></script>
 	<script src="app/theme/components/progressBarRound/progressBarRound.directive.js"></script>
 	<script src="app/theme/components/widgets/widgets.directive.js"></script>
+	<script src="app/theme/inputs/baSwitcher/baSwitcher.js"></script>
 	<script src="app/theme/filters/image/appImage.js"></script>
 	<script src="app/theme/filters/image/kameleonImg.js"></script>
 	<script src="app/theme/filters/image/profilePicture.js"></script>
 	<script src="app/theme/filters/text/removeHtml.js"></script>
-	<script src="app/theme/inputs/baSwitcher/baSwitcher.js"></script>
 	<script src="app/pages/manager-drink/categories/create/create-ctrl.js"></script>
 	<script src="app/pages/manager-drink/categories/detail/detail-ctrl.js"></script>
-	<script src="app/pages/manager-drink/categories/list/list-ctrl.js"></script>
 	<script src="app/pages/manager-drink/drink/create/create-ctrl.js"></script>
 	<script src="app/pages/manager-drink/drink/detail/detail-ctrl.js"></script>
-	<script src="app/pages/manager-drink/drink/list/list-ctrl.js"></script>
+	<script src="app/pages/manager-drink/categories/list/list-ctrl.js"></script>
 	<script src="app/pages/manager-drink/drink-types/create/create-ctrl.js"></script>
+	<script src="app/pages/manager-drink/drink/list/list-ctrl.js"></script>
 	<script src="app/pages/manager-drink/drink-types/detail/detail-ctrl.js"></script>
 	<script src="app/pages/manager-drink/drink-types/list/list-ctrl.js"></script>
 	<script src="app/pages/manager-drink/garnish/create/create-ctrl.js"></script>
@@ -328,9 +335,9 @@
 	<script src="app/pages/manager-ingredient/ingredient-brand/create/create-ctrl.js"></script>
 	<script src="app/pages/manager-ingredient/ingredient-brand/detail/detail-ctrl.js"></script>
 	<script src="app/pages/manager-ingredient/ingredient-brand/list/list-ctrl.js"></script>
-	<script src="app/pages/manager-ingredient/ingredient-types/create/create-ctrl.js"></script>
 	<script src="app/pages/manager-ingredient/ingredient-types/detail/detail-ctrl.js"></script>
 	<script src="app/pages/manager-ingredient/ingredient-types/list/list-ingredient-types-ctrl.js"></script>
+	<script src="app/pages/manager-ingredient/ingredient-types/create/create-ctrl.js"></script>
 	<script src="app/pages/manager-user/user-detail/order/user-order.js"></script>
 	<script src="app/pages/robot/history/create/create-ctrl.js"></script>
 	<script src="app/pages/robot/history/detail/detail-ctrl.js"></script>

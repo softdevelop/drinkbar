@@ -112,14 +112,14 @@
 				level: 0,
 			},
 			{
-				icon: "ion-social-reddit-outline",
+				icon: "ion-podium",
 				name: "stats",
 				stateRef: "stats",
 				title: "Stats",
 				level: 0,
 			},
 			{
-				icon: "ion-social-reddit-outline",
+				icon: "ion-ios-world-outline",
 				name: "hmi",
 				stateRef: "hmi",
 				title: "HMI",
