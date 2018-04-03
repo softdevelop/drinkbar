@@ -13,7 +13,7 @@
 	/** @ngInject */
 	function DrinkCreateCtrl($scope, DrinkService, toastr, $rootScope, $location, $window, $uibModal) {
 		$scope.data_create = {
-			name: '123123',
+			name: '',
 			active: false,
 			price : 0,
 			key_word : 0,

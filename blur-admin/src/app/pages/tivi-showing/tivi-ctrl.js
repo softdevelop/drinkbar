@@ -65,6 +65,10 @@
 
             return array;
         }
+
+        $scope.goToBack = function(){
+            $window.location.href = '#/';
+        }
     }
 
 })();

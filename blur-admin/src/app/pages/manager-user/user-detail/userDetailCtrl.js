@@ -72,7 +72,7 @@
             ManagerUserService.deleteUser(id, $rootScope.userLogin.token).success(function(res){
                 toastr.success('Deleted success!');
                 setTimeout(function(){
-                    $window.location.href = '#/list-user';
+                    $window.location.href = '#/manager-user/list-user';
                 },300)
             }).error(function (err, status, response) {
                 console.log(response);

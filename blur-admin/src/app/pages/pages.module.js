@@ -76,8 +76,10 @@
 		.config(routeConfig);
 
 	/** @ngInject */
-	function routeConfig($urlRouterProvider, baSidebarServiceProvider) {
+	function routeConfig($urlRouterProvider, baSidebarServiceProvider, $locationProvider) {
 		$urlRouterProvider.otherwise('/dashboard');
+
+		// $locationProvider.html5Mode(true);
 
 		baSidebarServiceProvider.addStaticItem({
 			title: 'Pages',
