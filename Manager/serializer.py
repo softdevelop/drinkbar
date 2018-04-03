@@ -311,7 +311,7 @@ class OrderSerializer(OrderSmallSerializer):
         model = Order
         fields = ('id','status','creation_date','amount',
             'channel','transaction_code','transaction_id',
-            'payer_firstname','payer_lastname','payer_email',
+            # 'payer_firstname','payer_lastname','payer_email',
             'tray_number','products','photo','user')
 
 class OrderMachineSerializer(OrderSerializer):
