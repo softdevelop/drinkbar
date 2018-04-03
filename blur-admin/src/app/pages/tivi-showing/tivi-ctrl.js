@@ -66,9 +66,69 @@
             return array;
         }
 
-        $scope.goToBack = function(){
-            $window.location.href = '#/';
+        // ================= socket ==============
+
+        function WebSocketTest() {
+            if ("WebSocket" in window) {
+                // alert("WebSocket is supported by your Browser!");
+                console.log('WebSocket is supported by your Browser!')
+
+                // Let us open a web socket
+                var ws = new WebSocket("ws://hiefficiencybar.com:80/");
+                //var ws = new WebSocket("ws://localhost:8000/");		
+                ws.onopen = function () {
+                    // Web Socket is connected, send data using send()
+                    let data = {
+                        stream: "orders",
+                        payload: {
+                            action: "subscribe",
+                            data: {
+                                action: "create"
+                            },
+                        }
+                    }
+                    let mgs = JSON.stringify(data)
+                    ws.send(mgs);
+                    //alert("Message is sent...");
+                    data = {
+                        stream: "orders",
+                        payload: {
+                            action: "subscribe",
+                            data: {
+                                action: "update"
+                            },
+                        }
+                    }
+                    mgs = JSON.stringify(data);
+                    ws.send(mgs);
+
+
+                };
+
+                ws.onmessage = function (evt) {
+                    var received_msg = evt.data;
+                    // alert("Message is received..." + received_msg);
+                    console.log(received_msg)
+                };
+
+                ws.onclose = function () {
+                    // websocket is closed.
+                    // alert("Connection is closed...");
+                    console.log('Connection is closed...')
+                };
+
+                window.onbeforeunload = function (event) {
+                    socket.close();
+                };
+            }
+
+            else {
+                // The browser doesn't support WebSocket
+                alert("WebSocket NOT supported by your Browser!");
+            }
         }
+
+        WebSocketTest();
     }
 
 })();
