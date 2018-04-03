@@ -11,6 +11,6 @@ class OrderDemultiplexer(WebsocketDemultiplexer):
     }
 
 channel_routing = [	
-    consumers.StatisticConsumer.as_route(path=r"^/statistic/$"),
+    # consumers.StatisticConsumer.as_route(path=r"^/statistic/$"),
     route_class(OrderDemultiplexer),
 ]
