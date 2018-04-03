@@ -24,11 +24,11 @@
 			IngredientTypesService.created($scope.data_create, $rootScope.userLogin.token).success(function(res){
                 toastr.success('Created success!');
                 $rootScope.create_new_type = res;
-                // $window.location.href = '#/manager-ingredient/ingredient/create';
+                // $window.location.href = '/manager-ingredient/ingredient/create';
                 $rootScope.load_page();
                 $uibModalInstance.close();
 				// setTimeout(function(){
-				// 	res.id > 0 && ($window.location.href = '#/manager-ingredient/ingredient-types/detail/'+res.id);
+				// 	res.id > 0 && ($window.location.href = '/manager-ingredient/ingredient-types/detail/'+res.id);
 				// }, 300);
 			}).error(function(err, status, res){
 				console.log(err)

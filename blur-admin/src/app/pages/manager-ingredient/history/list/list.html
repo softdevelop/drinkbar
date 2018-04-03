@@ -21,9 +21,6 @@
                         <span>{{item.creation_date | date:'MM/dd/yyyy'}}</span>
                     </td>
                     <td class="ng-binding align-items-center">
-                        <!-- <div class="_status text_align_center">
-                            <ba-switcher switcher-style="success" switcher-value="item.status" ng-click="changeSwitch(item)"></ba-switcher>
-                        </div> -->
                         <div class="text_align_center" ng-if="item.status"><i class="fa fa-sign-in-alt" style="margin-right : 7px;"></i> Import</div>
                         <div class="text_align_center" ng-if="!item.status"><i class="fa fa-sign-out-alt" style="margin-right : 7px;"></i> Export</div>
                     </td>

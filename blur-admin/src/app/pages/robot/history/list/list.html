@@ -12,7 +12,7 @@
                     <th class="text_align_center">Machine</th>
                     <th class="text_align_center">Ingredient</th>
                     <th class="text_align_center">Place Number</th>
-                    <!-- <th>Action</th> -->
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,23 +22,24 @@
                         <span>{{item.creation_date | date:'MM/dd/yyyy'}}</span>
                     </td>
                     <td class="ng-binding align-items-center">
-                        <div class="text_align_center" ng-if="item.status"><i class="fa fa-sign-in-alt" style="margin-right : 7px;"></i> Import</div>
-                        <div class="text_align_center" ng-if="!item.status"><i class="fa fa-sign-out-alt" style="margin-right : 7px;"></i> Export</div>
+                        <div class="_status text_align_center">
+                            <ba-switcher switcher-style="success" switcher-value="item.status" ng-click="changeSwitch(item)"></ba-switcher>
+                        </div>
                     </td>
                     <td class="ng-binding text_align_center">
                         <span ng-if="item.machine">Robot - {{item.machine}}</span>
                     </td>
                     <td class="ng-binding text_align_center">
-                        <span>{{item.ingredient_view.name}}</span>
+                        <span>{{item.ingredient}}</span>
                     </td>
                     <td class="ng-binding text_align_center">
                         <span>{{ item.place_number }}</span>
                     </td>
-                    <!-- <td class="ng-binding" style="width: 30px; text-align : center;">
+                    <td class="ng-binding" style="width: 30px; text-align : center;">
                         <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">
                             <i class="ion-android-delete"></i>
                         </a>
-                    </td> -->
+                    </td>
                 </tr>
             </tbody>
         </table>
