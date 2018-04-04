@@ -10,9 +10,13 @@
 
     /** @ngInject */
     function TiviCtrl($stateParams, $scope, TiviService, toastr, $rootScope, $location, $window, $uibModal) {
-        $scope.products = [];
-        $scope.action = '';
-        $scope.data_socket = {};
+        $rootScope.products = [];
+        $rootScope.action = '';
+        $rootScope.data_socket = {};
+        $rootScope.data_updated = {};
+        $scope.status_view = '';
+        $scope.pk = undefined;
+
         $scope.myInterval = 5000;
         $scope.noWrapSlides = false;
         $scope.active = 0;
@@ -112,15 +116,26 @@
 
                 ws.onmessage = function (evt) {
                     var received_msg = JSON.parse(evt.data);
-                    $scope.status = received_msg.payload.data.status;
-                    $scope.data_socket = received_msg.payload.data;
-                    
-                    if($scope.data_socket.user){
-                        var _user = $scope.data_socket.user;
-                        _user.key = $rootScope.user_key;
-                        $rootScope.users_orders.push(_user);
-                        $rootScope.user_key ++;
+                    $rootScope.action = received_msg.payload.action;
+                    $rootScope.data_socket = received_msg.payload.data;
+                    $scope.pk = $rootScope.data_socket.id;
+
+                    if($rootScope.action === 'create'){
+                        if($rootScope.data_socket.user){
+                            var _user = $rootScope.data_socket.user;
+                            _user.key = $scope.pk;
+                            $rootScope.users_orders.push(_user);
+                            $rootScope.user_key ++;
+                        }
+                    } else{
+                        $rootScope.products = $rootScope.data_socket.products;
+                        $rootScope.user_updated = $rootScope.data_socket.user;
+
+                        $rootScope.users_orders = $rootScope.users_orders.filter(function(el){
+                            return el.key !== $scope.pk;
+                        })
                     }
+                    
                 };
 
                 ws.onclose = function () {

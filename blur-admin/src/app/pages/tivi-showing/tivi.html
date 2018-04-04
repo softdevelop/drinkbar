@@ -1,11 +1,11 @@
 <div class="container-fluid _container_tivi">
     <div class="row">
         <div class="col-md-3">
-            <div class="_order">
+            <div class="_order animated bounceInLeft">
                 <h3>Upcoming orders</h3>
             </div>
             <div class="_order_user">
-                <div ng-if="users_orders.length > 0" class="_user animated bounceInLeft" ng-repeat="user in users_orders | orderBy: '-key' | limitTo: 5">
+                <div ng-if="users_orders.length > 0" class="_user animated bounceInLeft" ng-repeat="user in users_orders | orderBy: '-key'">
                     <div class="_avt _img">
                         <img ng-if="user.avatar" src="{{ user.avatar }}" alt="">
                         <img ng-if="!user.avatar" src="{{ user.avatar_url }}" alt="">
@@ -13,39 +13,32 @@
                     <p class="_user_name">{{ user.first_name }} {{ user.last_name }}</p>
                 </div>
             </div>
-            <div class="_order_robot">
+            <div class="_order_robot animated zoomIn">
                 <img src="assets/img/tivi/robot.png" alt="">
             </div>
         </div>
         <div class="col-md-9">
             <div class="col-md-8">
                 <div class="_ctn_header">
-                    <div class="_title">
+                    <div class="_title animated fadeInDown">
                         <h3>
                             <i class="ion-android-arrow-down"></i> Now serving</h3>
                     </div>
                     <div class="_icon_bottom"></div>
                     <div class="_title_name">
-                        <div class="_avt">
-                            <img src="assets/img/tivi/avt.png" alt="">
+                        <div ng-if="user_updated.avatar" class="_avt animated zoomIn">
+                            <img ng-if="user_updated.avatar" src="{{user_updated.avatar}}" alt="">
+                            <img ng-if="!user_updated.avatar" src="{{user_updated.avatar_url}}" alt="">
                         </div>
-                        <h3>Setve L.</h3>
+                        <h3 ng-if="user_updated.first_name" class="animated flash">{{ user_updated.first_name }} {{ user_updated.last_name }}</h3>
                     </div>
                 </div>
                 <div class="_ctn">
                     <div class="_left_6">
                         <h3>Drink</h3>
                         <div class="_ctn_drink">
-                            <a class="" href="">
-                                <span>2</span> Budweiser Draft
-                                <i></i>
-                            </a>
-                            <a class="active" href="">
-                                <span>2</span> Budweiser Draft
-                                <i></i>
-                            </a>
-                            <a href="">
-                                <span>2</span> Budweiser Draft
+                            <a class="animated bounceInUp" href="" ng-repeat="product in products">
+                                <span>2</span> {{ product.drink.name }}
                                 <i></i>
                             </a>
                         </div>
@@ -147,7 +140,7 @@
                         <h3>New Order Wait Time</h3>
                         <h1>05:15</h1>
                     </div>
-                    <div class="_btn_play_now">
+                    <div class="_btn_play_now animated zoomInDown">
                         <h3>
                             <i></i> Livi'n on Prayer
                             <span>- Bon Jovi</span>

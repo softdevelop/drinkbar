@@ -341,14 +341,14 @@ multiselect .dropdown-menu > li > a {
 .label_black {
   color: #000 !important; }
 
-._image {
+._image_glass {
   width: 100px;
   height: auto;
   overflow: hidden;
   display: inline-block;
   text-align: center;
   margin: 0 auto; }
-  ._image img {
+  ._image_glass img {
     width: 50%;
     /* height: auto; */
     display: inline-block;
