@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^user/me/tab/(?P<pk>[0-9]+)/$', api_views.UpdateTab.as_view(), name='user-update-tab'), 
     url(r'^user/order/$', api_views.UserOrder.as_view(), name='user-order'), 
     url(r'^user/order/(?P<pk>[0-9]+)/$', api_views.UserOrderDetail.as_view(), name='user-order-detail'), 
+    url(r'^user/favorite/(?P<pk>[0-9]+)/$', api_views.UserFavoriteDrink.as_view(), name='user-favorite-drink'), 
 
     url(r'^drink/$',api_views.DrinkList.as_view(), name='drink-list'),
     url(r'^drink/(?P<pk>[0-9]+)/$',api_views.DrinkDetial.as_view(), name='drink-detail'),

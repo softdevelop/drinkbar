@@ -210,6 +210,21 @@ class SendVerificationEmail(APIView):
 
         return Response({'message': 'An email was sent to your email. '
                                     'Please click on the link in it to verify your email address.'},status=status.HTTP_202_ACCEPTED)
+class UserFavoriteDrink(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, pk):
+        fav = self.request.user.favorite_drink.filter(id=pk).first()
+        if fav:
+            self.request.user.favorite_drink.remove(fav)
+            return Response({'detail':'deleted'},status=status.HTTP_202_ACCEPTED)
+        try:
+            self.request.user.favorite_drink.add(Drink.objects.get(id=pk))
+        except:
+            raise api_utils.BadRequest("INVALID_DRINK")
+        return Response({'detail':'added'},status=status.HTTP_202_ACCEPTED)
+
+
 class AddToTab(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = AddToTabSerializer
@@ -339,11 +354,16 @@ class DrinkCategoryList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     paginator = None
 
+    def get_queryset(self):
+        is_main = self.request.GET.get('main', False)
+        if is_main:
+            return self.queryset.filter(parent__name="Type")
+        return self.queryset
+
 class DrinkCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DrinkCategory
     serializer_class = DrinkCategorySerializer
     permission_classes = [IsAuthenticated]
-
 
 class DrinkList(generics.ListCreateAPIView):
     queryset = Drink.objects.all()

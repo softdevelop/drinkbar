@@ -24,7 +24,7 @@ from collections import Counter
 
 class UserBase(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
-    birthday = models.DateField(null=True, blank=True)
+    birthday = models.DateField()
     avatar = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='avatars',
                                  null=True, blank=True)
     avatar_url = models.CharField(max_length=200, null=True, blank=True, default=settings.MEDIA_URL+'avatar_defautl.png')
@@ -32,7 +32,8 @@ class UserBase(AbstractUser):
     is_email_verified = models.BooleanField(default=False)
     fb_uid = models.CharField(max_length=200, null=True, blank=True)
     fb_access_token = models.CharField(max_length=1000, null=True, blank=True)
-
+    favorite_drink = models.ManyToManyField("Drink",related_name="favorite_by")
+    
     @property
     def full_name(self):
         return u'{} {}'.format(self.first_name,self.last_name)
@@ -316,6 +317,16 @@ class Order(models.Model):
         data = urllib.quote_plus(data)
         return u'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={}'.format(data)
 
+@receiver(pre_save, sender=Order)
+def set_robot_and_line(sender, instance=None, **kwargs):
+    '''
+        Coodinarate robot and which line user will get their drinks
+    '''
+    
+
+    instance.ingredient.save()
+
+
 class Tab(models.Model):
 
     CONST_NO_ICE = 0
@@ -372,6 +383,8 @@ class Tab(models.Model):
     quantity = models.PositiveIntegerField(blank=True, null= True, default=0)
     quantity_done = models.PositiveIntegerField(blank=True, null= True, default=0)
     order = models.ForeignKey(Order, related_name='products',blank=True, null= True,)
+
+
 class RobotIngredient(models.Model):
 
     robot = models.ForeignKey(Robot, related_name='ingredients')

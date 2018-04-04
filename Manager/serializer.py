@@ -183,12 +183,18 @@ class DrinkSerializer(serializers.ModelSerializer):
     ingredients = DrinkIngredientSerializer(many=True, read_only=True)
     garnishes = serializers.SerializerMethodField('_garnishes')
     creator = UserSerializer(read_only=True)
+    is_favorite = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Drink
         fields = ('id','numbers_bought','category','glass','ingredients',
             'garnishes','name','image','image_background','price','creator','creation_date',
-            'key_word','estimate_time','is_have_ice')
+            'key_word','estimate_time','is_have_ice','is_favorite')
         # depth = 1
+
+    def get_is_favorite(self, obj):
+        if super(DrinkSerializer,self).context['request'].user.favorite_drink.filter(id=obj.id):
+            return True
+        return False
 
     def _garnishes(self, obj):
         qs = DrinkGarnish.objects.filter(drink=obj, garnish__active=True)
