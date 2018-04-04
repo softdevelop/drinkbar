@@ -5,35 +5,12 @@
                 <h3>Upcoming orders</h3>
             </div>
             <div class="_order_user">
-                <div class="_user">
+                <div ng-if="users_orders.length > 0" class="_user animated bounceInLeft" ng-repeat="user in users_orders | orderBy: '-key' | limitTo: 5">
                     <div class="_avt _img">
-                        <img src="assets/img/tivi/avt.png" alt="">
+                        <img ng-if="user.avatar" src="{{ user.avatar }}" alt="">
+                        <img ng-if="!user.avatar" src="{{ user.avatar_url }}" alt="">
                     </div>
-                    <p class="_user_name">Jill H.</p>
-                </div>
-                <div class="_user">
-                    <div class="_avt _img">
-                        <img src="assets/img/tivi/avt.png" alt="">
-                    </div>
-                    <p class="_user_name">Jill H.</p>
-                </div>
-                <div class="_user">
-                    <div class="_avt _img">
-                        <img src="assets/img/tivi/avt.png" alt="">
-                    </div>
-                    <p class="_user_name">Jill H.</p>
-                </div>
-                <div class="_user">
-                    <div class="_avt _img">
-                        <img src="assets/img/tivi/avt.png" alt="">
-                    </div>
-                    <p class="_user_name">Jill H.</p>
-                </div>
-                <div class="_user">
-                    <div class="_avt _img">
-                        <img src="assets/img/tivi/avt.png" alt="">
-                    </div>
-                    <p class="_user_name">Jill H.</p>
+                    <p class="_user_name">{{ user.first_name }} {{ user.last_name }}</p>
                 </div>
             </div>
             <div class="_order_robot">
@@ -183,7 +160,7 @@
     </div>
     <!-- go to dashboard -->
     <div class="_back_home">
-        <a href="#/"><i class="ion-android-exit"></i></a>
+        <a href="#/" class="heart animated css"><i class="ion-android-exit"></i></a>
         <!-- <button type="button" class="btn btn-danger btn-icon"><i class="ion-android-exit"></i></button> -->
     </div>
 </div>

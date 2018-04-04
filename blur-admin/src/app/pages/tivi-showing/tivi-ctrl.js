@@ -10,9 +10,14 @@
 
     /** @ngInject */
     function TiviCtrl($stateParams, $scope, TiviService, toastr, $rootScope, $location, $window, $uibModal) {
+        $scope.products = [];
+        $scope.action = '';
+        $scope.data_socket = {};
         $scope.myInterval = 5000;
         $scope.noWrapSlides = false;
         $scope.active = 0;
+        $rootScope.users_orders = [];
+        $rootScope.user_key = 0;
         var slides = $scope.slides = [];
         var currIndex = 0;
 
@@ -73,12 +78,12 @@
                 // alert("WebSocket is supported by your Browser!");
                 console.log('WebSocket is supported by your Browser!')
 
-                // Let us open a web socket
+                // var us open a web socket
                 var ws = new WebSocket("ws://hiefficiencybar.com:80/");
                 //var ws = new WebSocket("ws://localhost:8000/");		
                 ws.onopen = function () {
                     // Web Socket is connected, send data using send()
-                    let data = {
+                    var data = {
                         stream: "orders",
                         payload: {
                             action: "subscribe",
@@ -87,7 +92,7 @@
                             },
                         }
                     }
-                    let mgs = JSON.stringify(data)
+                    var mgs = JSON.stringify(data)
                     ws.send(mgs);
                     //alert("Message is sent...");
                     data = {
@@ -106,9 +111,16 @@
                 };
 
                 ws.onmessage = function (evt) {
-                    var received_msg = evt.data;
-                    // alert("Message is received..." + received_msg);
-                    console.log(received_msg)
+                    var received_msg = JSON.parse(evt.data);
+                    $scope.status = received_msg.payload.data.status;
+                    $scope.data_socket = received_msg.payload.data;
+                    
+                    if($scope.data_socket.user){
+                        var _user = $scope.data_socket.user;
+                        _user.key = $rootScope.user_key;
+                        $rootScope.users_orders.push(_user);
+                        $rootScope.user_key ++;
+                    }
                 };
 
                 ws.onclose = function () {
