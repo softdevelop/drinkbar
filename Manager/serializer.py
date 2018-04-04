@@ -275,13 +275,16 @@ class UserOrderTabSerializer(serializers.ModelSerializer):
     drink = DrinkUserOrdersSerializer(required=False, read_only=True)
     garnishes = DrinkGarnishSerializer(many=True)
     ice = serializers.SerializerMethodField()
-
+    status_view = serializers.SerializerMethodField()
     class Meta:
         model = Tab
-        fields = ('drink','status','ice','garnishes','quantity')
+        fields = ('drink','status','status_view','ice','garnishes','quantity')
 
     def get_ice(self,obj):
         return obj.get_ice_display()
+
+    def get_status_view(self,obj):
+        return obj.get_status_display()
 
 class OrderTabSerializer(UserOrderTabSerializer):
     drink = DrinkOrdersSerializer(required=False, read_only=True)
@@ -294,13 +297,16 @@ class OrderSmallSerializer(serializers.ModelSerializer):
     # For user
     products = UserOrderTabSerializer(many=True, required=False, read_only=True)
     qr_code = serializers.SerializerMethodField(read_only=True)
-
+    status_view = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Order
-        fields = ('id','status','creation_date','amount',
+        fields = ('id','status','status_view','creation_date','amount',
             'channel','transaction_code','transaction_id',
             'payer_firstname','payer_lastname','payer_email',
             'tray_number','products','qr_code','photo','robot')
+
+    def get_status_view(self,obj):
+        return obj.get_status_display()
 
     def get_qr_code(self,obj):
         return obj.qr_code
@@ -325,7 +331,7 @@ class OrderMachineSerializer(OrderSerializer):
     statistic_orders_drink_today = serializers.SerializerMethodField(read_only=True)
     class Meta(OrderSmallSerializer.Meta):
         model = Order
-        fields = OrderSmallSerializer.Meta.fields +('statistic_orders_today',
+        fields = OrderSmallSerializer.Meta.fields +('user','statistic_orders_today',
                     'statistic_orders_drink_today')
 
     def get_statistic_orders_today(self,obj):

@@ -16,6 +16,7 @@ from datetime import datetime, date
 from . import api_utils
 import facebook
 import urllib
+import fpformat
 from django.utils import timezone
 from django.conf import settings
 from collections import Counter
@@ -242,9 +243,9 @@ class DrinkIngredient(models.Model):
     ratio = models.FloatField(help_text=_('part'))
     unit = models.PositiveSmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_PART)
 
-    @property
-    def change_to_ml(self,total_part=None,glass=None):
-        if self.unit == CONST_UNIT_ML:
+    # @staticmethod
+    def change_to_ml(self, total_part=None, glass=None):
+        if self.unit == DrinkIngredient.CONST_UNIT_ML:
             return self.ratio
         ret = float(self.ratio/total_part*glass)
         ret = fpformat.fix(ret, 2) 
@@ -379,6 +380,10 @@ class RobotIngredient(models.Model):
     remain_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
     last_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
     last_ingredient = models.ForeignKey(Ingredient, on_delete=models.SET_NULL, null=True, blank=True)
+
+
+    def __unicode__(self):
+        return str(self.ingredient.id)
 
 class IngredientHistory(models.Model):
     CONST_STATUS_IMPORT= 0
