@@ -33,7 +33,7 @@ class UserBase(AbstractUser):
     fb_uid = models.CharField(max_length=200, null=True, blank=True)
     fb_access_token = models.CharField(max_length=1000, null=True, blank=True)
     favorite_drink = models.ManyToManyField("Drink",related_name="favorite_by")
-    
+
     @property
     def full_name(self):
         return u'{} {}'.format(self.first_name,self.last_name)
@@ -317,14 +317,20 @@ class Order(models.Model):
         data = urllib.quote_plus(data)
         return u'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={}'.format(data)
 
-@receiver(pre_save, sender=Order)
-def set_robot_and_line(sender, instance=None, **kwargs):
+@receiver(post_save, sender=Order)
+def set_robot_and_line(sender, instance=None,created=False, **kwargs):
     '''
         Coodinarate robot and which line user will get their drinks
     '''
-    
-
-    instance.ingredient.save()
+    if created:
+        order = Order.objects.all().order_by('-id')[1]
+        tray_number = 1
+        if order.tray_number:
+            tray_number = order.tray_number+1
+        if tray_number>4:
+            tray_number=1
+        instance.tray_number = tray_number
+        instance.save()
 
 
 class Tab(models.Model):

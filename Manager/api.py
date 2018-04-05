@@ -366,7 +366,7 @@ class DrinkCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 class DrinkList(generics.ListCreateAPIView):
-    queryset = Drink.objects.all()
+    queryset = Drink.objects.all().order_by('-numbers_bought')
     serializer_class = DrinkSerializer
     permission_classes = [IsAuthenticated]
 
