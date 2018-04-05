@@ -5,7 +5,7 @@
                 <h3>Upcoming orders</h3>
             </div>
             <div class="_order_user">
-                <div ng-if="users_orders.length > 0" class="_user animated bounceInLeft" ng-repeat="user in users_orders | orderBy: '-key'">
+                <div ng-if="users_orders.length > 0" class="_user animated bounceInLeft" ng-repeat="user in users_orders | orderBy: 'key'">
                     <div class="_avt _img">
                         <img ng-if="user.avatar" src="{{ user.avatar }}" alt="">
                         <img ng-if="!user.avatar" src="{{ user.avatar_url }}" alt="">
@@ -62,8 +62,18 @@
                         </div>
                     </div>
                     <div class="_right_4">
-                        <div class="_ingredient_img">
+                        <!-- <div class="_ingredient_img">
                             <img class="_image" src="assets/img/tivi/ic5.png" alt="">
+                        </div> -->
+                        <div class="_ingredient_img _ingredient_content">
+                            <div class="_ingredient_img_bg">
+                                <img class="_image" src="assets/img/tivi/ic8.png" alt="">
+                            </div>
+                            <div class="_ingre_1 color_defaul"></div>
+                            <div class="_ingre_2 color_2"></div>
+                            <div class="_ingre_3 color_3"></div>
+                            <div class="_ingre_4 color_4"></div>
+                            <div class="_ingre_5 color_5"></div>
                         </div>
                         <div class="_ingredient_ctn">
                             <h3>Ingredient</h3>
