@@ -3694,7 +3694,14 @@ box-shadow: 10px 10px 292px 12px rgba(247,237,247,1);
                 }
             }
             ._order_user{
-                min-height: 410px;
+                height: 407px;
+                // overflow-y: scroll;
+                // overflow-x: hidden;
+                overflow: hidden;
+                :hover{
+                    cursor: row-resize;
+                }
+                // box-sizing: border-box;
                 ._user{
                     position: relative;
                     margin-bottom: 20px;
@@ -3758,10 +3765,15 @@ box-shadow: 10px 10px 292px 12px rgba(247,237,247,1);
                 }
                 ._title_name{
                     margin: 30px;
-                    overflow: hidden;                    
+                    overflow: hidden;  
                     ._avt{
                         width: 15%;
+                        padding: 10px;                
                         float: left;
+                        border: 4px solid #2dacd1;
+                        border-radius: 50%;
+                        box-sizing: border-box;
+                        background: #c7c4c0;  
                         img{
                             width: 100%;
                         }
@@ -3770,8 +3782,9 @@ box-shadow: 10px 10px 292px 12px rgba(247,237,247,1);
                         width: 85%;
                         float: right;
                         margin: 0;
-                        padding: 23px 20px;
+                        padding: 32px 20px;
                         font-size: 38px;
+                        font-weight: 300;
                     }
                 }
             }
@@ -3791,6 +3804,7 @@ box-shadow: 10px 10px 292px 12px rgba(247,237,247,1);
                     }
                     ._ctn_drink{
                         overflow: hidden;
+                        height: 235px;
                         a{
                             display: inline-block;
                             width: 100%;
@@ -3832,7 +3846,7 @@ box-shadow: 10px 10px 292px 12px rgba(247,237,247,1);
                     }
                     ._drink_times{
                         overflow: hidden;
-                        margin-top: 40px;
+                        margin-top: 20px;
                         ._times{
                             width: 50%;
                             float: left;
