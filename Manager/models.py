@@ -244,6 +244,10 @@ class DrinkIngredient(models.Model):
     ratio = models.FloatField(help_text=_('part'))
     unit = models.PositiveSmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_PART)
 
+
+    def __unicode__(self):
+        return str(self.ingredient.id)
+
     # @staticmethod
     def change_to_ml(self, total_part=None, glass=None):
         if self.unit == DrinkIngredient.CONST_UNIT_ML:

@@ -358,7 +358,7 @@ class DrinkCategoryList(generics.ListCreateAPIView):
         is_main = self.request.GET.get('main', False)
         if is_main:
             return self.queryset.filter(parent__name="Type")
-        return self.queryset
+        return self.queryset.all()
 
 class DrinkCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DrinkCategory
@@ -366,7 +366,7 @@ class DrinkCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 class DrinkList(generics.ListCreateAPIView):
-    queryset = Drink.objects.all().order_by('-numbers_bought')
+    queryset = Drink.objects.all().order_by('id')
     serializer_class = DrinkSerializer
     permission_classes = [IsAuthenticated]
 
@@ -595,8 +595,7 @@ class RobotChange(APIView):
             if status_drink>30 and status_drink<40:
                 ingredient = self.request.data.get('ingredient',None)
                 try:
-                    drink_ingredient = tab.drink.ingredients.get(id=ingredient)
-                    # drink_ingredient = drink_ingredient.ingredient
+                    drink_ingredient = tab.drink.ingredients.get(ingredient__id=ingredient)
                 except Exception as e:
                     raise api_utils.BadRequest("INVALID_INGREDIENT")
                 ratio_require = drink_ingredient.change_to_ml(tab.drink.total_part, tab.drink.glass.change_to_ml)

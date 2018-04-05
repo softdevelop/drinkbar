@@ -3,6 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
+	<base href="/">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Blur Admin</title>
@@ -21,7 +22,7 @@
 
 	<link rel="stylesheet" href="styles/vendor-dddc8eebb5.css">
 
-	<link rel="stylesheet" href="styles/app-4691582010.css">
+	<link rel="stylesheet" href="styles/app-de6f6b56a1.css">
 
 	<!-- <link type="text/html" href="/node_modules/angular-multiple-select/build/multiple-select.min.css" rel="stylesheet"> -->
 </head>
@@ -30,14 +31,18 @@
 	<div class="body-bg"></div>
 	<main ng-if="$pageFinishedLoading" ng-class="{ 'menu-collapsed': $baSidebarService.isMenuCollapsed() && appState.current.name != 'login', 'auth-main': appState.current.name == 'login' }">
 
-		<ba-sidebar ng-if="appState.current.name != 'login'"></ba-sidebar>
-		<page-top ng-if="appState.current.name != 'login'"></page-top>
+		<ba-sidebar ng-if="appState.current.name != 'login' && appState.current.name != 'tivi-showing'"></ba-sidebar>
+		<page-top ng-if="appState.current.name != 'login' && appState.current.name !== 'tivi-showing'"></page-top>
 
-		<div ng-class="{ 'al-main': appState.current.name != 'login', 'auth-block': appState.current.name == 'login'}">
+		<div ng-if="appState.current.name !== 'tivi-showing'" ng-class="{ 'al-main': appState.current.name != 'login', 'auth-block': appState.current.name == 'login'}">
 			<div class="al-content">
 				<content-top ng-if="appState.current.name != 'login'"></content-top>
 				<div ui-view autoscroll="true" autoscroll-body-top></div>
 			</div>
+		</div>
+
+		<div ng-if="appState.current.name === 'tivi-showing'" class="_tivi_showing">
+			<div class="_tivi_container" ui-view autoscroll="true" autoscroll-body-top></div>
 		</div>
 
 		<!-- <footer ng-if="appState.current.name != 'login'" class="al-footer clearfix">
@@ -80,7 +85,7 @@
 	<!-- <script type="text/html" src="/node_modules/angular-multiple-select/build/multiple-select.min.js"></script> -->
 	 
 
-	<script src="scripts/app-25ce77bb04.js"></script>
+	<script src="scripts/app.js"></script>
 
 </body>
 
