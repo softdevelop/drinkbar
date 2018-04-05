@@ -156,6 +156,69 @@
         }
 
         WebSocketTest();
+
+        // ============ ingredient =========
+        $scope.data_ingredients = [
+            {
+                ingredient : {
+                    id : 1,
+                    name : 'Bourbon Full Proof'
+                },
+                ratio : 3,
+                unit : 'Part',
+            },
+            {
+                ingredient : {
+                    id : 2,
+                    name : 'Port Finish Bourbon'
+                },
+                ratio : 2,
+                unit : 'Part',
+            },
+            {
+                ingredient : {
+                    id : 1,
+                    name : 'Port Finish Bourbon'
+                },
+                ratio : 1,
+                unit : 'Part',
+            },
+            // {
+            //     ingredient : {
+            //         id : 4,
+            //         name : 'Small Batch Bourbon'
+            //     },
+            //     ratio : 30,
+            //     unit : 'mL'
+            // },
+        ];
+        $scope.total_part = 6;
+        $scope.total_ml = 0;
+        $scope._height = 0;
+        $scope._width = 60;
+        $scope.level = 2;
+        $scope._top = 0;
+        $scope._ratio = 0;
+        $scope._k = $scope.total_part;
+
+        for (let index = 0; index < $scope.data_ingredients.length; index++) {
+            console.log($scope.data_ingredients[index])
+            var _data = $scope.data_ingredients[index];
+
+            var width = (100 -  $scope._width) / 2 * (_data.ratio / $scope._k) * 2 + $scope._width ;
+            $scope._width = width;
+            var _el = '<div class="color_' + $scope.level + ' animated zoomIn" style=" width: calc('+ width +'%); border-top: calc(293px * ' + (_data.ratio / $scope.total_part)
+                + ') solid; bottom:'+ $scope._top +'%; border-left: calc(55px * ' + (_data.ratio / $scope.total_part)
+                + ') solid transparent; border-right: calc(55px * ' + (_data.ratio / $scope.total_part)
+                + ') solid transparent;" ></div>';
+            $('#_ingredient').append(_el);
+
+            $scope.level ++;
+            // $scope._width = (40 * ($scope.total_part - $scope._ratio - _data.ratio) / $scope.total_part + 60);
+            $scope._top = $scope._top + (100 * _data.ratio / $scope.total_part);
+            $scope._ratio = _data.ratio + $scope._ratio;
+            $scope._k = _data.ratio;
+        }
     }
 
 })();
