@@ -21,25 +21,33 @@
                         <i class="ion-plus-round"></i> Add Ingredient</button>
                 </div>
 
-                <table ng-if="ingredients.length > 0" class="table table-striped" st-table="smartTableData">
+                <table ng-if="detail.ingredients.length > 0" class="table table-striped" st-table="smartTableData">
                     <thead>
                         <tr class="sortable ">
                             <th class="" style="text-align : left;">Ingredient</th>
-                            <th>Ratio</th>
-                            <th>Unit</th>
+                            <th>last_ingredient</th>
+                            <th>place_number</th>
+                            <th>last_bottle</th>
+                            <th>remain_of_bottle</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="ing in ingredients" class="ng-scope">
+                        <tr ng-repeat="ing in detail.ingredients" class="ng-scope">
                             <td class="ng-binding" style="text-align : left;">
-                                {{ing.ingredient.name}}
+                                {{ing.ingredient}}
                             </td>
                             <td class="ng-binding">
-                                {{ ing.ratio }}
+                                {{ ing.last_ingredient }}
                             </td>
                             <td class="ng-binding">
-                                {{ ing.unit }}
+                                {{ ing.place_number }}
+                            </td>
+                            <td class="ng-binding">
+                                {{ ing.last_bottle }}
+                            </td>
+                            <td class="ng-binding">
+                                {{ ing.remain_of_bottle }}
                             </td>
                             <td class="ng-binding" style="width: 30px; text-align : center;">
                                 <a href="" data-toggle="modal" ng-click="confirmDelete(ing)" style="color : #e85555;">
