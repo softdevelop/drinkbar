@@ -337,7 +337,7 @@ class OrderSerializer(OrderSmallSerializer):
     user = UserSerializer(required=False, read_only=True)
     class Meta(OrderSmallSerializer.Meta):
         model = Order
-        fields = ('id','status','creation_date','amount',
+        fields = ('id','status','status_view','creation_date','amount',
             'channel','transaction_code','transaction_id',
             'payer_firstname','payer_lastname','payer_email',
             'tray_number','products','photo','user')
