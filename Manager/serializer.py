@@ -131,7 +131,7 @@ class DrinkOrdersSerializer(DrinkUserOrdersSerializer):
         fields = DrinkUserOrdersSerializer.Meta.fields+('ingredients',\
             'total_part','glass_ml','ml_per_part')
 
-def drink_add_on(self, ret=None):
+def drink_add_on(self, ret=None, is_update=False):
     categories = self.initial_data.get('category',None)
     if categories:
         categories = categories.split(",")
@@ -139,8 +139,11 @@ def drink_add_on(self, ret=None):
             try:
                 ret.category.add(DrinkCategory.objects.get(id=category))
             except Exception as e:
-                ret.delete()
-                raise e
+                if not is_update:
+                    ret.delete()
+                    raise e
+                else:
+                    return str(e)
 
     ingredients = self.initial_data.getlist('ingredients',None)
     if ingredients:
@@ -152,9 +155,12 @@ def drink_add_on(self, ret=None):
                                 unit=ingredient['unit'])
                 ingre.save()
             except Exception as e:
-                DrinkIngredient.objects.filter(drink=ret).delete()
-                ret.delete()
-                raise e
+                if not is_update:    
+                    DrinkIngredient.objects.filter(drink=ret).delete()
+                    ret.delete()
+                    raise e
+                else:
+                    return str(e)
     else:
         ret.delete()
         raise api_utils.BadRequest("NOT INCLUDE ANY INGREDIENT, ADD ONE!")
@@ -169,10 +175,13 @@ def drink_add_on(self, ret=None):
                                 ratio=garnish['ratio'],)
                 garn.save()
             except Exception as e:
-                DrinkIngredient.objects.filter(drink=ret).delete()
-                DrinkGarnish.objects.filter(drink=ret).delete()
-                ret.delete()
-                raise e
+                if not is_update: 
+                    DrinkIngredient.objects.filter(drink=ret).delete()
+                    DrinkGarnish.objects.filter(drink=ret).delete()
+                    ret.delete()
+                    raise e
+                else:
+                    return str(e)
     return ret
 
 
@@ -206,11 +215,14 @@ class DrinkUpdateSerializer(DrinkSerializer):
 
     def update(self, instance, validated_data):
         ret = super(DrinkSerializer,self).update(instance, validated_data)
+        backup = ret
         ret.category.clear()
         ret.ingredients.all().delete()
         ret.garnishes.all().delete()
-        ret = drink_add_on(self, ret)
-        return ret
+        temp = drink_add_on(self, ret, is_update=True)
+        if type(ret)==type(temp):
+            return temp
+        raise api_utils.BadRequest(temp)
 
 class DrinkCreateSerializer(serializers.ModelSerializer):
     ingredients = DrinkIngredientSerializer(many=True, required=False, read_only=True)
@@ -304,15 +316,19 @@ class OrderSmallSerializer(serializers.ModelSerializer):
     products = UserOrderTabSerializer(many=True, required=False, read_only=True)
     qr_code = serializers.SerializerMethodField(read_only=True)
     status_view = serializers.SerializerMethodField(read_only=True)
+    user_view = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Order
         fields = ('id','status','status_view','creation_date','amount',
             'channel','transaction_code','transaction_id',
             'payer_firstname','payer_lastname','payer_email',
-            'tray_number','products','qr_code','photo','robot')
+            'tray_number','products','qr_code','photo','robot','user_view')
 
     def get_status_view(self,obj):
         return obj.get_status_display()
+
+    def get_user_view(self,obj):
+        return obj.user.full_name
 
     def get_qr_code(self,obj):
         return obj.qr_code
@@ -338,7 +354,7 @@ class OrderMachineSerializer(OrderSerializer):
     class Meta(OrderSmallSerializer.Meta):
         model = Order
         fields = OrderSmallSerializer.Meta.fields +('user','statistic_orders_today',
-                    'statistic_orders_drink_today')
+                    'statistic_orders_drink_today') 
 
     def get_statistic_orders_today(self,obj):
         today = date.today()
