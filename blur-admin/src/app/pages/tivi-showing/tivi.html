@@ -26,9 +26,9 @@
                     </div>
                     <div class="_icon_bottom"></div>
                     <div class="_title_name">
-                        <div ng-if="user_updated.avatar" class="_avt animated zoomIn">
-                            <img ng-if="user_updated.avatar" src="{{user_updated.avatar}}" alt="">
-                            <img ng-if="!user_updated.avatar" src="{{user_updated.avatar_url}}" alt="">
+                        <div ng-show="user_updated.avatar" class="_avt animated zoomIn">
+                            <img ng-show="user_updated.avatar" src="{{user_updated.avatar}}" alt="">
+                            <img ng-show="!user_updated.avatar" src="{{user_updated.avatar_url}}" alt="">
                         </div>
                         <h3 ng-if="user_updated.first_name" class="animated flash">{{ user_updated.first_name }} {{ user_updated.last_name }}</h3>
                     </div>
@@ -67,7 +67,7 @@
                         </div> -->
                         <div class="_ingredient_img _ingredient_content" id="_ingredient">
                             <div class="_ingredient_img_bg">
-                                <img class="_image" src="assets/img/tivi/ic8.png" alt="">
+                                <img class="_image" src="assets/img/tivi/ic8.png" alt="" id="_img_ingredient" height="100%">
                             </div>
 
                             <!-- <div class="_ingre_1 color_1"></div>

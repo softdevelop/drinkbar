@@ -23,8 +23,22 @@
 			category : []
 		};
 		$scope.isChange = $scope.isChangeIngredient = $scope.isChangeGarnish = false;
+		$scope.categories = [];
 
-		$scope.list_categories = $scope.list_glass = $rootScope.ingredients = $rootScope.garnishs = [];
+		$rootScope.list_categories = $scope.list_glass = $rootScope.ingredients = $rootScope.garnishs = [];
+
+		// ================ select category============
+		$scope.selected_baselines = [];
+
+		$scope.selected_baseline_settings = {
+			template: '<b>{{option.link}}</b>',
+			searchField: 'link',
+			enableSearch: true,
+			selectionLimit: 4,
+			selectedToTop: true
+		};
+
+		$scope.selected_baselines_customTexts = { buttonDefaultText: 'Select Users' };
 
 		// ============ load data ==========
 		function loadData() {
@@ -37,10 +51,58 @@
 			}
 		}
 
+		// ============ select multi category ==============
+		$scope.selectCategory = function (data) {
+			$scope.data_detail.category.push(data.id);
+			$scope.categories.push(data);
+
+			var _class_el = '.check_' + data.id;
+
+			$rootScope.list_categories.forEach(function (el) {
+				if (el.id === data.id) {
+
+					if(el.selected){
+						el.selected = false;
+						$(_class_el).children('._check_icon').css('display', 'none');
+						
+						$scope.categories = $scope.categories.filter(function(el){
+							return el.id !== data.id;
+						})
+						
+						$scope.data_detail.category = $scope.data_detail.category.filter(function(el){
+							return el !== data.id;
+						})
+					} else{
+						el.selected = true;
+						$(_class_el).children('._check_icon').css('display', 'inline-block');
+					}
+				}
+			});
+		}
+
+		// ============ seleced init category ============
+		function initCategorySelected(){
+			
+		}
+
 		// ========== function get list categories ===========
 		function getCategories() {
 			DrinkService.getCategories($rootScope.userLogin.token).success(function (res) {
-				$scope.list_categories = res;
+				$rootScope.list_categories = res;
+				
+				setTimeout(function(){
+					var _arr = $scope.data_detail.category;
+					$rootScope.list_categories.forEach(function(el){
+						for (var i = 0; i < _arr.length; i++) {
+							var element = _arr[i];
+							if(element == el.id){
+								console.log('ok')
+								el.selected = true;
+							}
+						}
+					});
+				},400);
+
 			}).error(function (err, stt, res) {
 				console.log(res)
 				toastr.error('Error!');
@@ -66,18 +128,20 @@
 			DrinkService.getElement($scope.paramt_id, $rootScope.userLogin.token).success(function (res) {
 				$scope.detail = res;
 				$scope.detail.glass = String(res.glass.id);
+
+				$scope.categories = res.category;
+				
 				var _category = res.category;
-				var _arr = [];
 				_category.forEach(function (el) {
-					_arr.push(String(el.id))
+					$scope.data_detail.category.push(el.id)
 				});
 
-				$scope.detail.category = _arr;
+				// $scope.detail.category = _arr;
 				$rootScope.ingredients = res.ingredients;
 				$rootScope.garnishs = res.garnishes;
 
 			}).error(function (err, status, res) {
-				console.log(err);
+				// console.log(err);
 				toastr.error('Error!');
 			})
 		}
@@ -93,29 +157,16 @@
 
 		// =========== function create =================
 		$scope.save = function () {
-			// if ($scope.isChangeIngredient) {
-			// 	var _arr = $rootScope.ingredients;
-			// 	_arr.forEach(function (el) {
-			// 		el.ingredient = el.ingredient.id;
-			// 	});
-			// 	$scope.data_detail.ingredients = _arr;
-			// }
-
-			// if ($scope.isChangeGarnish) {
-			// 	var _arr_garnish = $rootScope.garnishs;
-			// 	_arr_garnish.forEach(function (el) {
-			// 		el.garnish = el.garnish.id;
-			// 	});
-			// 	$scope.data_detail.garnishs = _arr_garnish;
-			// }
-
 			$scope.data_detail.garnishes = $rootScope.garnishs;
 			$scope.data_detail.ingredients = $rootScope.ingredients;
 
-			var _data = $scope.data_detail;
-
 			console.log($scope.data_detail)
 
+			var _data = $scope.data_detail;
+
+			// console.log($scope.data_detail)
+
+			console.log(_data)
 			DrinkService.updated(_data, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Updated success!');
 				setTimeout(function () {
