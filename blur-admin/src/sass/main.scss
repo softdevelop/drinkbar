@@ -3648,17 +3648,79 @@ box-shadow: 10px 10px 292px 12px rgba(247,237,247,1);
 ._image{
     width: 100% !important;
 }
+._select_multi{
+  .multiselect-parent{
+    width: 100%;
+    display: inline-block;
+    margin-top: -5px;
+    margin-left: -10px;
+    div{
+      width: 100%;
+      display: inline-block;
+      button{
+        width: 100%;
+        border: none;
+        background: none;
+        box-shadow: none;
+        text-align: left;
+        span{
+          position: absolute;
+          right: -10px;
+          top: 12px;
+        }
+      }
+    }
+  }
+  .dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus{
+    cursor: pointer;
+  }
+  ul{
+    width: 100%;
+  }
+}
+
+._select_category{
+  a{
+    width: 100%;
+    cursor: pointer;
+    color: #fff;
+    display: inline-block;
+    :hover{
+      color: #fff;
+    }
+    ._item_select{
+      display: inline-block;
+      padding: 3px 5px;
+      background: #c5bfbfcc;
+      border-radius: 10px;
+      margin-right: 11px;
+      color: #fff;
+      margin-top: -3px;
+    }
+  }
+  ul{
+    width: 100%;
+    li{
+      a{
+        :hover{
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
 ._tivi_showing{
-    background: rgba(60, 57, 57, 0.65) url('../assets/img/tivi/bg.jpg') no-repeat top center;
+    background: rgba(60, 57, 57, 0.65) url('../assets/img/tivi/bg-wrapper.jpg') no-repeat bottom center;
     background-size: cover;
+    // background-position-y: -2px;
     width: 100%;
     overflow: hidden;
     display: inline-block;
-    height: 99vh;
+    height: 99.6vh;
     ._tivi_container{
         width: 100%;
         background-color: rgba(10, 10, 10, 0.36);
-        height: 99vh;
+        height: 99.6vh;
         ._container_tivi{
             position: relative;
             padding: 30px;

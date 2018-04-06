@@ -24,11 +24,11 @@
                         fd.append('garnishes', JSON.stringify(el))
                     });
 
-                    var _arr = [];
-                    data.category.forEach(function (el) {
-                        _arr.push(el.id)
-                    });
-                    data.category = _arr;
+                    // var _arr = [];
+                    // data.category.forEach(function (el) {
+                    //     _arr.push(el.id)
+                    // });
+                    // data.category = _arr;
 
 
                     for (var key in data) {
@@ -56,40 +56,39 @@
                 },
                 updated: function (data, token) {
                     var fd = new FormData();
+
+                    console.log(data)
                     
                     data.ingredients.forEach(function (el) {
                         el.ingredient = el.ingredient.id;
                         fd.append('ingredients', JSON.stringify(el))
                     });
                     
-                    data.garnishes.forEach(function(el){
+                    data.garnishes.length > 0 && data.garnishes.forEach(function(el){
                         el.garnish = el.garnish.id;
                         fd.append('garnishes', JSON.stringify(el))
                     });
 
-                    var _arr = [];
-                    data.category.forEach(function (el) {
-                        _arr.push(el.id)
-                    });
-                    data.category = _arr;
+                    data.garnishes.length === 0 && fd.append('garnishes', '');
 
-
-                    for (var key in data) {
-                        if(!(key === 'garnishes' || key == 'ingredients')){
-                            fd.append(key, data[key])
-                        }
-                    }
+                    // var _arr = [];
+                    // data.category.forEach(function (el) {
+                    //     _arr.push(el.id)
+                    // });
+                    // data.category = _arr;
 
                     for (var key in data) {
-                        if (key === 'image') {
-                            if (data[key])
+                        if(!(key === 'garnishes' || key === 'ingredients')){
+                            if (key === 'image') {
+                                if (data[key])
+                                    fd.append(key, data[key]);
+                            } else if(key === 'image_background'){
+                                if (data[key])
+                                    fd.append(key, data[key]);
+                            }
+                             else {
                                 fd.append(key, data[key]);
-                        } else if(key === 'image_background'){
-                            if (data[key])
-                                fd.append(key, data[key]);
-                        }
-                         else {
-                            fd.append(key, data[key]);
+                            }
                         }
                     }
                     return $http.patch(AppSetting.BASE_URL + '/api/drink/' + data.id + '/', fd, {

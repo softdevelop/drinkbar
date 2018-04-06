@@ -17,7 +17,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in listData" class="ng-scope">
+                <tr ng-repeat="item in listData | orderBy : 'id'" class="ng-scope">
                     <td class="table-id ng-binding">{{item.id}}</td>
                     <td class="ng-binding">
                         <a href="#/manager-drink/drink/detail/{{item.id}}">{{item.name}}</a>

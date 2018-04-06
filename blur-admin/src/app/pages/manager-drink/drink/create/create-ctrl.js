@@ -15,15 +15,16 @@
 		$scope.data_create = {
 			name: '123123',
 			active: false,
-			price : 0,
-			key_word : 0,
-			estimate_time : 0,
-
+			price: 0,
+			key_word: 0,
+			estimate_time: 0,
+			category: []
 		};
-		$scope.list_categories = [];
+		$rootScope.list_categories = [];
 		$scope.list_glass = [];
 		$rootScope.ingredients = [];
 		$rootScope.garnishs = [];
+		$scope.categories = [];
 
 		// ============ load data ==========
 		function loadData() {
@@ -36,10 +37,42 @@
 			}
 		}
 
+		// ============ select multi category ==============
+		$scope.selectCategory = function (data) {
+			$scope.data_create.category.push(data.id);
+			$scope.categories.push(data);
+
+			var _class_el = '.check_' + data.id;
+
+			$rootScope.list_categories.forEach(function (el) {
+				if (el.id === data.id) {
+
+					if(el.selected){
+						el.selected = false;
+						$(_class_el).children('._check_icon').css('display', 'none');
+
+						$scope.categories = $scope.categories.filter(function(el){
+							return el.id !== data.id;
+						})
+						
+						$scope.data_detail.category = $scope.data_detail.category.filter(function(el){
+							return el !== data.id;
+						})
+					} else{
+						el.selected = true;
+						$(_class_el).children('._check_icon').css('display', 'inline-block');
+					}
+				}
+			});
+			console.log($scope.categories)
+			console.log($scope.data_create.category)
+		}
+
 		// ========== function get list categories ===========
 		function getCategories() {
 			DrinkService.getCategories($rootScope.userLogin.token).success(function (res) {
-				$scope.list_categories = res;
+				$rootScope.list_categories = res;
+				console.log($rootScope.list_categories)
 			}).error(function (err, stt, res) {
 				console.log(res)
 				toastr.error('Error!');

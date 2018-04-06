@@ -1,4 +1,4 @@
-<div ba-panel="" ba-panel-title="Create Drink" ba-panel-class="with-scroll">
+<div ba-panel="" ba-panel-title="Detail Drink" ba-panel-class="with-scroll">
     <div class="panel-body">
         <form name="form" class="form_create">
             <div class="form-group">
@@ -16,8 +16,29 @@
 
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Category</label>
-                <multiselect class="input-xlarge" multiple="true" ng-model="detail.category" options="item.link for item in list_categories"
-                    change="selected()"></multiselect>
+                <!-- <multiselect class="input-xlarge" multiple="true" ng-model="detail.category" options="item.link for item in list_categories"
+                    change="selected()"></multiselect> -->
+                <!-- <div class="form-control _select_multi" ng-dropdown-multiselect="" options="list_categories" selected-model="selected_baselines"
+                    extra-settings="selected_baseline_settings" translation-texts="selected_baselines_customTexts"></div> -->
+
+                <!-- <select >
+                    <option ng-selected="item.id === detail.cate" value="{{item.id}}">{{ item.link }}</option>
+                </select> -->
+
+                <div class="form-control _select_category" uib-dropdown on-toggle="toggled(open)">
+                        <a class="_btn_select_cate" href id="simple-dropdown" uib-dropdown-toggle>
+                            <span ng-if="categories.length === 0">Select Category</span>
+                            <span class="_item_select" ng-if="categories.length > 0" ng-repeat="elm in categories">{{ elm.link }}</span>
+                        </a>
+                        <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                            <li role="menuitem" ng-repeat="item in list_categories">
+                                <a ng-click="selectCategory(item)" class="check_{{item.id}}" style="margin : 0;" ng-style="item.selected && {'font-weight': 'bold'}">
+                                    {{item.link}}
+                                    <i ng-if="item.selected" class="fa fa-check _check_icon pull-right" style="margin-right : 5px; color: green;"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
             </div>
 
             <div class="form-group row">
@@ -30,14 +51,14 @@
                             </div>
                             <!-- <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i> -->
                             <a href class="change-userpic" ng-click="uploadPicture()">Change Image</a>
-    
+
                             <input type='file' id="uploadImage" ng-show="false" ng-model-instant onchange="angular.element(this).scope().imageUpload(event, 'image')"
                             />
-    
+
                         </div>
                     </div>
                 </div>
-    
+
                 <div class="form-group col-xs-6">
                     <label style="color : #fff; font-weight : bold;" for="">Image Background</label>
                     <div class="">
@@ -47,10 +68,10 @@
                             </div>
                             <!-- <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i> -->
                             <a href class="change-userpic" ng-click="uploadPicture()">Change Background Image</a>
-    
+
                             <input type='file' id="uploadBackground" ng-show="false" ng-model-instant onchange="angular.element(this).scope().imageUpload(event, 'image_background')"
                             />
-    
+
                         </div>
                     </div>
                 </div>
@@ -164,7 +185,7 @@
 
             <div style="text-align: center; margin-top: 60px;">
                 <hr>
-                <button ng-disabled="!isChange" type="button" class="btn btn-primary" ng-click="save()">Save</button>
+                <button type="button" class="btn btn-primary" ng-click="save()">Save</button>
             </div>
 
         </form>

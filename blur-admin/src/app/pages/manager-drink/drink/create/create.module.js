@@ -5,7 +5,7 @@
 (function () {
 	'use strict';
 
-	angular.module('BlurAdmin.pages.create-drink', ['ui.multiselect'])
+	angular.module('BlurAdmin.pages.create-drink', ['ui.multiselect', 'angularjs-dropdown-multiselect'])
 		.config(routeConfig);
 
 	/** @ngInject */
