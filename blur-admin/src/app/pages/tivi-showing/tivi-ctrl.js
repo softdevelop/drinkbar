@@ -201,7 +201,7 @@
         $scope._ratio = 0;
         $scope._k = $scope.total_part;
 
-        for (let index = 0; index < $scope.data_ingredients.length; index++) {
+        for (var index = 0; index < $scope.data_ingredients.length; index++) {
             console.log($scope.data_ingredients[index])
             var _data = $scope.data_ingredients[index];
 
