@@ -12,7 +12,7 @@
 	function routeConfig($stateProvider, $urlRouterProvider) {
 		
 		$stateProvider.state('import-ingredient', {
-			url: '/manager-ingredient/ingredient//import/',
+			url: '/manager-ingredient/ingredient/import/',
 			title: 'Ingredient / Import',
 			templateUrl: 'app/pages/manager-ingredient/import/import.html',
 			controller: 'IngredientImportHistoryCtrl',

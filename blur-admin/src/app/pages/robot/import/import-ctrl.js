@@ -16,7 +16,7 @@
         $scope.ingredients = [];
         $scope.data_create = {
             place_number : 0,
-            status : 0
+            status : 10
         }
 
         // ============ get list robot ===========

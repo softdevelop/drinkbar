@@ -20,6 +20,7 @@ db.sql
 .project
 .metadata/
 .pydevproject
+.tmp
 
 ## Deployment & build ignore pattern
 ####################################
@@ -30,3 +31,4 @@ db.sql
 .elasticbeanstalk/
 .idea/
 tags
+bower_components
