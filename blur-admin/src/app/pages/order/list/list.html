@@ -16,7 +16,8 @@
             <tbody>
                 <tr ng-repeat="item in listData" class="ng-scope">
                     <td class="ng-binding" style="text-align : left;">
-                        <a href="#/order/detail/{{item.id}}">{{item.creation_date | date:'MM/dd/yyyy'}}</a>
+                        <!-- <a href="#/order/detail/{{item.id}}">{{item.creation_date | date:'MM/dd/yyyy'}}</a> -->
+                        {{item.creation_date | date:'MM/dd/yyyy'}}
                     </td>
                     <td class="ng-binding" style="text-align : left;">
                         {{item.status}}

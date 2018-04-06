@@ -3631,8 +3631,12 @@ box-shadow: 10px 10px 292px 12px rgba(247,237,247,1);
 .text_align_center{
     text-align: center;
 }
+._image{
+  width: 100% !important;
+}
 ._drink{
-    width: 200px;
+    width: 200px !important;
+    margin : 0 auto;
     min-height: 150px;
     margin-top: 10px;
     img{
@@ -3644,9 +3648,6 @@ box-shadow: 10px 10px 292px 12px rgba(247,237,247,1);
     img{
         width: 100 !important;
     }
-}
-._image{
-    width: 100% !important;
 }
 ._select_multi{
   .multiselect-parent{

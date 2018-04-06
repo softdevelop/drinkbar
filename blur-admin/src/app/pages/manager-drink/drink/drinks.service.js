@@ -4,7 +4,7 @@
         .factory('DrinkService', function ($http, AppSetting) {
             return {
                 getList: function (token, offset) {
-                    return $http.get(AppSetting.BASE_URL + '/api/drink/?limit=10&offset=' + offset, {
+                    return $http.get(AppSetting.BASE_URL + '/api/drink/?limit=100&offset=' + offset, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -23,13 +23,6 @@
                         el.garnish = el.garnish.id;
                         fd.append('garnishes', JSON.stringify(el))
                     });
-
-                    // var _arr = [];
-                    // data.category.forEach(function (el) {
-                    //     _arr.push(el.id)
-                    // });
-                    // data.category = _arr;
-
 
                     for (var key in data) {
                         if(!(key === 'garnishes' || key == 'ingredients')){
@@ -68,14 +61,6 @@
                         el.garnish = el.garnish.id;
                         fd.append('garnishes', JSON.stringify(el))
                     });
-
-                    data.garnishes.length === 0 && fd.append('garnishes', '');
-
-                    // var _arr = [];
-                    // data.category.forEach(function (el) {
-                    //     _arr.push(el.id)
-                    // });
-                    // data.category = _arr;
 
                     for (var key in data) {
                         if(!(key === 'garnishes' || key === 'ingredients')){

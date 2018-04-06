@@ -9,6 +9,8 @@
                 <tr>
                     <th class="table-id">#</th>
                     <th>Name</th>
+                    <th style="text-align : center;">Image</th>
+                    <th>Status</th>
                     <th>Glass</th>
                     <th>Numbers bought</th>
                     <th>Price</th>
@@ -17,10 +19,26 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in listData | orderBy : 'id'" class="ng-scope">
+                <tr ng-repeat="item in listData" class="ng-scope">
                     <td class="table-id ng-binding">{{item.id}}</td>
                     <td class="ng-binding">
                         <a href="#/manager-drink/drink/detail/{{item.id}}">{{item.name}}</a>
+                    </td>
+                    <td class="ng-binding align-items-center" style="text-align : center;">
+                        <div class="_image _drink">
+                            <img ng-if="item.image" ng-src="{{ item.image }}" alt="{{item.image}}">
+                        </div>
+                    </td>
+                    <td class="ng-binding align-items-center">
+                        <!-- <div class="_status">
+                                <ba-switcher data-ng-disabled="true" switcher-style="success" switcher-value="item.is_have_ice" ></ba-switcher>
+                            </div> -->
+                        <!-- <button style="margin : 5px auto; min-width : 100px;" ng-if="item.is_have_ice" type="button" class="btn btn-success btn-with-icon">
+                            <i class="fa fa-sign-in-alt" style="margin-right : 7px;"></i>On</button>
+                        <button style="margin : 5px auto; min-width : 100px;" ng-if="!item.is_have_ice" type="button" class="btn btn-danger btn-with-icon">
+                            <i class="fa fa-sign-out-alt" style="margin-right : 7px;"></i>Off</button> -->
+                            <button style="margin : 5px auto;" ng-if="item.is_have_ice" type="button" class="btn btn-success btn-icon"><i class="ion-android-checkmark-circle"></i></button>
+                            <button style="margin : 5px auto;" ng-if="!item.is_have_ice" type="button" class="btn btn-danger btn-icon"><i class="ion-close"></i></button>
                     </td>
                     <td class="ng-binding">
                         {{item.glass.name}}
@@ -33,11 +51,11 @@
                         <span ng-if="!item.price">0</span>
                     </td>
                     <!-- <td class="ng-binding">
-                        <label class="checkbox-inline custom-checkbox nowrap">
-							<input type="checkbox" ng-checked="item.active" ng-model="item.active" ng-click="changeActive(item)">
-							<span></span>
-						</label>
-                    </td> -->
+                            <label class="checkbox-inline custom-checkbox nowrap">
+                                <input type="checkbox" ng-checked="item.active" ng-model="item.active" ng-click="changeActive(item)">
+                                <span></span>
+                            </label>
+                        </td> -->
                     <td class="ng-binding" style="width: 30px; text-align : center;">
                         <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">
                             <i class="ion-android-delete"></i>
