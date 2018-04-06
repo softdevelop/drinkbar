@@ -342,7 +342,7 @@ class UserOrder(generics.ListCreateAPIView):
 class UserOrderDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Order
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = OrderSerializer
+    serializer_class = OrderSmallSerializer
 
 '''
 Drink API:
