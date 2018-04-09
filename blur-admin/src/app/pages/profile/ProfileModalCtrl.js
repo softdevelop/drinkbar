@@ -10,7 +10,6 @@
 
 	/** @ngInject */
 	function ProfileModalCtrl($scope, $uibModalInstance, ProfileService, token, toastr) {
-		console.log(token)
 		$scope.data_password = {
 			old_password: '',
 			new_password: '',
@@ -55,7 +54,6 @@
 				new_password: $scope.data_password.new_password
 			};
 			ProfileService.changePassword(data_body, token).success(function (res) {
-				console.log(res)
 				toastr.success('', 'Change password success!', $scope.option);
 				$uibModalInstance.close($scope.link);
 			});

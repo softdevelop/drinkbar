@@ -81,7 +81,6 @@
 
                 $scope.types.length === 0 && ($scope.isAddElement.type = true);
             }).error(function(err, stt, res){
-                console.log(res)
                 toastr.error(err.detail);
             });
         }
@@ -95,7 +94,6 @@
 
                 $rootScope.brands.length === 0 && ($scope.isAddElement.brand = true);
             }).error(function(err, stt, res){
-                console.log(res)
                 toastr.error(err.detail);
             });
         }
@@ -124,7 +122,6 @@
 					res.id > 0 && ($window.location.href = '#/manager-ingredient/ingredient/detail/'+res.id);
 				}, 300);
 			}).error(function(err, status, res){
-				console.log(err)
 				toastr.error(err.detail);
 			})
 		}

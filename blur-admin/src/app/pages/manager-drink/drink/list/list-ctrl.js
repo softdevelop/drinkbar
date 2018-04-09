@@ -66,7 +66,6 @@
 
 	// controler drinkListDeleteCtrl
 	function DrinkDeleteCtrl($scope, toastr, DrinkService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
-		console.log(items)
 		$scope.item_del = items;
 
 		// ================= get list glass ===============

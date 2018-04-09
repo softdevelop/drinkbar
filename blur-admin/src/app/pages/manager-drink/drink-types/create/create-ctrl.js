@@ -26,7 +26,6 @@
 			var file = event.target.files[0];
 			$scope.data_create.image = file;
             $scope.isDisable = false;
-            console.log($scope.isDisable)
 		}
 
 		// =========== function create =================
@@ -37,7 +36,6 @@
 					res.id > 0 && ($window.location.href = '#/manager-drink/drink-types/detail/'+res.id);
 				}, 300);
 			}).error(function(err, status, res){
-				console.log(err)
 				toastr.error(err.detail);
 			})
 		}

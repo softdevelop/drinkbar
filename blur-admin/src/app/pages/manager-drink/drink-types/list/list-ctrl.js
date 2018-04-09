@@ -25,9 +25,6 @@
         }
 
         $scope.selectPage = function(page_number, e){
-            console.log('select page')
-            console.log(page_number)
-            console.log(e)
         }
 		
 		// ================= get list ===============
@@ -35,7 +32,6 @@
 			DrinkTypesService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -48,7 +44,6 @@
                 toastr.success('Updated active success!');
                 getList();
             }).error(function(err, stt, res){
-                console.log(res);
                 toastr.error(err.detail);
             })
         }
@@ -73,7 +68,6 @@
 
 	// controler GarnishListDeleteCtrl
 	function DrinkTypesDeleteCtrl($scope, toastr, DrinkTypesService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
-		console.log(items)
 		$scope.item_del = items;
 
 		// ================= get list glass ===============
@@ -81,7 +75,6 @@
 			DrinkTypesService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -93,7 +86,6 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function(err, status, res){
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}

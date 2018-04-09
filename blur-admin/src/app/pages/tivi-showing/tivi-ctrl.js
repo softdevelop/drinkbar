@@ -24,6 +24,7 @@
         $rootScope.user_key = 0;
         var slides = $scope.slides = [];
         var currIndex = 0;
+        $scope.drink_finish = {};
 
         $scope.addSlide = function () {
             var newWidth = 600 + slides.length + 1;
@@ -83,8 +84,8 @@
                 console.log('WebSocket is supported by your Browser!')
 
                 // var us open a web socket
-                var ws = new WebSocket("ws://hiefficiencybar.com:80/");
-                //var ws = new WebSocket("ws://localhost:8000/");		
+                // var ws = new WebSocket("ws://hiefficiencybar.com:80/");
+                var ws = new WebSocket("ws://localhost:8000/");		
                 ws.onopen = function () {
                     // Web Socket is connected, send data using send()
                     var data = {
@@ -134,13 +135,20 @@
                         $rootScope.users_orders = $rootScope.users_orders.filter(function(el){
                             return el.key !== $scope.pk;
                         })
+
+                        if($rootScope.data_socket.status === 10){
+                            $rootScope.products.forEach(function(el){
+                                if(el.status === 31){
+                                    $scope.drink_finish = el;
+                                    showIngredient(el.drink);
+                                }
+                            });
+                        }
                     }
                     
                 };
 
                 ws.onclose = function () {
-                    // websocket is closed.
-                    // alert("Connection is closed...");
                     console.log('Connection is closed...')
                 };
 
@@ -157,68 +165,40 @@
 
         WebSocketTest();
 
-        // ============ ingredient =========
-        $scope.data_ingredients = [
-            {
-                ingredient : {
-                    id : 1,
-                    name : 'Bourbon Full Proof'
-                },
-                ratio : 3,
-                unit : 'Part',
-            },
-            {
-                ingredient : {
-                    id : 2,
-                    name : 'Port Finish Bourbon'
-                },
-                ratio : 2,
-                unit : 'Part',
-            },
-            {
-                ingredient : {
-                    id : 1,
-                    name : 'Port Finish Bourbon'
-                },
-                ratio : 1,
-                unit : 'Part',
-            },
-            // {
-            //     ingredient : {
-            //         id : 4,
-            //         name : 'Small Batch Bourbon'
-            //     },
-            //     ratio : 30,
-            //     unit : 'mL'
-            // },
-        ];
-        $scope.total_part = 6;
-        $scope.total_ml = 0;
-        $scope._height = 0;
-        $scope._width = 60;
-        $scope.level = 2;
-        $scope._top = 0;
-        $scope._ratio = 0;
-        $scope._k = $scope.total_part;
+        var _top = 100; 
+        var _height = 80;
+        var _width_bottom = 60;
+        var _bottom = 0;
 
-        for (var index = 0; index < $scope.data_ingredients.length; index++) {
-            console.log($scope.data_ingredients[index])
-            var _data = $scope.data_ingredients[index];
+        function showIngredient(data){
+            console.log(data)
+            var _ingredients = data.ingredients;
+            var _total_part = data._total_part;
 
-            var width = (100 -  $scope._width) / 2 * (_data.ratio / $scope._k) * 2 + $scope._width ;
-            $scope._width = width;
-            var _el = '<div class="color_' + $scope.level + ' animated zoomIn" style=" width: calc('+ width +'%); border-top: calc(293px * ' + (_data.ratio / $scope.total_part)
-                + ') solid; bottom:'+ $scope._top +'%; border-left: calc(55px * ' + (_data.ratio / $scope.total_part)
-                + ') solid transparent; border-right: calc(55px * ' + (_data.ratio / $scope.total_part)
-                + ') solid transparent;" ></div>';
-            $('#_ingredient').append(_el);
+            _ingredients.forEach(function(el){
+                console.log(el)
+                var height = _height * (el.ratio / _total_part);
+                console.log(height)
+                var _div = '<div class="color_1 _ingredient" style="bottom : '+ (_bottom) +'% ; height : '+ height +'%; background : green; " ></div>';
 
-            $scope.level ++;
-            // $scope._width = (40 * ($scope.total_part - $scope._ratio - _data.ratio) / $scope.total_part + 60);
-            $scope._top = $scope._top + (100 * _data.ratio / $scope.total_part);
-            $scope._ratio = _data.ratio + $scope._ratio;
-            $scope._k = _data.ratio;
+                _bottom += height;
+
+                $('#_ingredient').append(_div);
+            });
+
+            // var _div = '<div class="color_1 _ingredient" style="bottom : 0; height : 80%; background : green; " ></div>';
+
+
+//             var _el = '<div class="color_' + $scope.level + ' animated zoomIn" style=" width: calc('+ width +'%); border-top: calc(293px * ' + (_data.ratio / $scope.total_part)
+// -                + ') solid; bottom:'+ $scope._top +'%; border-left: calc(55px * ' + (_data.ratio / $scope.total_part)
+// -                + ') solid transparent; border-right: calc(55px * ' + (_data.ratio / $scope.total_part)
+// -                + ') solid transparent;" ></div>';
+
+// -            $('#_ingredient').append(_div);
+
+
         }
+        
     }
 
 })();

@@ -72,7 +72,6 @@
                 },
                 // =========== import history =========
                 importHistoryRobo: function (data, token) {
-                    console.log(data)
                     var fd = new FormData();
 
                     for (var key in data) {

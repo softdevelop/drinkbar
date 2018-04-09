@@ -25,15 +25,11 @@
 		}
 
 		$scope.selectPage = function (page_number, e) {
-			console.log('select page')
-			console.log(page_number)
-			console.log(e)
 		}
 
 		// ============ change Switch ==============
 		$scope.changeSwitch = function (data) {
 			$scope.countSwitch ++;
-			console.log($scope.countSwitch)
 			if($scope.countSwitch == 2){
 				$scope.countSwitch = 0;
 				var _obj = {
@@ -45,7 +41,6 @@
 					toastr.success('Change status success!');
 					getList();
 				}).error(function (err, status, res) {
-					console.log(err);
 					toastr.error(err.detail);
 				})
 			}
@@ -56,7 +51,6 @@
 			CategoriesService.getList($rootScope.userLogin.token).success(function (res) {
 				$rootScope.listData = res;
 			}).error(function (err, status, res) {
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -90,7 +84,6 @@
 			CategoriesService.getList($rootScope.userLogin.token).success(function (res) {
 				$rootScope.listData = res;
 			}).error(function (err, status, res) {
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -102,7 +95,6 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function (err, status, res) {
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}

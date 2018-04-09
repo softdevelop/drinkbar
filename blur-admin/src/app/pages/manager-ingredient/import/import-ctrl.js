@@ -18,21 +18,8 @@
         $scope.isDisableBrand = true;
         $scope.isDisableIngredient = true;
 
-        // ============ get list ingredient ==========
-        // function getListIngredient(){
-        //     var offset = 0;
-        //     IngredientService.getList($rootScope.userLogin.token, offset).success(function(res){
-        //         $scope.ingredients = res.results;
-        //     }).error(function(err, stt, res){
-        //         console.log(res)
-        //         toastr.error(err.detail)
-        //     })
-        // }
-
-        // getListIngredient();
-
-         // =========== get list ingredient ==============
-         function getListIngredient(type, brand) {
+        // =========== get list ingredient ==============
+        function getListIngredient(type, brand) {
             var _data = {
                 filter_type : type,
                 filter_brand : brand
@@ -53,7 +40,6 @@
                 $scope.types = res;
                 $scope.types.length === 0 && ($scope.isAddElement.type = true);
             }).error(function (err, stt, res) {
-                console.log(res)
                 toastr.error(err.detail);
             });
         }
@@ -68,7 +54,6 @@
                 $rootScope.brands = res;
                 $rootScope.brands.length === 0 && ($scope.isAddElement.brand = true);
             }).error(function (err, stt, res) {
-                console.log(res)
                 toastr.error(err.detail);
             });
         }

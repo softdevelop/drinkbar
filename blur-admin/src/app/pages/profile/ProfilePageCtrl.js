@@ -104,7 +104,6 @@
                 $window.localStorage['currentUser'] = JSON.stringify(res);
                 $rootScope.userLogin = res;
             }).error(function (err, status, response) {
-                console.log(response);
                 toastr.error('', err.detail);
             });
         }
@@ -233,8 +232,6 @@
         };
 
         $scope.getFile = function () {
-            console.log($scope.file)
-            console.log($scope.data_profile.file)
             fileReader.readAsDataUrl($scope.file, $scope)
                 .then(function (result) {
                     $scope.data_profile.picture = result;

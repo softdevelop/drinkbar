@@ -50,8 +50,6 @@
                 updated: function (data, token) {
                     var fd = new FormData();
 
-                    console.log(data)
-                    
                     data.ingredients.forEach(function (el) {
                         el.ingredient = el.ingredient.id;
                         fd.append('ingredients', JSON.stringify(el))

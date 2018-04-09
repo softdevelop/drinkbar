@@ -326,7 +326,10 @@ class OrderSmallSerializer(serializers.ModelSerializer):
             'tray_number','products','qr_code','photo','robot','user_view')
 
     def get_status_view(self,obj):
-        return obj.get_status_display()
+        try:
+            return obj.get_status_display()
+        except:
+            pass
 
     def get_user_view(self,obj):
         return obj.user.full_name

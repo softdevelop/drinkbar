@@ -45,7 +45,6 @@
             ManagerUserService.getUser($scope.user_id, $rootScope.userLogin.token).success(function(res){
                 $scope.data_profile = res;
             }).error(function (err, status, response) {
-                console.log(response);
                 toastr.error( err.detail);
             });
         }
@@ -57,7 +56,6 @@
             ManagerUserService.getUserOrder($scope.user_id, $rootScope.userLogin.token).success(function(res){
                 $scope.user_order = res.orders;
             }).error(function(err, stt, res){
-                console.log(res)
                 toastr.error(err.detail);
             })
         }
@@ -72,7 +70,6 @@
                     $window.location.href = '#/list-user';
                 },300)
             }).error(function (err, status, response) {
-                console.log(response);
                 toastr.error('', err.detail);
             });
         }
@@ -140,7 +137,6 @@
                 $window.location.href = '#/manager-user/list-user';
                 
             }).error(function (err, status, response) {
-                console.log(response);
                 toastr.error('', err.detail);
             });
         }

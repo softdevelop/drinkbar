@@ -25,9 +25,6 @@
         }
 
         $scope.selectPage = function(page_number, e){
-            console.log('select page')
-            console.log(page_number)
-            console.log(e)
         }
 
         // =============== fucntion change status ================
@@ -37,7 +34,6 @@
 				id: data.id,
 				active: data.active
 			}
-			console.log(_obj)
 			HistoryIngredientService.updated(_obj, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Change status success!');
 				getList();
@@ -81,7 +77,6 @@
 
 	// controler IngredientBrandListDeleteCtrl
 	function HistoriesIngredientDeleteCtrl($scope, toastr, HistoryIngredientService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
-		console.log(items)
 		$scope.item_del = items;
 
 		// ================= get list glass ===============

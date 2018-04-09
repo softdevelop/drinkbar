@@ -32,3 +32,5 @@ blur-admin/.tmp/
 .idea/
 tags
 bower_components
+
+./blur-admin/.tmp/

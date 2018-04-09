@@ -41,7 +41,6 @@
             IngredientService.getListType($rootScope.userLogin.token).success(function (res) {
                 $scope.types = res;
             }).error(function (err, stt, res) {
-                console.log(res)
                 toastr.error(err.detail);
             });
         }
@@ -51,7 +50,6 @@
             IngredientService.getListBrand($rootScope.userLogin.token, type).success(function (res) {
                 $scope.brands = res;
             }).error(function (err, stt, res) {
-                console.log(res)
                 toastr.error(err.detail);
             });
         }
@@ -76,7 +74,6 @@
                     res.id > 0 && ($window.location.href = '#/manager-ingredient/ingredient/list');
                 }, 300);
             }).error(function (err, status, res) {
-                console.log(err)
                 toastr.error(err.detail);
             })
         }

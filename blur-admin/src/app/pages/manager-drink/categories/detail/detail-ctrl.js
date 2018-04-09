@@ -28,7 +28,6 @@
 				$scope.detail.parent = String(res.parent);
 				$scope.picture = res.image;
 			}).error(function(err, status, res){
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}
@@ -40,7 +39,6 @@
 			CategoriesService.getList($rootScope.userLogin.token).success(function(res){
 				$scope.list_categories = res;
 			}).error(function(err, status, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -68,14 +66,12 @@
 					res.id > 0 && ($window.location.href = '#/manager-drink/categories/list');
 				}, 300);
 			}).error(function(err, status, res){
-				console.log(err)
 				toastr.error(err.detail);
 			})
 		}
 
 		// ============ upload image ===============
 		$scope.removePicture = function () {
-			console.log($scope.detail.image)
 			$scope.image = '';
             $scope.isChangeAvatar = true;
         };
