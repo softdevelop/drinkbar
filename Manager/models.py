@@ -327,10 +327,13 @@ def set_robot_and_line(sender, instance=None,created=False, **kwargs):
         Coodinarate robot and which line user will get their drinks
     '''
     if created:
-        order = Order.objects.all().order_by('-id')[1]
         tray_number = 1
-        if order.tray_number:
-            tray_number = order.tray_number+1
+        try:
+            order = Order.objects.all().order_by('-id')[1]
+            if order.tray_number:
+                tray_number = order.tray_number+1
+        except Exception as e:
+            pass
         if tray_number>4:
             tray_number=1
         instance.tray_number = tray_number
