@@ -28,7 +28,7 @@
 				$rootScope.robotId = res.id;
 			}).error(function (err, status, res) {
 				console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
@@ -79,7 +79,7 @@
 				}, 300);
 			}).error(function (err, status, res) {
 				console.log(err)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 

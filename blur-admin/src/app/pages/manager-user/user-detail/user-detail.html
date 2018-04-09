@@ -189,7 +189,6 @@
                                 <th>Payer Firstname</th>
                                 <th>Payer Lastname</th>
                                 <th>Payer Email</th>
-                                <th>Create Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -219,10 +218,6 @@
                                 <td class="ng-binding">
                                     {{ item.payer_email }}
                                 </td>
-                                <td class="ng-binding">
-                                    {{ item.creation_date | date:'MM/dd/yyyy' }}
-                                </td>
-    
                                 <td class="ng-binding" style="width: 30px; text-align : center;">
                                     <a href="" ng-click="openInfoOrder(item)" >
                                         <i class="ion-eye"></i>

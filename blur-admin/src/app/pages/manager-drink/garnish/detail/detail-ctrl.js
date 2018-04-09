@@ -21,8 +21,7 @@
 			GarnishService.getElement($scope.paramt_id, $rootScope.userLogin.token).success(function(res){
 				$scope.detail = res;
 			}).error(function(err, status, res){
-				console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
@@ -41,8 +40,7 @@
 					res.id > 0 && ($window.location.href = '#/manager-drink/garnish/list');
 				}, 300);
 			}).error(function(err, status, res){
-				console.log(err)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 

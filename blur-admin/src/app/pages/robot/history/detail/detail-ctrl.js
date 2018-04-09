@@ -24,7 +24,7 @@
 				$scope.detail = res;
 			}).error(function(err, status, res){
 				console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
@@ -36,7 +36,7 @@
 				$scope.list_history = res;
 			}).error(function(err, status, res){
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -63,7 +63,7 @@
 				}, 300);
 			}).error(function(err, status, res){
 				console.log(err)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 

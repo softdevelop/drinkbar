@@ -13,7 +13,7 @@
 	/** @ngInject */
 	function DrinkCreateCtrl($scope, DrinkService, toastr, $rootScope, $location, $window, $uibModal) {
 		$scope.data_create = {
-			name: '123123',
+			name: '',
 			active: false,
 			price: 0,
 			key_word: 0,
@@ -64,18 +64,14 @@
 					}
 				}
 			});
-			console.log($scope.categories)
-			console.log($scope.data_create.category)
 		}
 
 		// ========== function get list categories ===========
 		function getCategories() {
 			DrinkService.getCategories($rootScope.userLogin.token).success(function (res) {
 				$rootScope.list_categories = res;
-				console.log($rootScope.list_categories)
 			}).error(function (err, stt, res) {
-				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
@@ -86,8 +82,7 @@
 			DrinkService.getListGlass($rootScope.userLogin.token).success(function (res) {
 				$scope.list_glass = res;
 			}).error(function (err, stt, res) {
-				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
@@ -112,16 +107,13 @@
 
 			var _data = $scope.data_create;
 
-			console.log($scope.data_create)
-
 			DrinkService.created(_data, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Created success!');
 				setTimeout(function () {
 					res.id > 0 && ($window.location.href = '#/manager-drink/drink/detail/' + res.id);
 				}, 300);
 			}).error(function (err, status, res) {
-				console.log(err)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 

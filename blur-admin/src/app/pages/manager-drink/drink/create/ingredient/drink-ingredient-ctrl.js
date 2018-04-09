@@ -38,8 +38,7 @@
 
                 $scope.types.length === 0 && ($scope.isAddElement.type = true);
             }).error(function (err, stt, res) {
-                console.log(res)
-                toastr.error('Error!');
+                toastr.error(err.detail);
             });
         }
 
@@ -53,8 +52,7 @@
                 $rootScope.brands = res;
                 $rootScope.brands.length === 0 && ($scope.isAddElement.brand = true);
             }).error(function (err, stt, res) {
-                console.log(res)
-                toastr.error('Error!');
+                toastr.error(err.detail);
             });
         }
 

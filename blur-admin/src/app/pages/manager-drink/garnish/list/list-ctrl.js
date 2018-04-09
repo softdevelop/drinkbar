@@ -18,8 +18,7 @@
 			GarnishService.getList($rootScope.userLogin.token).success(function(res){
 				$rootScope.listData = res;
 			}).error(function(err, status, res){
-				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -56,8 +55,7 @@
 					toastr.success('Change status success!');
 					getList();
 				}).error(function(err, status, res){
-					console.log(err);
-					toastr.error('Error!');
+					toastr.error(err.detail);
 				})
 			}
 		}
@@ -74,8 +72,7 @@
 			GarnishService.getList($rootScope.userLogin.token).success(function(res){
 				$rootScope.listData = res;
 			}).error(function(err, status, res){
-				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -86,8 +83,7 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function(err, status, res){
-				console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 	}

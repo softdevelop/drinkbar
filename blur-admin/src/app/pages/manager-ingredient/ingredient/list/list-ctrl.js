@@ -48,7 +48,7 @@
 				$scope.bigTotalItems = res.count;
 			}).error(function(err, stt, res){
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -78,7 +78,7 @@
 				$scope.bigTotalItems = res.count;
 			}).error(function (err, status, res) {
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -90,7 +90,7 @@
 				$scope.types = $scope.filter_types = res;
 			}).error(function (err, stt, res) {
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -112,7 +112,7 @@
 					getList();
 				}).error(function(err, status, res){
 					console.log(err);
-					toastr.error('Error!');
+					toastr.error(err.detail);
 				})
 			}
 		}
@@ -127,7 +127,7 @@
 				}
 			}).error(function (err, stt, res) {
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -165,7 +165,7 @@
 				$rootScope.listData = res.results;
 			}).error(function (err, status, res) {
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -177,7 +177,7 @@
 				getList();
 			}).error(function (err, status, res) {
 				console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 	}
