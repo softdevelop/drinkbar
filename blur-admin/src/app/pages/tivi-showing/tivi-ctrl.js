@@ -165,10 +165,38 @@
 
         WebSocketTest();
 
+        var _top = 100; 
+        var _height = 80;
+        var _width_bottom = 60;
+        var _bottom = 0;
+
         function showIngredient(data){
             console.log(data)
             var _ingredients = data.ingredients;
             var _total_part = data._total_part;
+
+            _ingredients.forEach(function(el){
+                console.log(el)
+                var height = _height * (el.ratio / _total_part);
+                console.log(height)
+                var _div = '<div class="color_1 _ingredient" style="bottom : '+ (_bottom) +'% ; height : '+ height +'%; background : green; " ></div>';
+
+                _bottom += height;
+
+                $('#_ingredient').append(_div);
+            });
+
+            // var _div = '<div class="color_1 _ingredient" style="bottom : 0; height : 80%; background : green; " ></div>';
+
+
+//             var _el = '<div class="color_' + $scope.level + ' animated zoomIn" style=" width: calc('+ width +'%); border-top: calc(293px * ' + (_data.ratio / $scope.total_part)
+// -                + ') solid; bottom:'+ $scope._top +'%; border-left: calc(55px * ' + (_data.ratio / $scope.total_part)
+// -                + ') solid transparent; border-right: calc(55px * ' + (_data.ratio / $scope.total_part)
+// -                + ') solid transparent;" ></div>';
+
+// -            $('#_ingredient').append(_div);
+
+
         }
         
     }
