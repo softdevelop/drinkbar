@@ -43,9 +43,6 @@
         }
 
         $scope.selectPage = function(page_number, e){
-            console.log('select page')
-            console.log(page_number)
-            console.log(e)
         }
 
         // ================= open modal info of user ============================
@@ -66,30 +63,8 @@
 
         // =================== open modal create user ==========================
         $scope.openCreateUser = function (size) {
-            // var page = 'app/pages/manager-user/user-create/user-create.html';
-            // $uibModal.open({
-            //     animation: true,
-            //     templateUrl: page,
-            //     size: size,
-            //     resolve: {
-            //         token: function () {
-            //             return $scope.currentUser.token;
-            //         }
-            //     },
-            //     controller: 'UserCreateCtrl',
-            // });
 
         }
-
-        // // ====================== delete user ================================
-        // $scope.deleteUser = function (data) {
-        //     ManagerUserService.deleteUser(data.id, $scope.currentUser.token).success(function (res) {
-        //         toastr.success('', 'Deleted success!');
-        //         getAllUser();
-        //     }).error(function (err, status, response) {
-        //         console.log(response);
-        //     });
-        // }
 
         // =========== open modal confirm delete Glass ===========
 		$scope.confirmDelete = function(data){
@@ -114,12 +89,10 @@
 
                 $rootScope.bigTotalItems = res.count;
             }).error(function (err, status, response) {
-                console.log(response);
                 toastr.error('', err.detail);
             });
         }
 
-        console.log($rootScope.loadDataListUser)
         if ($rootScope.loadDataListUser) {
             getAllUser();
         }
@@ -139,7 +112,6 @@
 
                 $rootScope.bigTotalItems = res.count;
             }).error(function (err, status, response) {
-                console.log(response);
                 toastr.error('', err.detail);
             });
         }
@@ -151,7 +123,6 @@
 				$uibModalInstance.close();
 				getAllUser();
 			}).error(function(err, status, res){
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}

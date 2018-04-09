@@ -320,6 +320,7 @@ class UserOrder(generics.ListCreateAPIView):
 
         # Create new order
         serializer.validated_data['amount'] = float(total_bill)
+        serializer.validated_data['status'] = Order.STATUS_NEW
         order = serializer.create(serializer.validated_data)
         if reorder:
             for tab in tabs:

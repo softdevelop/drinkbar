@@ -38,7 +38,6 @@
                     $window.location.href = url_redirect;
                 }
             }).error(function (err, status, response) {
-                console.log(response);
                 toastr.error('', err.detail);
             });
         }

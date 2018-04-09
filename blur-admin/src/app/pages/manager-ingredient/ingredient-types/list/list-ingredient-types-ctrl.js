@@ -18,7 +18,6 @@
 			IngredientTypesService.getList($rootScope.userLogin.token).success(function(res){
 				$rootScope.listData = res;
 			}).error(function(err, status, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -45,7 +44,6 @@
 
 	// controler IngredientTypesListDeleteCtrl
 	function IngredientTypesDeleteCtrl($scope, toastr, IngredientTypesService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
-		console.log(items)
 		$scope.item_del = items;
 
 		// ================= get list glass ===============
@@ -53,7 +51,6 @@
 			IngredientTypesService.getList($rootScope.userLogin.token).success(function(res){
 				$rootScope.listData = res;
 			}).error(function(err, status, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -65,7 +62,6 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function(err, status, res){
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}

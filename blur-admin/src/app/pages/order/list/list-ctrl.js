@@ -24,9 +24,6 @@
         }
 
         $scope.selectPage = function(page_number, e){
-            console.log('select page')
-            console.log(page_number)
-            console.log(e)
         }
 
         // =============== fucntion change status ================
@@ -36,12 +33,10 @@
 				id: data.id,
 				active: data.active
 			}
-			console.log(_obj)
 			OrderService.updated(_obj, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Change status success!');
 				getList();
 			}).error(function (err, status, res) {
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}
@@ -51,7 +46,6 @@
 			OrderService.getList($rootScope.userLogin.token).success(function(res){
 				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -78,7 +72,6 @@
 
 	// controler IngredientBrandListDeleteCtrl
 	function OrderDeleteCtrl($scope, toastr, OrderService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
-		console.log(items)
 		$scope.item_del = items;
 
 		// ================= get list glass ===============
@@ -86,7 +79,6 @@
 			OrderService.getList($rootScope.userLogin.token).success(function(res){
 				$rootScope.listData = res;
 			}).error(function(err, status, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -98,7 +90,6 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function(err, status, res){
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}

@@ -27,7 +27,6 @@
 					res.id > 0 && ($window.location.href = '#/manager-ingredient/ingredient-brand/detail/'+res.id);
 				}, 300);
 			}).error(function(err, status, res){
-				console.log(err)
 				toastr.error(err.detail);
 			})
 		}

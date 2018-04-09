@@ -70,7 +70,6 @@
 	// ========== ************************ ==================
 	// ======================================================
 	function SeparateGlassListDeleteCtrl($scope, toastr, SeparateService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
-		console.log(items)
 		$scope.item_del = items;
 
 		// ================= get list glass ===============

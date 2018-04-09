@@ -44,7 +44,6 @@
 
 		// ============ load data ==========
 		function loadData() {
-			console.log($rootScope.ingredients)
 		}
 
 		$rootScope.loadPageDrinkCreate = function (val) {
@@ -98,7 +97,6 @@
 						for (var i = 0; i < _arr.length; i++) {
 							var element = _arr[i];
 							if (element == el.id) {
-								console.log('ok')
 								el.selected = true;
 							}
 						}
@@ -106,7 +104,6 @@
 				}, 400);
 
 			}).error(function (err, stt, res) {
-				console.log(res)
 				toastr.error(err.detail);
 			})
 		}
@@ -118,7 +115,6 @@
 			DrinkService.getListGlass($rootScope.userLogin.token).success(function (res) {
 				$scope.list_glass = res;
 			}).error(function (err, stt, res) {
-				console.log(res)
 				toastr.error(err.detail);
 			})
 		}
@@ -143,7 +139,6 @@
 				$rootScope.garnishs = res.garnishes;
 
 			}).error(function (err, status, res) {
-				// console.log(err);
 				toastr.error(err.detail);
 			})
 		}
@@ -153,7 +148,6 @@
 		// ========== function change from ===============
 		$scope.changeInfo = function (field, value) {
 			$scope.data_detail[field] = value;
-			console.log($scope.data_detail)
 			$scope.isChange = true;
 		}
 
@@ -170,7 +164,6 @@
 					res.id > 0 && ($window.location.href = '#/manager-drink/drink/list');
 				}, 300);
 			}).error(function (err, status, res) {
-				console.log(err)
 				toastr.error(err.detail);
 			})
 		}
@@ -296,7 +289,6 @@
 			$scope.$apply(function () {
 				$scope.stepsModel.push(e.target.result);
 
-				console.log($scope.field_name)
 				var file = undefined;
 				if ($scope.field_name === 'image') {
 					$scope.isChangeImage = false;

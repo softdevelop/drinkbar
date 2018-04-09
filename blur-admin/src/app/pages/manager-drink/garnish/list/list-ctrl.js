@@ -64,7 +64,6 @@
 
 	// controler GarnishListDeleteCtrl
 	function GarnishDeleteCtrl($scope, toastr, GarnishService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
-		console.log(items)
 		$scope.item_del = items;
 
 		// ================= get list glass ===============

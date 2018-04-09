@@ -30,7 +30,7 @@
 			CategoriesService.getList($rootScope.userLogin.token).success(function(res){
 				$scope.list_categories = res;
 			}).error(function(err, status, res){
-				console.log(res)
+				
 				toastr.error(err.detail);
 			});
 		}

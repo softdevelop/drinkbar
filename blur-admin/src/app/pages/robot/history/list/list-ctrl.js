@@ -25,9 +25,6 @@
         }
 
         $scope.selectPage = function(page_number, e){
-            console.log('select page')
-            console.log(page_number)
-            console.log(e)
         }
 
         // =============== fucntion change status ================
@@ -37,12 +34,10 @@
 				id: data.id,
 				active: data.active
 			}
-			console.log(_obj)
 			HistoryService.updated(_obj, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Change status success!');
 				getList();
 			}).error(function (err, status, res) {
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}
@@ -54,9 +49,7 @@
 					el.status = el.status === 0 ? true : false;
 				});
 				$rootScope.listData = res.results;
-				console.log($rootScope.listData)
 			}).error(function(err, status, res){
-				console.log(res)
                 $window.location.href = '#/robot/list';
 				toastr.error(err.detail);
 			});
@@ -64,18 +57,6 @@
 
 		getList();
 
-		// ============ get list ingredient ==========
-        // function getListIngredient(){
-        //     var offset = 0;
-        //     IngredientService.getList($rootScope.userLogin.token, offset).success(function(res){
-        //         $scope.ingredients = res.results;
-        //     }).error(function(err, stt, res){
-        //         console.log(res)
-        //         toastr.error(err.detail)
-        //     })
-        // }
-
-        // getListIngredient();
 
 		// =========== open modal confirm delete Glass ===========
 		$scope.confirmDelete = function(data){
@@ -97,7 +78,6 @@
 
 	// controler IngredientBrandListDeleteCtrl
 	function HistoriesDeleteCtrl($scope, toastr, HistoryService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
-		console.log(items)
 		$scope.item_del = items;
 
 		// ================= get list glass ===============
@@ -105,7 +85,6 @@
 			HistoryService.getList($rootScope.userLogin.token).success(function(res){
 				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -117,7 +96,6 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function(err, status, res){
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}

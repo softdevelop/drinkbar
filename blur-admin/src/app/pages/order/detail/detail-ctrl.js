@@ -24,7 +24,6 @@
                 $scope.detail = res;
                 $scope.detail.parent = String(res.parent);
 			}).error(function(err, status, res){
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}
@@ -36,7 +35,6 @@
 			OrderService.getList($rootScope.userLogin.token).success(function(res){
 				$scope.list_order = res;
 			}).error(function(err, status, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -63,7 +61,6 @@
 					res.id > 0 && ($window.location.href = '#/manager-drink/order/list');
 				}, 300);
 			}).error(function(err, status, res){
-				console.log(err)
 				toastr.error(err.detail);
 			})
 		}

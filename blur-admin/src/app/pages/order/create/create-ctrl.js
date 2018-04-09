@@ -36,7 +36,6 @@
 			OrderService.getList($rootScope.userLogin.token).success(function(res){
 				$scope.list_categories = res;
 			}).error(function(err, status, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -49,7 +48,6 @@
 			ManagerUserService.getAllUser($rootScope.userLogin.token, offset).success(function(res){
 				$scope.list_users = res.results;
 			}).error(function(err, stt, res){
-				console.log(res)
 				toastr(err.detail);
 			})
 		}
@@ -61,7 +59,6 @@
 			RobotService.getList($rootScope.userLogin.token).success(function(res){
 				$scope.list_robot = res.results;
 			}).error(function(err, stt, res){
-				console.log(res)
 				toastr.error(err.detail);
 			})
 		}
@@ -82,7 +79,6 @@
 					res.id > 0 && ($window.location.href = '#/order/detail/'+res.id);
 				}, 300);
 			}).error(function(err, status, res){
-				console.log(err)
 				toastr.error(err.detail);
 			})
 		}

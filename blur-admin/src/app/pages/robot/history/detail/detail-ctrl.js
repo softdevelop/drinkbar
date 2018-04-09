@@ -23,7 +23,6 @@
 			HistoryService.getElement($scope.paramt_id, $rootScope.userLogin.token).success(function(res){
 				$scope.detail = res;
 			}).error(function(err, status, res){
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}
@@ -35,7 +34,6 @@
 			HistoryService.getList($rootScope.userLogin.token).success(function(res){
 				$scope.list_history = res;
 			}).error(function(err, status, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -62,7 +60,6 @@
 					res.id > 0 && ($window.location.href = '#/robot/history/list');
 				}, 300);
 			}).error(function(err, status, res){
-				console.log(err)
 				toastr.error(err.detail);
 			})
 		}

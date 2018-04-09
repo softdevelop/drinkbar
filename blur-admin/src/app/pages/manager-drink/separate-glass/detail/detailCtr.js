@@ -24,7 +24,6 @@
 				res.unit = res.unit === 0 ? '0' : '10';
 				$scope.glass = res;
 			}).error(function(err, status, res){
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}
@@ -51,7 +50,6 @@
 					res.id > 0 && ($window.location.href = '#/manager-drink/separate-glass/list');
 				}, 300);
 			}).error(function(err, status, res){
-				console.log(err)
 				toastr.error(err.detail);
 			})
 		}

@@ -28,7 +28,6 @@
 
 		// ============ load data ==========
 		function loadData() {
-			console.log($rootScope.ingredients)
 		}
 
 		$rootScope.loadPageDrinkCreate = function (val) {

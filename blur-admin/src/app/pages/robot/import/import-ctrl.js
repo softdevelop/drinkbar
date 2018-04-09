@@ -10,8 +10,6 @@
 
 	/** @ngInject */
 	function RobotImportHistoryCtrl($stateParams, $scope, RobotService, DrinkService, IngredientService, toastr, $rootScope, $location, $window, $uibModal) {
-        console.log('RobotImportHistoryCtrl')
-        
         $scope.list_robot = [];
         $scope.ingredients = [];
         $scope.data_create = {
@@ -79,7 +77,6 @@
         
         // ========== function change from ===============
 		$scope.changeInfo = function(field, value){
-            console.log(field)
             if(field === 'type'){
                 $scope.isDisableBrand = false;
                 getListBrand(value);

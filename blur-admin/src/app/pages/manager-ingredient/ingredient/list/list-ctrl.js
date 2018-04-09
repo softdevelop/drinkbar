@@ -47,7 +47,6 @@
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
 			}).error(function(err, stt, res){
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -58,8 +57,6 @@
 		}
 
 		$scope.searchKey = function () {
-			console.log('===> search')
-			console.log($scope.keywork)
 		}
 
 		// ================ pagination ====================
@@ -77,7 +74,6 @@
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
 			}).error(function (err, status, res) {
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -89,7 +85,6 @@
 			IngredientService.getListType($rootScope.userLogin.token).success(function (res) {
 				$scope.types = $scope.filter_types = res;
 			}).error(function (err, stt, res) {
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -111,7 +106,6 @@
 					toastr.success('Change status success!');
 					getList();
 				}).error(function(err, status, res){
-					console.log(err);
 					toastr.error(err.detail);
 				})
 			}
@@ -126,7 +120,6 @@
 					$scope.brands = res;
 				}
 			}).error(function (err, stt, res) {
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -153,7 +146,6 @@
 
 	// controler IngredientListDeleteCtrl
 	function IngredientDeleteCtrl($scope, toastr, IngredientService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance) {
-		console.log(items)
 		$scope.item_del = items;
 
 		// ================= get list glass ===============
@@ -164,7 +156,6 @@
 				});
 				$rootScope.listData = res.results;
 			}).error(function (err, status, res) {
-				console.log(res)
 				toastr.error(err.detail);
 			});
 		}
@@ -176,7 +167,6 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function (err, status, res) {
-				console.log(err);
 				toastr.error(err.detail);
 			})
 		}
