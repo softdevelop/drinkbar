@@ -43,7 +43,7 @@
 				getList();
 			}).error(function (err, status, res) {
 				console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 		
@@ -58,7 +58,7 @@
 			}).error(function(err, status, res){
 				console.log(res)
                 $window.location.href = '#/robot/list';
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -71,7 +71,7 @@
         //         $scope.ingredients = res.results;
         //     }).error(function(err, stt, res){
         //         console.log(res)
-        //         toastr.error('Error!')
+        //         toastr.error(err.detail)
         //     })
         // }
 
@@ -106,7 +106,7 @@
 				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -118,7 +118,7 @@
 				getList();
 			}).error(function(err, status, res){
 				console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 	}

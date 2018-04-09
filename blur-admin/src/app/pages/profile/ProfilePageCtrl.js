@@ -105,7 +105,7 @@
                 $rootScope.userLogin = res;
             }).error(function (err, status, response) {
                 console.log(response);
-                toastr.error('', 'Error!');
+                toastr.error('', err.detail);
             });
         }
 

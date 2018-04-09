@@ -30,8 +30,7 @@
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
 			}).error(function(err, status, res){
-				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -43,8 +42,7 @@
                 toastr.success('Updated active success!');
                 getList();
             }).error(function(err, stt, res){
-                console.log(res);
-                toastr.error('Error!');
+                toastr.error(err.detail);
             })
         }
 
@@ -76,8 +74,7 @@
 			DrinkService.getList($rootScope.userLogin.token).success(function(res){
 				$rootScope.listData = res;
 			}).error(function(err, status, res){
-				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -88,8 +85,7 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function(err, status, res){
-				console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 	}

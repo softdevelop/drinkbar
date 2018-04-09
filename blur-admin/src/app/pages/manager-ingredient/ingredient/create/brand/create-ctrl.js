@@ -29,7 +29,7 @@
                 $uibModalInstance.close();
 			}).error(function(err, status, res){
 				console.log(err)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 

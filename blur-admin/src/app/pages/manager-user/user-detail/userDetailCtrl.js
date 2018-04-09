@@ -46,7 +46,7 @@
                 $scope.data_profile = res;
             }).error(function (err, status, response) {
                 console.log(response);
-                toastr.error('', 'Error!');
+                toastr.error( err.detail);
             });
         }
 
@@ -58,7 +58,7 @@
                 $scope.user_order = res.orders;
             }).error(function(err, stt, res){
                 console.log(res)
-                toastr.error('Error!');
+                toastr.error(err.detail);
             })
         }
 
@@ -73,7 +73,7 @@
                 },300)
             }).error(function (err, status, response) {
                 console.log(response);
-                toastr.error('', 'Error!');
+                toastr.error('', err.detail);
             });
         }
 
@@ -141,7 +141,7 @@
                 
             }).error(function (err, status, response) {
                 console.log(response);
-                toastr.error('', 'Error!');
+                toastr.error('', err.detail);
             });
         }
 

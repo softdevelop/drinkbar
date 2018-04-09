@@ -11,16 +11,16 @@
 	/** @ngInject */
 	function DrinkDetailCtrl($stateParams, $scope, DrinkService, toastr, $rootScope, $location, $window, $uibModal, $filter) {
 		$scope.detail = {
-			garnishes : [],
-			ingredients : [],
-			category : []
+			garnishes: [],
+			ingredients: [],
+			category: []
 		};
 		$scope.paramt_id = $stateParams.id;
 		$scope.data_detail = {
 			id: $scope.paramt_id,
-			garnishes : [],
-			ingredients : [],
-			category : []
+			garnishes: [],
+			ingredients: [],
+			category: []
 		};
 		$scope.isChange = $scope.isChangeIngredient = $scope.isChangeGarnish = false;
 		$scope.categories = [];
@@ -39,6 +39,8 @@
 		};
 
 		$scope.selected_baselines_customTexts = { buttonDefaultText: 'Select Users' };
+		$scope.isChangeImage = true;
+		$scope.isChangeBackgroundImage = true;
 
 		// ============ load data ==========
 		function loadData() {
@@ -61,18 +63,18 @@
 			$rootScope.list_categories.forEach(function (el) {
 				if (el.id === data.id) {
 
-					if(el.selected){
+					if (el.selected) {
 						el.selected = false;
 						$(_class_el).children('._check_icon').css('display', 'none');
-						
-						$scope.categories = $scope.categories.filter(function(el){
+
+						$scope.categories = $scope.categories.filter(function (el) {
 							return el.id !== data.id;
 						})
-						
-						$scope.data_detail.category = $scope.data_detail.category.filter(function(el){
+
+						$scope.data_detail.category = $scope.data_detail.category.filter(function (el) {
 							return el !== data.id;
 						})
-					} else{
+					} else {
 						el.selected = true;
 						$(_class_el).children('._check_icon').css('display', 'inline-block');
 					}
@@ -81,31 +83,31 @@
 		}
 
 		// ============ seleced init category ============
-		function initCategorySelected(){
-			
+		function initCategorySelected() {
+
 		}
 
 		// ========== function get list categories ===========
 		function getCategories() {
 			DrinkService.getCategories($rootScope.userLogin.token).success(function (res) {
 				$rootScope.list_categories = res;
-				
-				setTimeout(function(){
+
+				setTimeout(function () {
 					var _arr = $scope.data_detail.category;
-					$rootScope.list_categories.forEach(function(el){
+					$rootScope.list_categories.forEach(function (el) {
 						for (var i = 0; i < _arr.length; i++) {
 							var element = _arr[i];
-							if(element == el.id){
+							if (element == el.id) {
 								console.log('ok')
 								el.selected = true;
 							}
 						}
 					});
-				},400);
+				}, 400);
 
 			}).error(function (err, stt, res) {
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
@@ -117,7 +119,7 @@
 				$scope.list_glass = res;
 			}).error(function (err, stt, res) {
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
@@ -130,7 +132,7 @@
 				$scope.detail.glass = String(res.glass.id);
 
 				$scope.categories = res.category;
-				
+
 				var _category = res.category;
 				_category.forEach(function (el) {
 					$scope.data_detail.category.push(el.id)
@@ -142,7 +144,7 @@
 
 			}).error(function (err, status, res) {
 				// console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
@@ -160,13 +162,8 @@
 			$scope.data_detail.garnishes = $rootScope.garnishs;
 			$scope.data_detail.ingredients = $rootScope.ingredients;
 
-			console.log($scope.data_detail)
-
 			var _data = $scope.data_detail;
 
-			// console.log($scope.data_detail)
-
-			console.log(_data)
 			DrinkService.updated(_data, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Updated success!');
 				setTimeout(function () {
@@ -174,7 +171,7 @@
 				}, 300);
 			}).error(function (err, status, res) {
 				console.log(err)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
@@ -197,7 +194,7 @@
 			$scope.isChangeGarnish = true;
 			$scope.isChange = true;
 			var page = 'app/pages/manager-drink/drink/create/garnish/add.html';
-			
+
 			$uibModal.open({
 				animation: true,
 				templateUrl: page,
@@ -239,74 +236,82 @@
 		}
 
 		// ========== change image ===========
-		$scope.removePicture = function () {
-            $scope.picture = $filter('appImage')('theme/no-photo.png');
-            $scope.noPicture = true;
-        };
+		$scope.removePicture = function (field) {
+			if (field === 'image') {
+				$scope.isChangeImage = true;
+			} else {
+				$scope.isChangeBackgroundImage = true;
+			}
+		};
 
-        $scope.uploadPicture = function (field) {
+		$scope.uploadPicture = function (field) {
+			$scope.field_name = field;
 			var fileInput = '';
-			if(field === 'image_background')
-				fileInput = document.getElementById('uploadBackground');
+			if (field === 'image_background')
+				fileInput = document.getElementById('image_background');
 			else
 				fileInput = document.getElementById('uploadImage');
 
-            fileInput.click();
+			fileInput.click();
 
-        };
+		};
 
-        $scope.unconnect = function (item) {
-            item.href = undefined;
-        };
+		$scope.unconnect = function (item) {
+			item.href = undefined;
+		};
 
 
-        $scope.getFile = function () {
-            console.log($scope.file)
-            console.log($scope.data_profile.file)
-            fileReader.readAsDataUrl($scope.file, $scope)
-                .then(function (result) {
-                    $scope.data_profile.picture = result;
-                });
-        };
+		$scope.getFile = function () {
+			fileReader.readAsDataUrl($scope.file, $scope)
+				.then(function (result) {
+					$scope.data_profile.picture = result;
+				});
+		};
 
-        $scope.file = '';
-        $scope.onFileSelect = function ($file) {
-        }
+		$scope.file = '';
+		$scope.onFileSelect = function ($file) {
+		}
 
-        $scope.changeAvatar = function () {
-        }
+		$scope.changeAvatar = function () {
+		}
 
-        $scope.switches = [true, true, false, true, true, false];
+		$scope.switches = [true, true, false, true, true, false];
 
-        $scope.stepsModel = [];
+		$scope.stepsModel = [];
 
-        $scope.imageUpload = function (event, field) {
+		$scope.imageUpload = function (event, field) {
 			var files = event.target.files;
 			$scope.field_name = field;
 
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                var reader = new FileReader();
-                reader.onload = $scope.imageIsLoaded;
-                reader.readAsDataURL(file);
-            }
-        }
+			for (var i = 0; i < files.length; i++) {
+				var file = files[i];
+				var reader = new FileReader();
+				reader.onload = $scope.imageIsLoaded;
+				reader.readAsDataURL(file);
+			}
+		}
 
-        $scope.imageIsLoaded = function (e) {
-            $scope.isUpdated = true;
-            $scope.$apply(function () {
-                $scope.stepsModel.push(e.target.result);
-                $scope.isChangeAvatar = true;
-				$scope.picture = e.target.result;
+		$scope.imageIsLoaded = function (e) {
+			$scope.isUpdated = true;
+			$scope.$apply(function () {
+				$scope.stepsModel.push(e.target.result);
+
+				console.log($scope.field_name)
 				var file = undefined;
-				if($scope.field_name === 'image')
+				if ($scope.field_name === 'image') {
+					$scope.isChangeImage = false;
+					$scope.image = e.target.result;
 					file = $window.document.getElementById('uploadImage');
-				else
-					file = $window.document.getElementById('uploadBackground');
-					
+				}
+				else {
+					$scope.isChangeBackgroundImage = false;
+					$scope.image_background = e.target.result;
+					file = $window.document.getElementById('image_background');
+				}
+
 				$scope.data_detail[$scope.field_name] = file.files[0];
-            });
-        }
+			});
+		}
 
 	}
 

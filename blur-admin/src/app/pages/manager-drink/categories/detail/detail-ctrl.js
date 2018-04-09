@@ -17,7 +17,9 @@
         };
         $scope.list_categories = [];
 		$scope.isDisable = true;
-		$scope.picture = undefined;
+		$scope.picture = '';
+		$scope.isChangeAvatar = true;
+		
 		
 		// ========= function get data glass by id ===========
 		function getElement(){
@@ -25,10 +27,9 @@
                 $scope.detail = res;
 				$scope.detail.parent = String(res.parent);
 				$scope.picture = res.image;
-				
 			}).error(function(err, status, res){
 				console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
@@ -40,7 +41,7 @@
 				$scope.list_categories = res;
 			}).error(function(err, status, res){
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -51,6 +52,7 @@
 			var file = event.target.files[0];
 			$scope.data_detail.image = file;
 			$scope.isDisable = false;
+            $scope.isChangeAvatar = false;
 		}
 
 		// ========== function change from ===============
@@ -67,15 +69,15 @@
 				}, 300);
 			}).error(function(err, status, res){
 				console.log(err)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
 		// ============ upload image ===============
 		$scope.removePicture = function () {
-			console.log('asdasdas')
-			$scope.detail.image = $scope.picture;
 			console.log($scope.detail.image)
+			$scope.image = '';
+            $scope.isChangeAvatar = true;
         };
 
         $scope.uploadPicture = function () {
@@ -126,9 +128,9 @@
             $scope.isUpdated = true;
             $scope.$apply(function () {
                 $scope.stepsModel.push(e.target.result);
-                $scope.isChangeAvatar = true;
-                $scope.detail.image = e.target.result;
-
+                $scope.isChangeAvatar = false;
+				$scope.image = e.target.result;
+				
                 var file = $window.document.getElementById('uploadFile');
                 $scope.data_detail.image = file.files[0];
             });

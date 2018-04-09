@@ -115,7 +115,7 @@
                 $rootScope.bigTotalItems = res.count;
             }).error(function (err, status, response) {
                 console.log(response);
-                toastr.error('', 'Error!');
+                toastr.error('', err.detail);
             });
         }
 
@@ -140,7 +140,7 @@
                 $rootScope.bigTotalItems = res.count;
             }).error(function (err, status, response) {
                 console.log(response);
-                toastr.error('', 'Error!');
+                toastr.error('', err.detail);
             });
         }
 
@@ -152,7 +152,7 @@
 				getAllUser();
 			}).error(function(err, status, res){
 				console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 	}

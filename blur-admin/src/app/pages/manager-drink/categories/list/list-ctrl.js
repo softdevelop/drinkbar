@@ -46,7 +46,7 @@
 					getList();
 				}).error(function (err, status, res) {
 					console.log(err);
-					toastr.error('Error!');
+					toastr.error(err.detail);
 				})
 			}
 		}
@@ -57,7 +57,7 @@
 				$rootScope.listData = res;
 			}).error(function (err, status, res) {
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -91,7 +91,7 @@
 				$rootScope.listData = res;
 			}).error(function (err, status, res) {
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -103,7 +103,7 @@
 				getList();
 			}).error(function (err, status, res) {
 				console.log(err);
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 	};

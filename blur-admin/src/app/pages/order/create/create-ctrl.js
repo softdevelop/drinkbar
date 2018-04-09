@@ -37,7 +37,7 @@
 				$scope.list_categories = res;
 			}).error(function(err, status, res){
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -50,7 +50,7 @@
 				$scope.list_users = res.results;
 			}).error(function(err, stt, res){
 				console.log(res)
-				toastr('Error!');
+				toastr(err.detail);
 			})
 		}
 
@@ -62,7 +62,7 @@
 				$scope.list_robot = res.results;
 			}).error(function(err, stt, res){
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
@@ -83,7 +83,7 @@
 				}, 300);
 			}).error(function(err, status, res){
 				console.log(err)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 

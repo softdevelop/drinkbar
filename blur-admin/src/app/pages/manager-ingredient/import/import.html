@@ -25,7 +25,7 @@
             </div> -->
 
             <div class="form-group">
-                <label class="label_black" for="">Ingredient Type</label>
+                <label class="" for="">Ingredient Type</label>
 
                 <div ng-class=" {'row' : isAddElement.type} ">
                     <div ng-class=" {'col-md-11' : isAddElement.type} ">
@@ -41,11 +41,10 @@
             </div>
 
             <div class="form-group">
-                <label class="label_black" for="">Ingredient Brand</label>
-
+                <label class="" for="">Ingredient Brand</label>
                 <div ng-class=" {'row' : isAddElement.brand} ">
                     <div ng-class=" {'col-md-11' : isAddElement.brand} ">
-                        <select ng-disabled="isDisableBrand && brands.length > 0" class="form-control" name="brand" ng-model="brand" ng-change="changeInfo('brand', brand)"
+                        <select ng-disabled="isDisableBrand" class="form-control" name="brand" ng-model="brand" ng-change="changeInfo('brand', brand)"
                             required>
                             <option ng-repeat="item in brands" class="form-control" value="{{item.id}}">{{item.name}}</option>
                         </select>
@@ -58,8 +57,8 @@
             </div>
 
             <div class="form-group">
-                <label for="" class="label_black">Ingredient</label>
-                <select class="form-control" name="ingredient" ng-disabled="isDisableIngredient && list_ingredient.length > 0" ng-model="data_create.ingredient"
+                <label for="" class="">Ingredient</label>
+                <select class="form-control" name="ingredient" ng-disabled="isDisableIngredient" ng-model="data_create.ingredient"
                     ng-change="changeInfo('ingredient', data_create.ingredient)">
                     <option ng-repeat="item in list_ingredient" class="form-control" value="{{item.id}}">{{item.name}} - {{item.type.name}} </option>
                 </select>

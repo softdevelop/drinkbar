@@ -82,7 +82,7 @@
                 $scope.types.length === 0 && ($scope.isAddElement.type = true);
             }).error(function(err, stt, res){
                 console.log(res)
-                toastr.error('Error!');
+                toastr.error(err.detail);
             });
         }
 
@@ -91,12 +91,12 @@
         // ============ function get list brand ===========
         function getListBrand(type){
             IngredientService.getListBrand($rootScope.userLogin.token, type).success(function(res){
-                $rootScope.brands = res.results;
+                $rootScope.brands = res;
 
                 $rootScope.brands.length === 0 && ($scope.isAddElement.brand = true);
             }).error(function(err, stt, res){
                 console.log(res)
-                toastr.error('Error!');
+                toastr.error(err.detail);
             });
         }
 
@@ -125,7 +125,7 @@
 				}, 300);
 			}).error(function(err, status, res){
 				console.log(err)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 

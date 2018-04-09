@@ -26,19 +26,19 @@
                 </select> -->
 
                 <div class="form-control _select_category" uib-dropdown on-toggle="toggled(open)">
-                        <a class="_btn_select_cate" href id="simple-dropdown" uib-dropdown-toggle>
-                            <span ng-if="categories.length === 0">Select Category</span>
-                            <span class="_item_select" ng-if="categories.length > 0" ng-repeat="elm in categories">{{ elm.link }}</span>
-                        </a>
-                        <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-                            <li role="menuitem" ng-repeat="item in list_categories">
-                                <a ng-click="selectCategory(item)" class="check_{{item.id}}" style="margin : 0;" ng-style="item.selected && {'font-weight': 'bold'}">
-                                    {{item.link}}
-                                    <i ng-if="item.selected" class="fa fa-check _check_icon pull-right" style="margin-right : 5px; color: green;"></i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <a class="_btn_select_cate" href id="simple-dropdown" uib-dropdown-toggle>
+                        <span ng-if="categories.length === 0">Select Category</span>
+                        <span class="_item_select" ng-if="categories.length > 0" ng-repeat="elm in categories">{{ elm.link }}</span>
+                    </a>
+                    <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                        <li role="menuitem" ng-repeat="item in list_categories">
+                            <a ng-click="selectCategory(item)" class="check_{{item.id}}" style="margin : 0;" ng-style="item.selected && {'font-weight': 'bold'}">
+                                {{item.link}}
+                                <i ng-if="item.selected" class="fa fa-check _check_icon pull-right" style="margin-right : 5px; color: green;"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <div class="form-group row">
@@ -46,11 +46,14 @@
                     <label style="color : #fff; font-weight : bold;" for="">Image</label>
                     <div class="">
                         <div class="userpic">
-                            <div class="userpic-wrapper">
-                                <img style="width: 100% !important;" ng-src="{{ detail.image }}" ng-click="uploadPicture('image')">
+                            <div ng-show="isChangeImage" class="userpic-wrapper">
+                                <img style="width: 100% !important;" src="{{ detail.image }}" ng-click="uploadPicture()">
                             </div>
-                            <!-- <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i> -->
-                            <a href class="change-userpic" ng-click="uploadPicture()">Change Image</a>
+                            <div ng-show="!isChangeImage" class="userpic-wrapper">
+                                <img style="width: 100% !important;" src="{{ image }}" ng-click="uploadPicture('image')">
+                            </div>
+                            <i ng-show="!isChangeImage" class="ion-ios-close-outline" ng-click="removePicture('image')" ng-if="!noPicture"></i>
+                            <a href class="change-userpic" ng-click="uploadPicture('image')">Change Image</a>
 
                             <input type='file' id="uploadImage" ng-show="false" ng-model-instant onchange="angular.element(this).scope().imageUpload(event, 'image')"
                             />
@@ -63,13 +66,16 @@
                     <label style="color : #fff; font-weight : bold;" for="">Image Background</label>
                     <div class="">
                         <div class="userpic">
-                            <div class="userpic-wrapper">
-                                <img style="width: 100% !important;" ng-src="{{ detail.image_background }}" ng-click="uploadPicture('image_background')">
+                            <div ng-show="isChangeBackgroundImage" class="userpic-wrapper">
+                                <img style="width: 100% !important;" src="{{ detail.image_background }}" ng-click="uploadPicture()">
                             </div>
-                            <!-- <i class="ion-ios-close-outline" ng-click="removePicture()" ng-if="!noPicture"></i> -->
-                            <a href class="change-userpic" ng-click="uploadPicture()">Change Background Image</a>
+                            <div ng-show="!isChangeBackgroundImage" class="userpic-wrapper">
+                                <img style="width: 100% !important;" src="{{ image_background }}" ng-click="uploadPicture('image_background')">
+                            </div>
+                            <i ng-show="!isChangeBackgroundImage" class="ion-ios-close-outline" ng-click="removePicture('image_background')" ng-if="!noPicture"></i>
+                            <a href class="change-userpic" ng-click="uploadPicture('image_background')">Change Image</a>
 
-                            <input type='file' id="uploadBackground" ng-show="false" ng-model-instant onchange="angular.element(this).scope().imageUpload(event, 'image_background')"
+                            <input type='file' id="image_background" ng-show="false" ng-model-instant onchange="angular.element(this).scope().imageUpload(event, 'image_background')"
                             />
 
                         </div>

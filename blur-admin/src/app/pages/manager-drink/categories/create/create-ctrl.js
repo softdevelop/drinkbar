@@ -31,7 +31,7 @@
 				$scope.list_categories = res;
 			}).error(function(err, status, res){
 				console.log(res)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			});
 		}
 
@@ -52,7 +52,7 @@
 				}, 300);
 			}).error(function(err, status, res){
 				console.log(err)
-				toastr.error('Error!');
+				toastr.error(err.detail);
 			})
 		}
 
