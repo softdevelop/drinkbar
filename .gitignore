@@ -20,7 +20,7 @@ db.sql
 .project
 .metadata/
 .pydevproject
-.tmp
+blur-admin/.tmp/
 
 ## Deployment & build ignore pattern
 ####################################
