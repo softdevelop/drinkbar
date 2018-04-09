@@ -162,13 +162,13 @@ def drink_add_on(self, ret=None, is_update=False):
                 else:
                     return str(e)
     else:
-        ret.delete()
-        raise api_utils.BadRequest("NOT INCLUDE ANY INGREDIENT, ADD ONE!")
-
+        if not is_update:
+            ret.delete()
+            raise api_utils.BadRequest("NOT INCLUDE ANY INGREDIENT, ADD ONE!")
+        return "NOT INCLUDE ANY INGREDIENT, ADD ONE!"
     garnishes = self.initial_data.getlist('garnishes',None)
     if garnishes:
         for garnish in garnishes:
-            print garnish
             garnish = ast.literal_eval(garnish)
             try:
                 garn = DrinkGarnish(drink=ret, garnish=Garnish.objects.get(id=garnish['garnish']),
@@ -219,6 +219,7 @@ class DrinkUpdateSerializer(DrinkSerializer):
         ret.category.clear()
         ret.ingredients.all().delete()
         ret.garnishes.all().delete()
+        print backup.category.all()
         temp = drink_add_on(self, ret, is_update=True)
         if type(ret)==type(temp):
             return temp
