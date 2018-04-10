@@ -76,6 +76,24 @@
             return array;
         }
 
+        // ===================== Counter ===========================
+        function animateValue(id, start, end, duration) {
+            var range = end - start;
+            var current = start;
+            var increment = end > start? 1 : -1;
+            var stepTime = Math.abs(Math.floor(duration / range));
+            var obj = document.getElementById(id);
+            var timer = setInterval(function() {
+                current += increment;
+                obj.innerHTML = current;
+                if (current == end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+
+        // ================================================
+
         // ================= socket ==============
 
         function WebSocketTest() {
@@ -85,7 +103,7 @@
 
                 // var us open a web socket
                 // var ws = new WebSocket("ws://hiefficiencybar.com:80/");
-                var ws = new WebSocket("ws://localhost:8000/");		
+                var ws = new WebSocket("ws://localhost:8000/");
                 ws.onopen = function () {
                     // Web Socket is connected, send data using send()
                     var data = {
@@ -121,31 +139,36 @@
                     $rootScope.data_socket = received_msg.payload.data;
                     $scope.pk = $rootScope.data_socket.id;
 
-                    if($rootScope.action === 'create'){
-                        if($rootScope.data_socket.user){
+                    if ($rootScope.action === 'create') {
+                        if ($rootScope.data_socket.user) {
                             var _user = $rootScope.data_socket.user;
                             _user.key = $scope.pk;
                             $rootScope.users_orders.push(_user);
-                            $rootScope.user_key ++;
+                            $rootScope.user_key++;
+
+                            $rootScope.data_socket.robot > 0 && animateValue("timer_robot", 0, $rootScope.data_socket.robot, 1);
+                            $rootScope.data_socket.tray_number > 0 && animateValue("timer_pickup", 0, $rootScope.data_socket.tray_number, 1);
+                            $rootScope.data_socket.statistic_orders_today > 0 && animateValue("timer_drink_served", 0, $rootScope.data_socket.statistic_orders_today, 1);
                         }
-                    } else{
-                        $rootScope.products = $rootScope.data_socket.products;
-                        $rootScope.user_updated = $rootScope.data_socket.user;
+                    } else {
+                        if ($rootScope.data_socket.status === 10) {
+                            $rootScope.products = $rootScope.data_socket.products;
+                            $rootScope.user_updated = $rootScope.data_socket.user;
 
-                        $rootScope.users_orders = $rootScope.users_orders.filter(function(el){
-                            return el.key !== $scope.pk;
-                        })
+                            $rootScope.users_orders = $rootScope.users_orders.filter(function (el) {
+                                return el.key !== $scope.pk;
+                            })
 
-                        if($rootScope.data_socket.status === 10){
-                            $rootScope.products.forEach(function(el){
-                                if(el.status === 31){
+                            $rootScope.products.forEach(function (el) {
+                                if (el.status > 30) {
                                     $scope.drink_finish = el;
-                                    showIngredient(el.drink);
+                                    var _index = el.status - 31;
+                                    showIngredient(el.drink, el.drink.ingredients[_index]);
                                 }
                             });
                         }
                     }
-                    
+
                 };
 
                 ws.onclose = function () {
@@ -165,40 +188,64 @@
 
         WebSocketTest();
 
-        var _top = 100; 
+
+        // $('._ingredient').remove();
+        var _top = 100;
         var _height = 80;
         var _width_bottom = 60;
         var _bottom = 0;
+        var _height_img = $('#_img_ingredient').height();
+        var _width_img = $('#_img_ingredient').width();
+        var _height_ml = _height_img * 0.8;
+        var _height_ml_el = _height_ml;
+        var _height_el = 0;
+        var _left = 45;
+        var _width_top_part = (_height_ml / _height_img) * (_width_img - 0.6 * _width_img) + 0.6 * _width_img;
+        var _width_el = _width_img;
+        var width_ml = _width_top_part;
+        var _transition = 30;
+        var _level = 1;
 
-        function showIngredient(data){
-            console.log(data)
+        function showIngredient(data, ingredient) {
             var _ingredients = data.ingredients;
-            var _total_part = data._total_part;
+            var _total_part = data.total_part;
 
-            _ingredients.forEach(function(el){
-                console.log(el)
-                var height = _height * (el.ratio / _total_part);
-                console.log(height)
-                var _div = '<div class="color_1 _ingredient" style="bottom : '+ (_bottom) +'% ; height : '+ height +'%; background : green; " ></div>';
+            if (ingredient) {
+                // _ingredients.forEach(function (el) {
+                // var height = Number(_height * Number(el.ratio / _total_part));
+                if (ingredient.unit !== 'mL') {
+                    var height = _height_ml * (ingredient.ratio / _total_part);
+                    _height_el += height;
+                    var _left_border = _left * (ingredient.ratio / _total_part);
+                    var width = (_height_el / _height_img) * (_width_el - 0.6 * _width_el) + 0.6 * _width_el;
 
-                _bottom += height;
+                    var _div = '<div class="color_' + _level + ' _ingredient animated zoomIn" style="animation-duration ' + _transition + 's ; bottom : ' + (_bottom)
+                        + 'px ; width : ' + width + 'px ; border-top: ' + height + 'px solid; border-left: ' + _left_border + 'px solid transparent; border-right: '
+                        + _left_border + 'px solid transparent;" ></div>';
+
+                    _bottom += height;
+
+                } else {
+                    // width_ml += 5;
+                    var _left_border = _left * (ingredient.ratio / _total_part);
+
+                    var _div = '<div class="color_' + _level + ' _ingredient animated zoomIn" style="animation-duration ' + _transition + 's ; bottom : ' + (_height_ml_el) + 'px ; width : ' + width_ml + 'px ; border-top: ' + 7 + 'px solid;" ></div>';
+
+                    _height_ml_el += 7;
+                }
+
+                var color_ingredient = '<p class="animated zoomIn" style="animation-duration ' + _transition + 's ;"><i class="ingre_color_' + _level + '"></i> '+ ingredient.ingredient.name +'</p>'
 
                 $('#_ingredient').append(_div);
-            });
+                $('#_ingredient_ctn').append(color_ingredient);
 
-            // var _div = '<div class="color_1 _ingredient" style="bottom : 0; height : 80%; background : green; " ></div>';
-
-
-//             var _el = '<div class="color_' + $scope.level + ' animated zoomIn" style=" width: calc('+ width +'%); border-top: calc(293px * ' + (_data.ratio / $scope.total_part)
-// -                + ') solid; bottom:'+ $scope._top +'%; border-left: calc(55px * ' + (_data.ratio / $scope.total_part)
-// -                + ') solid transparent; border-right: calc(55px * ' + (_data.ratio / $scope.total_part)
-// -                + ') solid transparent;" ></div>';
-
-// -            $('#_ingredient').append(_div);
-
+                _level++;
+                _transition += 2;
+                // });
+            }
 
         }
-        
+
     }
 
 })();

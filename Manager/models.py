@@ -245,8 +245,8 @@ class DrinkIngredient(models.Model):
     unit = models.PositiveSmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_PART)
 
 
-    def __unicode__(self):
-        return str(self.ingredient.id)
+    # def __unicode__(self):
+    #     return str(self.ingredient.id)
 
     # @staticmethod
     def change_to_ml(self, total_part=None, glass=None):
