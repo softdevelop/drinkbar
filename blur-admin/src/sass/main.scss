@@ -3829,6 +3829,7 @@ box-shadow: 10px 10px 292px 12px rgba(247,237,247,1);
                 ._title_name{
                     margin: 30px;
                     overflow: hidden;  
+                    min-height: 113px;
                     ._avt{
                         width: 15%;
                         padding: 0;                
@@ -4021,9 +4022,11 @@ box-shadow: 10px 10px 292px 12px rgba(247,237,247,1);
 
                     }
                     ._ingredient_ctn{
-                        width: 65%;
+                        width: 100%;
                         margin: 0 auto;
                         margin-top: 20px;
+                        overflow: hidden;
+                        // height: 192px;
                         h3{
                             margin: 0;
                             text-transform: uppercase;
@@ -4032,38 +4035,61 @@ box-shadow: 10px 10px 292px 12px rgba(247,237,247,1);
                         }
                         p{
                             font-size: 16px;
+                            width: 50%;
+                            float: left;
+                            padding-right: 15px;
+                            i{
+                              width: 10px;
+                              height: 10px;
+                              border-radius: 50%;
+                              display: inline-block;
+                              border: none; 
+                              margin-right: 7px;
+                            }
+                            .ingre_color_1{
+                              background: #ec3504;
+                            }
+                            .ingre_color_2{
+                              background: #1fec04;
+                            }
+                            .ingre_color_3{
+                              background: #ecb604;
+                            }
+                            .ingre_color_4{
+                              background: #04e4ec;
+                            }
+                            .ingre_color_5{
+                              background: #ba77f8;
+                            }
+                            .ingre_color_6{
+                              background: #1b04ec;
+                            }
+                            .ingre_color_7{
+                              background: #d45a7f;
+                            }
+                            .ingre_color_8{
+                              background: #b3d7e2;
+                            }
+                            .ingre_color_9{
+                              background: #ac847a;
+                            }
+                            .ingre_color_10{
+                              background: #a3d85f;
+                            }
                         }
                         p._ingre_1{
                             i{
-                                width: 10px;
-                                height: 10px;
-                                border-radius: 50%;
                                 background: #dd5e44;
-                                display: inline-block;
-                                border: none; 
-                                margin-right: 7px;
                             }
                         }
                         p._ingre_2{
                             i{
-                                width: 10px;
-                                height: 10px;
-                                border-radius: 50%;
                                 background: #3396ac;
-                                display: inline-block;
-                                border: none; 
-                                margin-right: 7px;
                             }
                         }
                         p._ingre_3{
                             i{
-                                width: 10px;
-                                height: 10px;
-                                border-radius: 50%;
                                 background: #dce193;
-                                display: inline-block;
-                                border: none; 
-                                margin-right: 7px;
                             }
                         }
                     }

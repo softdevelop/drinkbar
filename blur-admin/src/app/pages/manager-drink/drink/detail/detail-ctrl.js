@@ -153,6 +153,10 @@
 
 		// =========== function create =================
 		$scope.save = function () {
+			$rootScope.ingredients.forEach(function(el){
+				el.unit = el.unit === 'Part' ? 0 : 10;
+			});
+
 			$scope.data_detail.garnishes = $rootScope.garnishs;
 			$scope.data_detail.ingredients = $rootScope.ingredients;
 
