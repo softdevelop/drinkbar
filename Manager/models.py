@@ -196,8 +196,24 @@ class Drink(models.Model):
         (CONST_STATUS_BLOCKED, _('Off')),
     )
 
+    CONST_PREP_SHAKE = 0
+    CONST_PREP_FILTER = 10
+    CONST_PREP_STIR = 20
+    CONST_PREP_MUDDLE = 30
+
+    CONST_PREP = (
+        (CONST_PREP_SHAKE, _('shake')),
+        (CONST_PREP_FILTER, _('filter')),
+        (CONST_PREP_STIR, _('stir')),
+        (CONST_PREP_MUDDLE, _('muddle')),
+    )
+
     status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
                                               default=CONST_STATUS_ENABLED)
+
+    prep = models.PositiveSmallIntegerField(_('prep'), choices=CONST_PREP,
+                                              default=CONST_PREP_SHAKE)
+
     name = models.CharField(max_length=200, unique=True)
     category = models.ManyToManyField(DrinkCategory)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),
