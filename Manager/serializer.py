@@ -81,12 +81,16 @@ class DrinkCategorySmallSerializer(DrinkCategorySerializer):
 
 class SeparateGlassSerializer(serializers.ModelSerializer):
     unit_view = serializers.SerializerMethodField(read_only=True)
+    change_to_ml = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = SeparateGlass
         fields = '__all__' 
 
     def get_unit_view(self,obj):
         return obj.get_unit_display()
+        
+    def get_change_to_ml(self,obj):
+        return obj.change_to_ml
 
 class GarnishSerializer(serializers.ModelSerializer):
     class Meta:
@@ -126,10 +130,15 @@ class DrinkUserOrdersSerializer(serializers.ModelSerializer):
 class DrinkOrdersSerializer(DrinkUserOrdersSerializer):
     ingredients = DrinkIngredientSerializer(many=True, read_only=True)
     glass_ml = serializers.SerializerMethodField()
+    prep_view = serializers.SerializerMethodField()
     class Meta(DrinkUserOrdersSerializer.Meta):
         model = Drink
         fields = DrinkUserOrdersSerializer.Meta.fields+('ingredients',\
-            'total_part','glass_ml','ml_per_part')
+            'total_part','glass_ml','ml_per_part','prep','prep_view',\
+            'estimate_time')
+
+    def get_prep_view(self,obj):
+        return obj.get_prep_display()
 
 def drink_add_on(self, ret=None, is_update=False):
     categories = self.initial_data.get('category',None)
@@ -193,9 +202,10 @@ class DrinkSerializer(serializers.ModelSerializer):
     garnishes = serializers.SerializerMethodField('_garnishes')
     creator = UserSerializer(read_only=True)
     is_favorite = serializers.SerializerMethodField(read_only=True)
+    prep_view = serializers.SerializerMethodField()
     class Meta:
         model = Drink
-        fields = ('id','numbers_bought','category','glass','ingredients',
+        fields = ('id','status','prep','prep_view','numbers_bought','category','glass','ingredients',
             'garnishes','name','image','image_background','price','creator','creation_date',
             'key_word','estimate_time','is_have_ice','is_favorite')
         # depth = 1
@@ -206,9 +216,16 @@ class DrinkSerializer(serializers.ModelSerializer):
         return False
 
     def _garnishes(self, obj):
+        # hide garnish with is not active
         qs = DrinkGarnish.objects.filter(drink=obj, garnish__active=True)
         serializer = DrinkGarnishSerializer(instance=qs, many=True)
         return serializer.data
+
+    def get_prep_view(self,obj):
+        try:
+            return obj.get_prep_display()
+        except Exception as e:
+            pass
 
 class DrinkUpdateSerializer(DrinkSerializer):
     garnishes = DrinkGarnishSerializer(many=True, required=False, read_only=True)
@@ -231,10 +248,9 @@ class DrinkCreateSerializer(serializers.ModelSerializer):
     category = DrinkCategorySmallSerializer(many=True, read_only=True)
     class Meta:
         model = Drink
-        fields = ('id','numbers_bought','category','glass','ingredients',
+        fields = ('id','status','prep','numbers_bought','category','glass','ingredients',
             'garnishes','name','image','image_background','price','creator',
             'creation_date','key_word','estimate_time','is_have_ice')
-
 
     def create(self, validated_data):
         ret = Drink(**validated_data)
