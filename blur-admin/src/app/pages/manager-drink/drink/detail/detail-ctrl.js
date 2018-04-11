@@ -157,8 +157,26 @@
 				el.unit = el.unit === 'Part' ? 0 : 10;
 			});
 
-			$scope.data_detail.garnishes = $rootScope.garnishs;
-			$scope.data_detail.ingredients = $rootScope.ingredients;
+			// $scope.data_detail.garnishes = $rootScope.garnishs;
+			// $scope.data_detail.ingredients = $rootScope.ingredients;
+
+			$rootScope.ingredients.forEach(function(el){
+				var _obj = {
+					ingredient : el.ingredient.id,
+					ratio : el.ratio,
+					unit : el.unit
+				}
+				$scope.data_detail.ingredients.push(_obj);
+			});
+
+			$rootScope.garnishs.forEach(function(el){
+				var _obj = {
+					garnish : el.garnish.id,
+					ratio : el.ratio
+					// unit : el.unit
+				}
+				$scope.data_detail.garnishes.push(_obj);
+			});
 
 			var _data = $scope.data_detail;
 

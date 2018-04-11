@@ -95,6 +95,8 @@
 
         //===========  updateProfile ================================
         $scope.updateProfile = function (field, value) {
+            console.log(field)
+            console.log(value)
             $scope.data_update[field] = value;
             $scope.isUpdated = true;
         }

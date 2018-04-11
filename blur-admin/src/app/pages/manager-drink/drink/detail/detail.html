@@ -109,10 +109,17 @@
 
 
             <div class="form-group">
-                <label class="checkbox-inline custom-checkbox nowrap">
+                <!-- <label class="checkbox-inline custom-checkbox nowrap">
                     <input type="checkbox" ng-model="detail.is_have_ice" ng-click="changeInfo('is_have_ice', detail.is_have_ice)">
                     <span>Is have ice</span>
-                </label>
+                </label> -->
+
+                <label class="_switch_label " style="color : #fff; font-weight : bold;" for="">Is have ice</label>
+                <div class="_switch_button">
+                    <div class="_status">
+                        <ba-switcher switcher-style="success" switcher-value="detail.is_have_ice" ng-click="updateProfile('is_have_ice', detail.is_have_ice)"></ba-switcher>
+                    </div>
+                </div>
             </div>
 
             <!-- Ingredient -->

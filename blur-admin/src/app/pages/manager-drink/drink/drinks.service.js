@@ -15,12 +15,12 @@
                     var fd = new FormData();
                     
                     data.ingredients.forEach(function (el) {
-                        el.ingredient = el.ingredient.id;
+                        // el.ingredient = el.ingredient.id;
                         fd.append('ingredients', JSON.stringify(el))
                     });
                     
                     data.garnishes.forEach(function(el){
-                        el.garnish = el.garnish.id;
+                        // el.garnish = el.garnish.id;
                         fd.append('garnishes', JSON.stringify(el))
                     });
 
@@ -51,12 +51,12 @@
                     var fd = new FormData();
 
                     data.ingredients.forEach(function (el) {
-                        el.ingredient = el.ingredient.id;
+                        // el.ingredient = el.ingredient.id;
                         fd.append('ingredients', JSON.stringify(el))
                     });
                     
                     data.garnishes.length > 0 && data.garnishes.forEach(function(el){
-                        el.garnish = el.garnish.id;
+                        // el.garnish = el.garnish.id;
                         fd.append('garnishes', JSON.stringify(el))
                     });
 

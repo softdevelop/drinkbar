@@ -18,7 +18,9 @@
 			price: 0,
 			key_word: 0,
 			estimate_time: 0,
-			category: []
+			category: [],
+			ingredients : [],
+			garnishes : []
 		};
 		$rootScope.list_categories = [];
 		$scope.list_glass = [];
@@ -101,10 +103,30 @@
 
 		// =========== function create =================
 		$scope.create = function () {
-			$scope.data_create.garnishes = $rootScope.garnishs;
-			$scope.data_create.ingredients = $rootScope.ingredients;
+			// $scope.data_create.garnishes = $rootScope.garnishs;
+			// $scope.data_create.ingredients = $rootScope.ingredients;
+
+			$rootScope.ingredients.forEach(function(el){
+				var _obj = {
+					ingredient : el.ingredient.id,
+					ratio : el.ratio,
+					unit : el.unit
+				}
+				$scope.data_create.ingredients.push(_obj);
+			});
+
+			$rootScope.garnishs.forEach(function(el){
+				var _obj = {
+					garnish : el.garnish.id,
+					ratio : el.ratio
+					// unit : el.unit
+				}
+				$scope.data_create.garnishes.push(_obj);
+			});
 
 			var _data = $scope.data_create;
+
+			console.log(_data)
 
 			DrinkService.created(_data, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Created success!');
