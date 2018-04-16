@@ -144,8 +144,9 @@ def update_ingredient_price(sender, instance, raw, using, update_fields, **kwarg
     new_price = float(fpformat.fix(new_price, 2))
 
     for drink in instance.drinks.all():
-        drink.drink.price += (new_price-instance.price_per_ml)*drink.change_to_ml(drink.drink.total_part,\
-                drink.drink.glass.change_to_ml)
+        drink.drink.price += (new_price-instance.price_per_ml)*\
+                    drink.change_to_ml(drink.drink.total_part,\
+                    drink.drink.glass.change_to_ml)
         drink.drink.save()
     instance.price_per_ml = new_price
 
@@ -252,7 +253,7 @@ class Drink(models.Model):
     image_background = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), 
                         upload_to='drink', blank=True, null=True)
     numbers_bought = models.PositiveIntegerField(blank=True, null= True, default=0)
-    price = models.FloatField(blank=True, null=True)
+    price = models.FloatField(default=0)
     glass = models.ForeignKey(SeparateGlass,blank=True, null=True, related_name='drinks')
     key_word = models.CharField(max_length=200, blank=True, null=True)
     estimate_time = models.PositiveIntegerField(help_text=_('seconds'), default=0)
@@ -334,7 +335,7 @@ class DrinkIngredient(models.Model):
     #     return str(self.ingredient.id)
 
     # @staticmethod
-    def change_to_ml(self, total_part=None, glass=None):
+    def change_to_ml(self, total_part=0, glass=0):
         if self.unit == DrinkIngredient.CONST_UNIT_ML:
             return self.ratio
         ret = float(self.ratio/total_part*glass)
@@ -547,5 +548,8 @@ def delete_ingredient_history(sender, instance=None, created=False, **kwargs):
         instance.machine.ingredients.filter(place_number=instance.place_number)\
                 .update(remain_of_bottle=F('last_bottle'),ingredient=F('last_ingredient'))
     instance.ingredient.save()
+
+
+        
 
 
