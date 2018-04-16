@@ -4,7 +4,7 @@
         .factory('FifoService', function ($http, AppSetting) {
             return {
                 getList: function (token, offset) {
-                    return $http.get(AppSetting.BASE_URL + '/api/user/order/?admin=true&limit=10&offset='+offset, {
+                    return $http.get(AppSetting.BASE_URL + '/api/user/order/?robot=true&limit=10&offset='+offset, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
