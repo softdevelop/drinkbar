@@ -243,12 +243,16 @@ class MyTab(generics.ListAPIView):
     serializer_class = OrderTabSerializer
 
     def get_queryset(self):
-        return Tab.objects.filter(user=self.request.user)
+        return Tab.objects.filter(user=self.request.user, order__isnull=True)
 
 class UpdateTab(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tab
     permission_classes = [IsAuthenticated]
     serializer_class = OrderTabSerializer
+
+    def delete(self, request, *args, **kwargs):
+        self.destroy(request, *args, **kwargs)
+        return Response({'detail':'success'},status=status.HTTP_200_OK)
 
 class UserOrder(generics.ListCreateAPIView):
     queryset = Order.objects.order_by('-creation_date')

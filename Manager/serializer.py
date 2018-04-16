@@ -323,9 +323,9 @@ class AddToTabSerializer(serializers.ModelSerializer):
 
 class UserOrderTabSerializer(serializers.ModelSerializer):
     drink = DrinkUserOrdersSerializer(required=False, read_only=True)
-    garnishes = DrinkGarnishSerializer(many=True)
+    garnishes = DrinkGarnishSerializer(many=True, read_only=True)
     ice = serializers.SerializerMethodField()
-    status_view = serializers.SerializerMethodField()
+    status_view = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Tab
         fields = ('id','drink','status','status_view','ice','garnishes','quantity')

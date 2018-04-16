@@ -20,7 +20,7 @@ import fpformat
 from django.utils import timezone
 from django.conf import settings
 from collections import Counter
-
+from pprint import pprint
 
 class UserBase(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
@@ -138,6 +138,17 @@ class Ingredient(models.Model):
     price_per_ml = models.FloatField(blank=True, null= True, default=1)
     def __unicode__(self):
         return self.name
+@receiver(pre_save, sender=Ingredient)
+def update_ingredient_price(sender, instance, raw, using, update_fields, **kwargs):
+    new_price = instance.price/float(instance.quanlity_of_bottle)
+    new_price = float(fpformat.fix(new_price, 2))
+
+    for drink in instance.drinks.all():
+        drink.drink.price += (new_price-instance.price_per_ml)*drink.change_to_ml(drink.drink.total_part,\
+                drink.drink.glass.change_to_ml)
+        drink.drink.save()
+    instance.price_per_ml = new_price
+
 class DrinkCategory(CategoryBase):
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),null=True, blank=True, upload_to='categories')
 
@@ -291,6 +302,18 @@ class Drink(models.Model):
 
     def __unicode__(self):
         return self.name
+@receiver(post_save, sender=Drink)
+def update_drink_price(sender, instance, created, raw, 
+                    using, update_fields, **kwargs):
+    if created:
+        drink = Drink.objects.get(id=instance.id)
+        price = 0
+        for drink in drink.ingredients.all():
+            price += drink.change_to_ml(drink.drink.total_part,\
+                drink.drink.glass.change_to_ml)*drink.ingredient.price_per_ml
+
+        drink.price = price
+        drink.save()
 
 class DrinkIngredient(models.Model):
     CONST_UNIT_PART = 0
@@ -302,7 +325,7 @@ class DrinkIngredient(models.Model):
     )
 
     drink = models.ForeignKey(Drink, related_name='ingredients', on_delete=models.SET_NULL, null=True, blank=True)
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.SET_NULL, null=True, blank=True)
+    ingredient = models.ForeignKey(Ingredient, on_delete=models.SET_NULL, null=True, blank=True, related_name='drinks')
     ratio = models.FloatField(help_text=_('part'))
     unit = models.PositiveSmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_PART)
 
