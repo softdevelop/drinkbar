@@ -18,8 +18,8 @@
         $scope.isDisableBrand = true;
         $scope.isDisableIngredient = true;
 
-        // =========== get list ingredient ==============
-        function getListIngredient(type, brand) {
+         // =========== get list ingredient ==============
+         function getListIngredient(type, brand) {
             var _data = {
                 filter_type : type,
                 filter_brand : brand
@@ -28,8 +28,6 @@
                 $scope.list_ingredient = res.results;
             })
         }
-
-        // getListIngredient();
 
         // ========== function get list type ============
         function getListType() {
@@ -40,7 +38,8 @@
                 $scope.types = res;
                 $scope.types.length === 0 && ($scope.isAddElement.type = true);
             }).error(function (err, stt, res) {
-                toastr.error(err.detail);
+                console.log(res)
+                toastr.error('Error!');
             });
         }
 
@@ -54,7 +53,8 @@
                 $rootScope.brands = res;
                 $rootScope.brands.length === 0 && ($scope.isAddElement.brand = true);
             }).error(function (err, stt, res) {
-                toastr.error(err.detail);
+                console.log(res)
+                toastr.error('Error!');
             });
         }
 
@@ -78,7 +78,7 @@
                 $rootScope.robotId = $scope.data_create.machine;
                 $window.location.href = '#/manager-ingredient/history/list';
             }).error(function(err, stt, res){
-                toastr.error(err.detail);
+                toastr.error('Error!');
             })
         }
 

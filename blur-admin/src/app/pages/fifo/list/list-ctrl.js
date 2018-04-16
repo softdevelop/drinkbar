@@ -15,7 +15,8 @@
 
 		$scope.maxSize = 10;
         $scope.bigTotalItems = 0;
-        $scope.bigCurrentPage = 1;
+		$scope.bigCurrentPage = 1;
+		$rootScope.offset = 0;
 		
 		// ================ pagination ====================
         $scope.changePage =  function(page_index){
@@ -43,8 +44,9 @@
 		
 		// ================= get list ===============
 		function getList(){
-			FifoService.getList($rootScope.userLogin.token).success(function(res){
+			FifoService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listData = res.results;
+				$scope.bigTotalItems = res.count;
 			}).error(function(err, status, res){
 				toastr.error(err.detail);
 			});
@@ -76,7 +78,7 @@
 
 		// ================= get list glass ===============
 		function getList(){
-			FifoService.getList($rootScope.userLogin.token).success(function(res){
+			FifoService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listData = res;
 			}).error(function(err, status, res){
 				toastr.error(err.detail);

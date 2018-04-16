@@ -44,6 +44,7 @@
         function getUser(){
             ManagerUserService.getUser($scope.user_id, $rootScope.userLogin.token).success(function(res){
                 $scope.data_profile = res;
+                $scope.birthday = new Date(res.birthday);
             }).error(function (err, status, response) {
                 toastr.error( err.detail);
             });
@@ -146,8 +147,9 @@
         // ========================= datepicker=========================
         $scope.today = function () {
             $scope.birthday = new Date();
+            console.log($scope.birthday)
         };
-        $scope.today();
+        // $scope.today();
 
         $scope.clear = function () {
             $scope.birthday = null;
