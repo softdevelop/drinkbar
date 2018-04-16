@@ -257,7 +257,13 @@ class UpdateTab(generics.RetrieveUpdateDestroyAPIView):
 class UserOrder(generics.ListCreateAPIView):
     queryset = Order.objects.order_by('-creation_date')
     permission_classes = [permissions.IsAuthenticated]
-    serializer_class = OrderSerializer
+    # serializer_class = OrderSerializer
+
+    def get_serializer_class(self):
+        is_robot = self.request.GET.get('robot', False)
+        if is_robot:
+            return OrderMachineSerializer
+        return OrderSerializer
 
     def get_queryset(self):
         is_robot = self.request.GET.get('robot', False)
@@ -284,9 +290,9 @@ class UserOrder(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         reorder_id = self.request.data.get('order_id', None)
         reorder = None
-        # stripe_token = self.request.data.get('stripe_token', None)
-        # if not stripe_token:
-        #     raise api_utils.BadRequest("INVALID_STRIPE_TOKEN")
+        stripe_token = self.request.data.get('stripe_token', None)
+        if not stripe_token:
+            raise api_utils.BadRequest("INVALID_STRIPE_TOKEN")
 
         tabs = request.user.tab.filter(order__isnull=True, quantity__gt=0)
         if reorder_id:
@@ -326,19 +332,19 @@ class UserOrder(generics.ListCreateAPIView):
             raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR DRINK, PLEASE BACK LATER")
         serializer.validated_data['robot']=robot_will_do
         # Payment with stripe
-        # try:
-        #     total_bill = float(total_bill)
-        #     amount = int(round(total_bill*100))
-        #     stripe_payment = payments.StripePayment()
-        #     charge = stripe_payment.charge(amount=amount, currency=currency, token=stripe_token)
-        #     serializer.validated_data['transaction_code'] = stripe_token
-        #     serializer.validated_data['transaction_id'] = charge.id
-        #     serializer.validated_data['amount'] = float(amount/100)
-        #     serializer.validated_data['channel'] = Order.CHANNEL_STRIPE
-        # except payments.StripePayment.StripePaymentException:
-        #     raise api_utils.BadRequest('STRIPE_ERROR')
-        # except Exception as e:
-        #     raise api_utils.BadRequest(e.message)
+        try:
+            total_bill = float(total_bill)
+            amount = int(round(total_bill*100))
+            stripe_payment = payments.StripePayment()
+            charge = stripe_payment.charge(amount=amount, currency=currency, token=stripe_token)
+            serializer.validated_data['transaction_code'] = stripe_token
+            serializer.validated_data['transaction_id'] = charge.id
+            serializer.validated_data['amount'] = float(amount/100)
+            serializer.validated_data['channel'] = Order.CHANNEL_STRIPE
+        except payments.StripePayment.StripePaymentException:
+            raise api_utils.BadRequest('STRIPE_ERROR')
+        except Exception as e:
+            raise api_utils.BadRequest(e.message)
 
         # Create new order
         serializer.validated_data['amount'] = float(total_bill)
