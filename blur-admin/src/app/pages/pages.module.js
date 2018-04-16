@@ -17,6 +17,8 @@
 		// 'BlurAdmin.pages.maps',
 		// ============ tivi showing ============
 		'BlurAdmin.pages.tivi-showing',
+		// ============ fifo ============
+		'BlurAdmin.pages.list-fifo',
 		// ============ user profile =============
 		'BlurAdmin.pages.profile',
 		// =============== manager user ===========
@@ -98,6 +100,11 @@
 				{
 					title : 'Tivi Showing',
 					stateRef : 'tivi-showing'
+				},
+				// ============== Fifo =======
+				{
+					title : 'List Fifo',
+					stateRef : 'list-fifo'
 				},
 				// ============== user ===============
 				{

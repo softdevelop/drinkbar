@@ -31,6 +31,14 @@
 				title: "TV Showing"
 			},
 			{
+				icon: "ion-arrow-graph-up-right",
+				level: 0,
+				name: "list-fifo",
+				order: 0,
+				stateRef: "list-fifo",
+				title: "FIFO"
+			},
+			{
 				icon: "ion-person-stalker",
 				name: "list-user",
 				level: 0,
