@@ -266,11 +266,15 @@ class UserOrder(generics.ListCreateAPIView):
             return self.queryset.filter(user=self.request.user)
 
         ret = self.queryset.all()        
-        search = self.request.GET.get('search', False)
+        search = self.request.GET.get('search', None)
         if search:
             ret = ret.filter(Q(user__username__icontains=search)|\
                 Q(user__email__icontains=search)|Q(id__icontains=search))
         
+        status = self.request.GET.get('status', None)
+        if status:
+            ret = ret.filter(status=status)
+
         return ret
 
     def create(self, request, *args, **kwargs):
@@ -300,9 +304,23 @@ class UserOrder(generics.ListCreateAPIView):
         if temp['sum_quantity'] > 5:
             raise api_utils.BadRequest("OVER 5 QUANTITY, PLEASE REMOVE SOME!")
         total_bill = 0
-        for tab in tabs:
-            total_bill += int(tab.quantity)*float(tab.drink.price)
+        robot_will_do = None
+        for robot in Robot.objects.all():
+            total_bill = 0
+            temp = 0
+            for tab in tabs:
+                if tab.drink.is_enough_ingredient(robot,tab.quantity):
+                    temp +=1
+                    total_bill += int(tab.quantity)*float(tab.drink.price)
+                else:
+                    break
+            if temp == len(tabs):
+                robot_will_do = robot
+                break
 
+        if not robot_will_do:
+            raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR DRINK, PLEASE BACK LATER")
+        serializer.validated_data['robot']=robot_will_do
         # Payment with stripe
         # try:
         #     total_bill = float(total_bill)
@@ -322,6 +340,7 @@ class UserOrder(generics.ListCreateAPIView):
         serializer.validated_data['amount'] = float(total_bill)
         serializer.validated_data['status'] = Order.STATUS_NEW
         order = serializer.create(serializer.validated_data)
+
         if reorder:
             for tab in tabs:
                 garnishes = tab.garnishes.all()
@@ -335,6 +354,10 @@ class UserOrder(generics.ListCreateAPIView):
                     new_tab.garnish.add(garnish)
         else:
             tabs.update(order=order)
+        
+        for tab in Tab.objects.filter(order=order):
+            tab.drink.make_drink(robot_will_do,tab.quantity)
+
         # pprint(vars(serializer.data))
         headers = self.get_success_headers(serializer.data)
         return Response(OrderSmallSerializer(order).data, status=status.HTTP_201_CREATED, headers=headers)
@@ -359,7 +382,22 @@ class DrinkCategoryList(generics.ListCreateAPIView):
         is_main = self.request.GET.get('main', False)
         if is_main:
             return self.queryset.filter(parent__name="Type")
-        return self.queryset.all()
+
+        ret = self.queryset.all()
+
+        search_query = self.request.GET.get('search', None)
+        if search_query:
+            ret = ret.filter(name__icontains=search_query)
+
+        ancestor = self.request.GET.get('ancestor', None)
+        if ancestor:
+            ret = ret.filter(parent__isnull=True)
+
+        parent = self.request.GET.get('parent', None)
+        if parent:
+            ret = ret.filter(parent=parent)
+
+        return ret
 
 class DrinkCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DrinkCategory
@@ -378,8 +416,6 @@ class DrinkList(generics.ListCreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        print serializer.initial_data
-        print request.data
         serializer.is_valid(raise_exception=True)
         serializer.validated_data['creator']=request.user
         self.perform_create(serializer)
@@ -407,6 +443,20 @@ class DrinkList(generics.ListCreateAPIView):
         category = self.request.GET.get('category', None)
         if category:
             ret = ret.filter(category=category)
+
+        ingredient = self.request.GET.get('ingredient', None)
+        if ingredient:
+            drinks = DrinkIngredient.objects.filter(ingredient=ingredient).values_list('drink',flat=True)
+            ret = ret.filter(id__in=drinks)
+
+        ingredient_by = self.request.GET.get('ingredient_by', None)
+        if ingredient_by:
+            ret = ret.filter(ingredients__ingredient__type_search=ingredient_by)
+
+        myfavorite = self.request.GET.get('myfavorite', None)
+        if myfavorite:
+            drinks = self.request.user.favorite_drink.all().values_list('id',flat=True)
+            return ret.filter(id__in=drinks)
 
         return ret
 
@@ -462,6 +512,10 @@ class IngredientList(generics.ListCreateAPIView):
     def get_queryset(self):
         is_admin = self.request.GET.get('admin', False)
         ret = self.queryset.exclude(status=Ingredient.CONST_STATUS_BLOCKED)
+
+        search_query = self.request.GET.get('search', None)
+        if search_query:
+            ret = ret.filter(name__icontains=search_query)
 
         type = self.request.GET.get('type', None)
         if type:
@@ -601,7 +655,6 @@ class RobotChange(APIView):
                     drink_ingredient = tab.drink.ingredients.get(ingredient__id=ingredient)
                 except Exception as e:
                     raise api_utils.BadRequest("INVALID_INGREDIENT")
-                ratio_require = drink_ingredient.change_to_ml(tab.drink.total_part, tab.drink.glass.change_to_ml)
 
                 try:
                     robot_ingredient = robot.ingredients.get(ingredient=drink_ingredient.ingredient)
@@ -611,11 +664,11 @@ class RobotChange(APIView):
                     tasks.send_email(subject, html_content, UserBase.objects.filter(is_superuser=True).values_list('email',flat=True))
                     raise api_utils.BadRequest("THIS_ROBOT_DONT_HAVE_THIS_INGREDIENT")
 
-                if robot_ingredient.remain_of_bottle < ratio_require:
-                    subject = 'Hi-Effeciency - Robot {} out of {}'.format(robot.id, robot_ingredient.ingredient.name)
-                    html_content = render_to_string('email/robot_error_2.html',{'ingredient':robot_ingredient})
-                    tasks.send_email(subject, html_content, UserBase.objects.filter(is_superuser=True).values_list('email',flat=True))
-                    raise api_utils.BadRequest("NOT ENOUGH INGREDIENT ON THIS ROBOT")
+                # if robot_ingredient.remain_of_bottle < ratio_require:
+                #     subject = 'Hi-Effeciency - Robot {} out of {}'.format(robot.id, robot_ingredient.ingredient.name)
+                #     html_content = render_to_string('email/robot_error_2.html',{'ingredient':robot_ingredient})
+                #     tasks.send_email(subject, html_content, UserBase.objects.filter(is_superuser=True).values_list('email',flat=True))
+                #     raise api_utils.BadRequest("NOT ENOUGH INGREDIENT ON THIS ROBOT")
                     
                 if robot_ingredient.remain_of_bottle < 100:
                     # warning
@@ -623,8 +676,6 @@ class RobotChange(APIView):
                     html_content = render_to_string('email/robot_warning.html',{'ingredient':robot_ingredient})
                     tasks.send_email(subject, html_content, UserBase.objects.filter(is_superuser=True).values_list('email',flat=True))
 
-                robot_ingredient.remain_of_bottle -= ratio_require
-                robot_ingredient.save()
                 ret['place_number'] = robot_ingredient.place_number
             if status_drink == Tab.STATUS_FINISHED:
                 drink.quantity_done +=1

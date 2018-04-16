@@ -153,11 +153,15 @@ def drink_add_on(self, ret=None, is_update=False):
                     raise e
                 else:
                     return str(e)
-
-    ingredients = self.initial_data.getlist('ingredients',None)
+    if (self._context['request'].user.is_superuser and self.initial_data.has_key('image_background')) or is_update==True:
+        ingredients = self.initial_data.getlist('ingredients',None)
+    else:
+        ingredients = ast.literal_eval(self.initial_data['ingredients'])
+    tempdict=dict()
     if ingredients:
         for ingredient in ingredients:
-            ingredient = ast.literal_eval(ingredient)
+            if not type(ingredient)==type(tempdict):
+                ingredient = ast.literal_eval(ingredient)
             try:
                 ingre = DrinkIngredient(drink=ret, ingredient=Ingredient.objects.get(id=ingredient['ingredient']),
                                 ratio=ingredient['ratio'],
@@ -302,9 +306,20 @@ class RobotSerializer(serializers.ModelSerializer):
 '''
 class AddToTabSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False, read_only=True)
+    garnishes = DrinkGarnishSerializer(many=True, read_only=True)
     class Meta:
         model = Tab
         fields = '__all__'
+
+    def create(self, validated_data):
+        ret = Tab(**validated_data)
+        ret.save()
+        garnishes = self.initial_data.get('garnishes')
+        garnishes = DrinkGarnish.objects.filter(drink=ret.drink,garnish__in=ast.literal_eval(garnishes))
+        garnishes = list(garnishes)
+        ret.garnishes.add(*garnishes)
+        return ret
+
 
 class UserOrderTabSerializer(serializers.ModelSerializer):
     drink = DrinkUserOrdersSerializer(required=False, read_only=True)
@@ -313,7 +328,7 @@ class UserOrderTabSerializer(serializers.ModelSerializer):
     status_view = serializers.SerializerMethodField()
     class Meta:
         model = Tab
-        fields = ('drink','status','status_view','ice','garnishes','quantity')
+        fields = ('id','drink','status','status_view','ice','garnishes','quantity')
 
     def get_ice(self,obj):
         return obj.get_ice_display()

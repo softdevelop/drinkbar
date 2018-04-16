@@ -104,8 +104,28 @@ class Ingredient(models.Model):
         (CONST_STATUS_BLOCKED, _('Off')),
     )
 
+    CONST_SEARCH_BASICS = 0
+    CONST_SEARCH_SPIRITS = 10
+    CONST_SEARCH_LIQUERS = 20
+    CONST_SEARCH_MIXERS = 30
+    CONST_SEARCH_OTHER = 40
+    CONST_STATUS_FRUITS = 50
+
+    CONST_SEARCH = (
+        (CONST_SEARCH_BASICS, _('Basics')),
+        (CONST_SEARCH_SPIRITS, _('Spirits')),
+        (CONST_SEARCH_LIQUERS, _('Liquers')),
+        (CONST_SEARCH_MIXERS, _('Mixers')),
+        (CONST_SEARCH_OTHER, _('Other')),
+        (CONST_STATUS_FRUITS, _('Fruits')),
+    )
+
     status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
                                               default=CONST_STATUS_ENABLED)
+
+    type_search = models.PositiveSmallIntegerField(_('type by'), choices=CONST_SEARCH,
+                                              default=CONST_SEARCH_BASICS)
+
     type = models.ForeignKey(IngredientType, on_delete=models.SET_NULL, blank=True,
                             null=True, related_name='ingredient_types')
     name = models.CharField(max_length=200)
@@ -115,7 +135,7 @@ class Ingredient(models.Model):
     brand = models.ForeignKey(IngredientBrand, on_delete=models.SET_NULL, blank=True,
                         null=True, related_name='ingredient_brands')
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='ingredient', null=True, blank=True)
-
+    price_per_ml = models.FloatField(blank=True, null= True, default=1)
     def __unicode__(self):
         return self.name
 class DrinkCategory(CategoryBase):
@@ -243,6 +263,32 @@ class Drink(models.Model):
         except Exception as e:
             return 0
 
+    def is_enough_ingredient(self,robot=1,quantity=1):
+        temp=0
+        for drink in self.ingredients.all():
+            try:
+                robot_ingredient = robot.ingredients.get(ingredient=drink.ingredient)
+                if robot_ingredient.remain_of_bottle>=drink.change_to_ml(self.total_part,self.glass.change_to_ml)*quantity:
+                    temp+=1
+                    continue
+                subject = 'Hi-Effeciency - Robot {} out of {} for {} {}'.format(robot.id,drink.ingredient,quantity,self.name)
+                html_content = render_to_string('email/robot_error_2.html',{'ingredient':robot_ingredient})
+                tasks.send_email(subject, html_content, UserBase.objects.filter(is_superuser=True).values_list('email',flat=True))
+            except Exception as e:
+                print e
+        if temp == len(self.ingredients.all()):
+            return True
+        return False
+
+    def make_drink(self,robot=1,quantity=1):
+        for drink in self.ingredients.all():
+            try:
+                robot_ingredient = robot.ingredients.get(ingredient=drink.ingredient)
+                robot_ingredient.remain_of_bottle-=drink.change_to_ml(self.total_part,self.glass.change_to_ml)*quantity
+                robot_ingredient.save()
+            except Exception as e:
+                print e
+
     def __unicode__(self):
         return self.name
 
@@ -345,7 +391,7 @@ def set_robot_and_line(sender, instance=None,created=False, **kwargs):
     if created:
         tray_number = 1
         try:
-            order = Order.objects.all().order_by('-id')[1]
+            order = Order.objects.filter(robot=instance.robot).order_by('-id')[1]
             if order.tray_number:
                 tray_number = order.tray_number+1
         except Exception as e:
