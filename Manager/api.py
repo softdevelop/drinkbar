@@ -24,6 +24,12 @@ from pprint import pprint
 User API:
 '''
 # Create by user
+try:
+    settingbar = SettingBar.objects.get(id=1)
+except Exception as e:
+    print e
+    pass
+
 class IsSuperAdmin(IsAdminUser):
 
     def has_permission(self, request, view):
@@ -311,8 +317,8 @@ class UserOrder(generics.ListCreateAPIView):
         if not tabs:
             raise api_utils.BadRequest("YOU HAVE NOT ADDED TO TAB ANY THING")
         temp = tabs.aggregate(sum_quantity=Sum('quantity'))
-        if temp['sum_quantity'] > 5:
-            raise api_utils.BadRequest("OVER 5 QUANTITY, PLEASE REMOVE SOME!")
+        if temp['sum_quantity'] > settingbar.max_drink_order:
+            raise api_utils.BadRequest("OVER {} QUANTITY, PLEASE REMOVE SOME!".format(settingbar.max_drink_order))
         total_bill = 0
         robot_will_do = None
         for robot in Robot.objects.all():
@@ -331,12 +337,19 @@ class UserOrder(generics.ListCreateAPIView):
         if not robot_will_do:
             raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR DRINK, PLEASE BACK LATER")
         serializer.validated_data['robot']=robot_will_do
+        if total_bill>0:
+            if settingbar.fee_unit==SettingBar.CONST_FEE_DOLLAR:
+                total_bill+=settingbar.fee
+            else:
+                total_bill+=float(total_bill*settingbar.fee/SettingBar.CONST_FEE_PERCENT)
+            total_bill += float(total_bill*settingbar.tax/100)
+
         # Payment with stripe
         try:
             total_bill = float(total_bill)
             amount = int(round(total_bill*100))
             stripe_payment = payments.StripePayment()
-            charge = stripe_payment.charge(amount=amount, currency=currency, token=stripe_token)
+            charge = stripe_payment.charge(amount=amount, currency="USD", token=stripe_token)
             serializer.validated_data['transaction_code'] = stripe_token
             serializer.validated_data['transaction_id'] = charge.id
             serializer.validated_data['amount'] = float(amount/100)
@@ -680,7 +693,7 @@ class RobotChange(APIView):
                 #     tasks.send_email(subject, html_content, UserBase.objects.filter(is_superuser=True).values_list('email',flat=True))
                 #     raise api_utils.BadRequest("NOT ENOUGH INGREDIENT ON THIS ROBOT")
                     
-                if robot_ingredient.remain_of_bottle < 100:
+                if robot_ingredient.remain_of_bottle < settingbar.bottle_waring:
                     # warning
                     subject = 'Hi-Effeciency - Robot {} almost out of {}'.format(robot.id, robot_ingredient.ingredient.name)
                     html_content = render_to_string('email/robot_warning.html',{'ingredient':robot_ingredient})
@@ -703,3 +716,16 @@ class RobotChange(APIView):
             ret['drink'] = OrderTabSerializer(instance=tab).data
         ret['order_status'] = order.status
         return Response(ret, status=status.HTTP_200_OK)
+
+class Settings(generics.ListAPIView):
+    queryset = SettingBar.objects.all()
+    serializer_class = SettingsForUserSeirializer
+    permission_classes = [IsAuthenticated]
+    paginator = None
+
+class SettingsAdmin(generics.RetrieveUpdateAPIView):
+    queryset = SettingBar
+    serializer_class = SettingsForAdminSeirializer
+    permission_classes = [IsSuperAdmin]
+
+        

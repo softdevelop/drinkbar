@@ -549,6 +549,22 @@ def delete_ingredient_history(sender, instance=None, created=False, **kwargs):
                 .update(remain_of_bottle=F('last_bottle'),ingredient=F('last_ingredient'))
     instance.ingredient.save()
 
+class SettingBar(models.Model):
+    CONST_FEE_DOLLAR= 1
+    CONST_FEE_PERCENT = 100
+
+    CONST_FEE_UNIT = (
+        (CONST_FEE_DOLLAR, _('$')),
+        (CONST_FEE_PERCENT, _('%')),
+    )
+
+    bar_status = models.BooleanField(default=True)
+    max_drink_order = models.PositiveSmallIntegerField(default=5)
+    bottle_waring = models.PositiveSmallIntegerField(default=100,help_text='mL')
+    fee = models.FloatField(default=10)
+    fee_unit = models.PositiveSmallIntegerField(choices=CONST_FEE_UNIT)
+    tax = models.PositiveSmallIntegerField(default=10)
+
 
         
 

@@ -90,7 +90,7 @@ class StripePayment:
             charge = stripe.Charge.create(
                 source=token,
                 amount=amount,
-                currency=USE
+                currency=currency
             )
             if charge.status == u'succeeded' and charge.amount == amount \
                 and charge.currency == currency.lower() and charge.paid == True:

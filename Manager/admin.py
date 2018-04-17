@@ -197,6 +197,22 @@ class RobotAdmin(admin.ModelAdmin):
     def has_add_permission(self, obj):
         return False
 
+class SettingsAdmin(admin.ModelAdmin):
+    list_display = ('id','bar_status','max_drink_order','fee','fee_unit','tax')
+    list_editable = ('bar_status',)
+    
+    fieldsets = (
+        (_('Main settings:'), {
+            'fields': ('bar_status',)
+        }),
+        (_('Drink settings:'), {
+            'fields': ('bottle_waring', 'max_drink_order',)
+        }),
+        (_('Fee and tax:'), {
+            'fields': (('fee', 'fee_unit'),'tax')
+        }),
+    )
+
 admin.site.register(UserBase, UserBaseAdmin)
 admin.site.register(DrinkCategory, DrinkCategoryAdmin)
 admin.site.register(Drink,DrinkAdmin)
@@ -210,3 +226,4 @@ admin.site.register(Robot, RobotAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(SeparateGlass, SeparateGlassAdmin)
 admin.site.register(Tab, TabAdmin)
+admin.site.register(SettingBar, SettingsAdmin)
