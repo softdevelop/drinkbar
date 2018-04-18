@@ -102,8 +102,8 @@
                 console.log('WebSocket is supported by your Browser!')
 
                 // var us open a web socket
-                // var ws = new WebSocket("ws://hiefficiencybar.com:80/");
-                var ws = new WebSocket("ws://localhost:8000/");
+                var ws = new WebSocket("ws://hiefficiencybar.com:80/");
+                // var ws = new WebSocket("ws://localhost:8000/");
                 ws.onopen = function () {
                     // Web Socket is connected, send data using send()
                     var data = {

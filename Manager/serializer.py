@@ -118,7 +118,6 @@ class DrinkIngredientSerializer(serializers.ModelSerializer):
     def get_unit(self,obj):
         return obj.get_unit_display()
 
-
 class DrinkUserOrdersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Drink
