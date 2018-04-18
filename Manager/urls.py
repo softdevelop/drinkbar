@@ -43,5 +43,7 @@ urlpatterns = [
     url(r'^robot/(?P<pk>[0-9]+)/$', api_views.RobotDetail.as_view(), name="robot-detail"),
     url(r'^robot/change/$', api_views.RobotChange.as_view(), name="robot-change"),
 
+    url(r'^settings/$', api_views.Settings.as_view(), name="robot-detail"),
+    url(r'^settings/(?P<pk>[0-9]+)/$', api_views.SettingsAdmin.as_view(), name="robot-detail"),
     
 ]

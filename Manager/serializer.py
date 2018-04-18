@@ -413,3 +413,18 @@ class UserWithOrderSerializer(UserSerializer):
     orders = OrderSmallSerializer(read_only=True, many=True, required=False,)
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ('orders',)
+
+
+class SettingsForUserSeirializer(serializers.ModelSerializer):
+    fee_unit_view = serializers.SerializerMethodField(read_only=True)
+    class Meta:
+        model = SettingBar
+        fields = ('max_drink_order','fee','fee_unit','fee_unit_view','tax')
+    def get_fee_unit_view(self,obj):
+        return obj.get_fee_unit_display()
+
+class SettingsForAdminSeirializer(SettingsForUserSeirializer):
+
+    class Meta(SettingsForUserSeirializer.Meta):
+        model = SettingBar
+        fields = SettingsForUserSeirializer.Meta.fields+('bar_status','bottle_waring')
