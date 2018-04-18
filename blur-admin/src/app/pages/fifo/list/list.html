@@ -1,6 +1,6 @@
 <div ba-panel="" ba-panel-title="List Fifo" ba-panel-class="with-scroll">
-    <div class="panel-body">
-        <table class="table table-striped">
+    <div class="panel-body _fifo">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th style="text-align : left;">Username</th>
@@ -10,67 +10,382 @@
                     <th style="text-align : left;">Glass For Order</th>
                     <th style="text-align : left;">Glass Status</th>
                     <th style="text-align : left;">Ice Status</th>
+
                     <th style="text-align : left;">Drink</th>
                     <th style="text-align : left;">Drink One Status</th>
-                    <th style="text-align : left;">Ingredient</th>
-                    <th style="text-align : left;">Grid Placement</th>
-                    <th style="text-align : left;">ML</th>
-                    <th style="text-align : left;">Ingredient Status</th>
-                    <th style="text-align : left;">Countinue up</th>
+                    
+                    <th style="text-align : left;">Ingredient 1</th>
+                    <th style="text-align : left;">Grid Placement 1</th>
+                    <th style="text-align : left;">ML 1</th>
+                    <th style="text-align : left;">Ingredient Status 1</th>
+                    
+                    <th style="text-align : left;">Ingredient 2</th>
+                    <th style="text-align : left;">Grid Placement 2</th>
+                    <th style="text-align : left;">ML 2</th>
+                    <th style="text-align : left;">Ingredient Status 2</th>
+                    
+                    <th style="text-align : left;">Ingredient 3</th>
+                    <th style="text-align : left;">Grid Placement 3</th>
+                    <th style="text-align : left;">ML 3</th>
+                    <th style="text-align : left;">Ingredient Status 3</th>
+                    
+                    <th style="text-align : left;">Ingredient 4</th>
+                    <th style="text-align : left;">Grid Placement 4</th>
+                    <th style="text-align : left;">ML 4</th>
+                    <th style="text-align : left;">Ingredient Status 4</th>
+                    
+                    <th style="text-align : left;">Ingredient 5</th>
+                    <th style="text-align : left;">Grid Placement 5</th>
+                    <th style="text-align : left;">ML 5</th>
+                    <th style="text-align : left;">Ingredient Status 5</th>
+                    
+                    <th style="text-align : left;">Ingredient 6</th>
+                    <th style="text-align : left;">Grid Placement 6</th>
+                    <th style="text-align : left;">ML 6</th>
+                    <th style="text-align : left;">Ingredient Status 6</th>
+                    
+                    <th style="text-align : left;">Ingredient 7</th>
+                    <th style="text-align : left;">Grid Placement 7</th>
+                    <th style="text-align : left;">ML 7</th>
+                    <th style="text-align : left;">Ingredient Status 7</th>
+                    
+                    <th style="text-align : left;">Ingredient 8</th>
+                    <th style="text-align : left;">Grid Placement 8</th>
+                    <th style="text-align : left;">ML 8</th>
+                    <th style="text-align : left;">Ingredient Status 8</th>
+
+                    <th style="text-align : left;">Slide</th>
+                    <th style="text-align : left;">Slide Status</th>
+                   
+                   <!--  <th style="text-align : left;">Countinue up</th>
                     <th>Status</th>
                     <th style="text-align : left;">Amount</th>
-                    <th>Action</th>
+                    <th>Action</th> -->
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in listData" class="ng-scope">
+                <tr ng-repeat="item in listData | orderBy: '-creation_date'" class="ng-scope">
                     <td class="ng-binding" style="text-align : left;">
-                        <!-- <a href="#/order/detail/{{item.id}}">{{item.creation_date | date:'MM/dd/yyyy'}}</a> -->
-                        <!-- {{item.creation_date | date:'MM/dd/yyyy'}} -->
                         {{ item.user.email }}
                     </td>
                     <td class="ng-binding" style="text-align : left;">
-                        <img src="{{item.qr_code}}" alt="" class="img-thumbnail" width="50px" style="margin: 10px;">
+                        <!-- <img src="{{item.qr_code}}" alt="" class="" width="20px"> -->
+                        <a href="" data-toggle="modal" ng-click="showQR(item.qr_code)">View QR Code</a>
+                    </td>
+                    <td class="ng-binding" style="text-align : left;">{{item.status_view}}
                     </td>
                     <td class="ng-binding" style="text-align : left;">
-                        <!-- {{item.qr_code}} -->
+                        
                     </td>
-                    <td class="ng-binding" style="text-align : left;">
-                        <!-- {{item.qr_code}} -->
+                    <td class="ng-binding" style="text-align : left;  padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td style="padding: 5px 7px;">{{pro.drink.glass_ml}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </td>
-                    <td class="ng-binding" style="text-align : left;">
-                        <!-- {{item.qr_code}} -->
+                    <td class="ng-binding" style="text-align : left; padding: 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.status >= 20" style="padding: 5px 7px;">Done</td>
+                                    <td ng-if="pro.status < 20" style="padding: 5px 7px;">Not Do</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </td>
-                    <td class="ng-binding" style="text-align : left;">
-                        <!-- {{item.qr_code}} -->
+                    <td class="ng-binding" style="text-align : left; padding: 0 !important">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.status >= 30" style="padding: 5px 7px;">Done</td>
+                                    <td ng-if="pro.status < 30" style="padding: 5px 7px;">Not Do</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </td>
-                    <td class="ng-binding" style="text-align : left;">
-                        <!-- {{item.qr_code}} -->
+
+                    <td  class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td style="padding: 5px 7px;">{{pro.drink.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </td>
-                    <td class="ng-binding" style="text-align : left;">
-                        <p ng-repeat="pro in item.products">{{pro.drink.name}}</p>
+
+                    <td  class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td style="padding: 5px 7px;">{{pro.status_view}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </td>
-                    <td class="ng-binding" style="text-align : left;">
-                        <!-- {{item.qr_code}} -->
+
+                    <!-- =================================== -->
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[0]" style="padding: 5px 7px;">{{pro.drink.ingredients[0].ingredient.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[0]" style="padding: 5px 7px;">{{pro.drink.ingredients[0].ratio * pro.drink.ml_per_part | number : 2}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.status > 30 && pro.drink.ingredients[0]" style="padding: 5px 7px;">Do</td>
+                                    <td ng-if="pro.status < 31 && pro.drink.ingredients[0]" style="padding: 5px 7px;">Not Do</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[1]" style="padding: 5px 7px;">{{pro.drink.ingredients[1].ingredient.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[1]" style="padding: 5px 7px;">{{pro.drink.ingredients[1].ratio * pro.drink.ml_per_part | number : 2}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.status > 31 && pro.drink.ingredients[1]" style="padding: 5px 7px;">Do</td>
+                                    <td ng-if="pro.status < 32 && pro.drink.ingredients[1]" style="padding: 5px 7px;">Not Do</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[2]" style="padding: 5px 7px;">{{pro.drink.ingredients[2].ingredient.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[2]" style="padding: 5px 7px;">{{pro.drink.ingredients[2].ratio * pro.drink.ml_per_part | number : 2}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.status > 32 && pro.drink.ingredients[2]" style="padding: 5px 7px;">Do</td>
+                                    <td ng-if="pro.status < 33 && pro.drink.ingredients[2]" style="padding: 5px 7px;">Not Do</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[3]" style="padding: 5px 7px;">{{pro.drink.ingredients[3].ingredient.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[3]" style="padding: 5px 7px;">{{pro.drink.ingredients[3].ratio * pro.drink.ml_per_part | number : 2}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.status > 33 && pro.drink.ingredients[3]" style="padding: 5px 7px;">Do</td>
+                                    <td ng-if="pro.status < 34 && pro.drink.ingredients[3]" style="padding: 5px 7px;">Not Do</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[4]" style="padding: 5px 7px;">{{pro.drink.ingredients[4].ingredient.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[4]" style="padding: 5px 7px;">{{pro.drink.ingredients[4].ratio * pro.drink.ml_per_part | number : 2}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.status > 34 && pro.drink.ingredients[4]" style="padding: 5px 7px;">Do</td>
+                                    <td ng-if="pro.status < 35 && pro.drink.ingredients[4]" style="padding: 5px 7px;">Not Do</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[5]" style="padding: 5px 7px;">{{pro.drink.ingredients[5].ingredient.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[5]" style="padding: 5px 7px;">{{pro.drink.ingredients[5].ratio * pro.drink.ml_per_part | number : 2}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.status > 35 && pro.drink.ingredients[5]" style="padding: 5px 7px;">Do</td>
+                                    <td ng-if="pro.status < 36 && pro.drink.ingredients[5]" style="padding: 5px 7px;">Not Do</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[6]" style="padding: 5px 7px;">{{pro.drink.ingredients[6].ingredient.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[6]" style="padding: 5px 7px;">{{pro.drink.ingredients[6].ratio * pro.drink.ml_per_part | number : 2}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.status > 36 && pro.drink.ingredients[6]" style="padding: 5px 7px;">Do</td>
+                                    <td ng-if="pro.status < 37 && pro.drink.ingredients[6]" style="padding: 5px 7px;">Not Do</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[7]" style="padding: 5px 7px;">{{pro.drink.ingredients[7].ingredient.name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[7]" style="padding: 5px 7px;">{{pro.drink.ingredients[7].ratio * pro.drink.ml_per_part | number : 2}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.status > 37 && pro.drink.ingredients[7]" style="padding: 5px 7px;">Do</td>
+                                    <td ng-if="pro.status < 38 && pro.drink.ingredients[7]" style="padding: 5px 7px;">Not Do</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+
+                    <td></td>
+                    <td></td>
+
+                    <!-- <td class="ng-binding" style="text-align : left;">
                         <p ng-repeat="pro in item.products">{{pro.status_view}}</p>
                     </td>
                     <td class="ng-binding" style="text-align : left;">
-                        <!-- {{item.qr_code}} -->
                         <p ng-repeat="pro in item.products">
                             <span ng-repeat="ingre in pro.drink.ingredients">{{ingre.ingredient.name}}</span>
                         </p>
                     </td>
                     <td class="ng-binding" style="text-align : left;">
-                        <!-- {{item.qr_code}} -->
                     </td>
                     <td class="ng-binding" style="text-align : left;">
-                        <!-- {{item.qr_code}} -->
                     </td>
                     <td class="ng-binding" style="text-align : left;">
-                        <!-- {{item.qr_code}} -->
                     </td>
                     <td class="ng-binding" style="text-align : left;">
-                        <!-- {{item.qr_code}} -->
                     </td>
                     <td class="ng-binding" style="text-align : left;">
                         {{item.status_view}}
@@ -82,13 +397,13 @@
                         <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">
                             <i class="ion-android-delete"></i>
                         </a>
-                    </td>
+                    </td> -->
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="align-right" ng-show="bigTotalItems > 10">
         <ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" ng-click="changePage(bigCurrentPage)"
-            class="pagination-sm" boundary-link-numbers="true"></ul>
+        class="pagination-sm" boundary-link-numbers="true"></ul>
     </div>
 </div>

@@ -227,9 +227,10 @@
                                 {{item.creation_date | date:'MM/dd/yyyy'}}
                             </td>
                             <td class="ng-binding">
-                                <div class="_status">
+                                <!-- <div class="_status">
                                     <ba-switcher data-ng-disabled="true" switcher-style="success" switcher-value="item.status"></ba-switcher>
-                                </div>
+                                </div> -->
+                                {{ item.status_view }}
                             </td>
                             <td class="ng-binding">
                                 {{ item.amount }}

@@ -7,6 +7,7 @@
 
 	angular.module('BlurAdmin.pages.list-fifo')
 		.controller('FifoListCtrl', FifoListCtrl)
+		.controller('FifoShowQRCodeCtrl', FifoShowQRCodeCtrl)
 		.controller('FifoDeleteCtrl', FifoDeleteCtrl);
 
 	/** @ngInject */
@@ -27,6 +28,24 @@
         $scope.selectPage = function(page_number, e){
         }
 
+        // =============== show zoom QR Code =====================
+        $scope.showQR = function(image){
+        	console.log(image)
+        	var page = 'app/pages/fifo/list/show-qr-code.html';
+
+            $uibModal.open({
+                animation: true,
+                templateUrl: page,
+				size: 'sm',
+				resolve: {
+                    items: function () {
+                        return image;
+                    }
+                },
+                controller: 'FifoShowQRCodeCtrl',
+            });
+        }
+
         // =============== fucntion change status ================
 		$scope.changeStatus = function (data) {
 			data.active === true ? data.active = false : data.active = true;
@@ -44,8 +63,15 @@
 		
 		// ================= get list ===============
 		function getList(){
+			var _key = 1;
 			FifoService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listData = res.results;
+				// $rootScope.listData.products.forEach(function(el){
+				// 	el.key = _key;
+				// 	_key++;
+				// });
+				$scope.products = $rootScope.listData.products;
+				console.log($scope.products)
 				$scope.bigTotalItems = res.count;
 			}).error(function(err, status, res){
 				toastr.error(err.detail);
@@ -95,6 +121,11 @@
 				toastr.error(err.detail);
 			})
 		}
+	}
+
+	// controler IngredientBrandListDeleteCtrl
+	function FifoShowQRCodeCtrl($scope, toastr, FifoService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
+		$scope.qr_code = items;
 	}
 
 })();
