@@ -74,6 +74,8 @@
 		'BlurAdmin.pages.list-history',
 		'BlurAdmin.pages.create-history',
 		'BlurAdmin.pages.detail-history',
+		// =========== settings ==============
+		'BlurAdmin.pages.settings',
 	])
 		.config(routeConfig);
 
@@ -267,6 +269,11 @@
 				{
 					title: 'History Detail',
 					stateRef: 'detail-history/:id'
+				},
+				// ============== settings ==============
+				{
+					title: 'Settings',
+					stateRef: 'settings'
 				},
 				// ===================================
 				{

@@ -3946,7 +3946,7 @@
                     overflow: hidden;
                     margin-top: 50px;
                     ._wait_time {
-                        widows: 20%;
+                        width: 20%;
                         float: left;
                         h3 {
                             margin: 0;
@@ -4026,6 +4026,105 @@
                     }
                 }
             }
+            tbody{
+                tr{
+                    td{
+                        table{
+                            tbody{
 
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    // ========== response ============
+
+    @media (min-width: 1199px){
+        ._tivi_showing{
+            ._tivi_container{
+                ._container_tivi{
+                    ._playing{
+                        ._wait_time{
+                            width: 30%;
+                            h3{
+                                font-size: 16px;
+                            }
+                            h1{
+                                font-size: 70px;
+                            }
+                        }
+                        ._btn_play_now{
+                            width: 60%;
+                            margin-top: 0px;
+                        }
+                    }
+                    ._stats_header{
+                        margin-bottom: 40px; 
+                    }
+                    ._stats_ctn{
+                        margin-bottom: 20px;
+                        ._stats_1{
+                            margin-bottom: 20px;
+                            h3{
+                                font-size: 14px;
+                            }
+                            h1{
+                                font-size: 42px;
+                            }
+                        }
+                        ._pickup_slide{
+                            p{
+                                margin-bottom: 7px;
+                            }
+                        }
+                    }
+                    ._order h3{
+                        padding-left: 45px;
+                        font-size: 22px;
+                    }
+                    ._ctn{
+                        ._right_4{
+                            ._ingredient_content{
+                                ._ingredient_img_bg{
+                                    height: auto;
+                                }
+                            }
+                            ._ingredient_ctn{
+                                h3{
+                                    font-size: 18px;
+                                    margin-bottom: 0px;
+                                }
+                                p{
+                                    width: 100%;
+                                    padding: 0;
+                                    margin-bottom: 7px;
+                                }
+                            }
+                        }
+                        ._left_6{
+                            h3{
+                                padding: 0 10px;
+                            }
+                            ._drink_times{
+                                ._times{
+                                    h3{
+                                        font-size: 14px;
+                                    }
+                                    h1{
+                                        font-size: 26px;
+                                    }
+                                }
+                            }
+                            ._ctn_drink{
+                                height: 100px;
+                            }
+                        }
+                    }
+                } 
+            } 
         }
     }

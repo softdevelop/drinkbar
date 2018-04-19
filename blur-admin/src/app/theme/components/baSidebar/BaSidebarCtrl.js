@@ -133,6 +133,13 @@
 				title: "HMI",
 				level: 0,
 			},
+			{
+				icon: "ion-ios-gear",
+				name: "settings",
+				stateRef: "settings",
+				title: "Settings",
+				level: 0,
+			},
 		];
 
 		$scope.defaultSidebarState = $scope.menuItems[0].stateRef;
