@@ -11,7 +11,7 @@
  * Copyright (c) 2018 Daniel Eden
  */
 
- .animated {
+.animated {
     -webkit-animation-duration: 1s;
     animation-duration: 1s;
     -webkit-animation-fill-mode: both;
@@ -3174,7 +3174,6 @@
         -webkit-transform: translate3d(0, 0, 0);
         transform: translate3d(0, 0, 0);
     }
-
     to {
         visibility: hidden;
         -webkit-transform: translate3d(0, -100%, 0);
@@ -3187,7 +3186,6 @@
         -webkit-transform: translate3d(0, 0, 0);
         transform: translate3d(0, 0, 0);
     }
-
     to {
         visibility: hidden;
         -webkit-transform: translate3d(0, -100%, 0);
@@ -3199,7 +3197,6 @@
     -webkit-animation-name: slideOutUp;
     animation-name: slideOutUp;
 }
-
 
 // ================================================
 .heart {
@@ -3380,11 +3377,9 @@
 
 ._drink {
     width: 100px !important;
-    margin: 10px auto;
-    // min-height: 150px;
+    margin: 10px auto; // min-height: 150px;
     img {
-        width: 100%;
-        // height: 150px;
+        width: 100%; // height: 150px;
     }
 }
 
@@ -3508,623 +3503,654 @@
                 overflow: hidden;
                 :hover {
                     cursor: row-resize;
-                    } // box-sizing: border-box;
-                    ._user {
-                        position: relative;
-                        margin-bottom: 20px;
-                        overflow: hidden;
-                        ._avt {
-                            width: 15%;
-                            float: left;
-                            position: relative;
-                            z-index: 2;
-                            padding: 7px;
-                            border: 3px solid #2399bb;
-                            border-radius: 50%;
-                            background: #4c4343;
-                            img {
-                                width: 100%;
-                            }
-                        }
-                        ._user_name {
-                            width: 90%;
-                            margin: 0;
-                            position: absolute;
-                            left: 5%;
-                            top: 10px;
-                            display: inline-block;
-                            padding: 15px 15px 15px 55px;
-                            border-radius: 0 30px 30px 0;
-                            z-index: 1;
-                            background: rgba(156, 151, 151, 0.6);
-                            font-size: 18px;
-                        }
-                    }
-                }
-                ._order_robot {
-                    width: 100%;
+                } // box-sizing: border-box;
+                ._user {
+                    position: relative;
+                    margin-bottom: 20px;
                     overflow: hidden;
-                    img {
-                        width: 100%;
-                    }
-                }
-                ._ctn_header {
-                    margin: 0 30px;
-                    ._title {
-                        h3 {
-                            margin: 0;
-                            padding: 15px 40px;
-                            background: #dd5e44;
-                            border-radius: 30px;
-                            text-transform: uppercase;
-                            i {
-                                margin-right: 7px;
-                            }
-                        }
-                    }
-                    ._icon_bottom {
-                        width: 25px;
-                        height: 12px;
-                        background: url(../assets/img/tivi/ic2.png) no-repeat top center;
-                        background-size: contain;
-                        margin-top: -1px;
-                        margin-left: 10%;
-                    }
-                    ._title_name {
-                        margin: 30px;
-                        overflow: hidden;
-                        min-height: 113px;
-                        ._avt {
-                            width: 15%;
-                            padding: 0;
-                            float: left;
-                            border: 4px solid #2dacd1;
-                            border-radius: 50%;
-                            box-sizing: border-box;
-                            background: #c7c4c0;
-                            img {
-                                width: 100%;
-                            }
-                        }
-                        h3 {
-                            width: 85%;
-                            float: right;
-                            margin: 0;
-                            padding: 32px 20px;
-                            font-size: 38px;
-                            font-weight: 300;
-                        }
-                    }
-                }
-                ._ctn {
-                    overflow: hidden;
-                    margin: 20px 50px;
-                    margin-bottom: 0;
-                    ._left_6 {
-                        width: 60%;
+                    ._avt {
+                        width: 15%;
                         float: left;
-                        h3 {
-                            margin: 0;
-                            text-transform: uppercase;
-                            color: #17abce;
-                            padding: 10px;
-                            margin-bottom: 7px;
-                        }
-                        ._ctn_drink {
-                            overflow: hidden;
-                            height: 235px;
-                            a {
-                                display: inline-block;
-                                width: 100%;
-                                overflow: hidden;
-                                font-size: 20px;
-                                color: #fff;
-                                padding: 14px 15px;
-                                span {
-                                    color: #dd5e44;
-                                }
-                            }
-                            .isActive {
-                                background: rgba(156, 151, 151, 0.6);
-                                border-radius: 30px;
-                                overflow: hidden;
-                                padding: 12px 15px;
-                                i {
-                                    background: url(../assets/img/tivi/ic4.png) no-repeat center center;
-                                    background-size: contain;
-                                    width: 20px;
-                                    height: 20px;
-                                    display: inline-block;
-                                    float: right;
-                                }
-                            }
-                            a:hover {
-                                background: rgba(156, 151, 151, 0.6);
-                                border-radius: 30px;
-                                padding: 12px 15px;
-                                i {
-                                    background: url(../assets/img/tivi/ic4.png) no-repeat center center;
-                                    background-size: contain;
-                                    width: 20px;
-                                    height: 20px;
-                                    display: inline-block;
-                                    float: right;
-                                }
-                            }
-                        }
-                        ._drink_times {
-                            overflow: hidden;
-                            margin-top: 20px;
-                            ._times {
-                                width: 50%;
-                                float: left;
-                                margin-bottom: 10px;
-                                h3 {
-                                    padding: 10px 0;
-                                    margin-bottom: 0;
-                                }
-                                h1 {
-                                    font-size: 36px;
-                                    font-weight: 300;
-                                }
-                            }
+                        position: relative;
+                        z-index: 2;
+                        padding: 7px;
+                        border: 3px solid #2399bb;
+                        border-radius: 50%;
+                        background: #4c4343;
+                        img {
+                            width: 100%;
                         }
                     }
-                    ._right_4 {
-                        width: 40%;
-                        float: right;
-                        padding: 0 30px;
-                        ._ingredient_img {
-                            img {}
-                        }
-                        ._ingredient_content {
-                            position: relative;
-                            ._ingredient_img_bg {
-                                position: relative;
-                                z-index: 5;
-                                height: 293px;
-                            }
-                            div {
-                                margin: 0 auto;
-                                left: 0px;
-                                right: 0px;
-                                height: 0;
-                                position: absolute;
-                            }
-                            ._ingre_1 {
-                                top: 0px;
-                                width: 100%;
-                                height: 100%; // width: 150px;
-                                border-top: calc(293px / 5) solid;
-                                border-left: calc(55px / 5) solid transparent;
-                                border-right: calc(55px / 5) solid transparent;
-                            }
-                            ._ingre_2 {
-                                top: calc(100% / 5);
-                                width: calc((100% - 60%) * (4 / 5) + 60%);
-                                border-top: calc(293px / 5) solid;
-                                border-left: calc(55px / 5) solid transparent;
-                                border-right: calc(55px / 5) solid transparent;
-                            }
-                            ._ingre_3 {
-                                top: calc(100% * 2 / 5);
-                                width: calc((100% - 60%) * (3 / 5) + 60%);
-                                border-top: calc(293px / 5) solid;
-                                border-left: calc(55px / 5) solid transparent;
-                                border-right: calc(55px / 5) solid transparent;
-                            }
-                            ._ingre_4 {
-                                top: calc(100% * 3 / 5);
-                                width: calc((100% - 60%) * (2 / 5) + 60%);
-                                border-top: calc(293px / 5) solid;
-                                border-left: calc(55px / 5) solid transparent;
-                                border-right: calc(55px / 5) solid transparent;
-                            }
-                            ._ingre_5 {
-                                top: calc(100% * 4 / 5);
-                                width: calc((100% - 60%) * (1 / 5) + 60%);
-                                border-top: calc(293px / 5) solid;
-                                border-left: calc(55px / 5) solid transparent;
-                                border-right: calc(55px / 5) solid transparent;
-                            }
-                            .color_defaul {
-                                border-top-color: rgba(0, 0, 0, 0);
-                            }
-                            .color_1 {
-                                border-top-color: #ec3504 !important;
-                            }
-                            .color_2 {
-                                border-top-color: #1fec04 !important;
-                            }
-                            .color_3 {
-                                border-top-color: #ecb604 !important;
-                            }
-                            .color_4 {
-                                border-top-color: #04e4ec !important;
-                            }
-                            .color_5 {
-                                border-top-color: #ba77f8 !important;
-                            }
-                            .color_6 {
-                                border-top-color: #1b04ec !important;
-                            }
-                            .color_7 {
-                                border-top-color: #d45a7f !important;
-                            }
-                            .color_8 {
-                                border-top-color: #b3d7e2 !important;
-                            }
-                            .color_9 {
-                                border-top-color: #ac847a !important;
-                            }
-                            .color_10 {
-                                border-top-color: #a3d85f !important;
-                            }
-                        }
-                        ._ingredient_ctn {
-                            width: 100%;
-                            margin: 0 auto;
-                            margin-top: 20px;
-                            overflow: hidden; // height: 192px;
-                            h3 {
-                                margin: 0;
-                                text-transform: uppercase;
-                                color: #17abce;
-                                margin-bottom: 15px;
-                            }
-                            p {
-                                font-size: 16px;
-                                width: 50%;
-                                float: left;
-                                padding-right: 15px;
-                                i {
-                                    width: 10px;
-                                    height: 10px;
-                                    border-radius: 50%;
-                                    display: inline-block;
-                                    border: none;
-                                    margin-right: 7px;
-                                }
-                                .ingre_color_1 {
-                                    background: #ec3504;
-                                }
-                                .ingre_color_2 {
-                                    background: #1fec04;
-                                }
-                                .ingre_color_3 {
-                                    background: #ecb604;
-                                }
-                                .ingre_color_4 {
-                                    background: #04e4ec;
-                                }
-                                .ingre_color_5 {
-                                    background: #ba77f8;
-                                }
-                                .ingre_color_6 {
-                                    background: #1b04ec;
-                                }
-                                .ingre_color_7 {
-                                    background: #d45a7f;
-                                }
-                                .ingre_color_8 {
-                                    background: #b3d7e2;
-                                }
-                                .ingre_color_9 {
-                                    background: #ac847a;
-                                }
-                                .ingre_color_10 {
-                                    background: #a3d85f;
-                                }
-                            }
-                            p._ingre_1 {
-                                i {
-                                    background: #dd5e44;
-                                }
-                            }
-                            p._ingre_2 {
-                                i {
-                                    background: #3396ac;
-                                }
-                            }
-                            p._ingre_3 {
-                                i {
-                                    background: #dce193;
-                                }
-                            }
-                        }
+                    ._user_name {
+                        width: 90%;
+                        margin: 0;
+                        position: absolute;
+                        left: 5%;
+                        top: 10px;
+                        display: inline-block;
+                        padding: 15px 15px 15px 55px;
+                        border-radius: 0 30px 30px 0;
+                        z-index: 1;
+                        background: rgba(156, 151, 151, 0.6);
+                        font-size: 18px;
                     }
                 }
-                ._stats_header {
-                    padding: 10px 0;
-                    margin-bottom: 70px;
+            }
+            ._order_robot {
+                width: 100%;
+                overflow: hidden;
+                img {
+                    width: 100%;
+                }
+            }
+            ._ctn_header {
+                margin: 0 30px;
+                ._title {
                     h3 {
                         margin: 0;
-                        background: url(../assets/img/tivi/ic6.png) no-repeat left center;
-                        background-size: contain;
-                        padding-left: 50px;
+                        padding: 15px 40px;
+                        background: #dd5e44;
+                        border-radius: 30px;
                         text-transform: uppercase;
+                        i {
+                            margin-right: 7px;
+                        }
                     }
                 }
-                ._stats_ctn {
+                ._icon_bottom {
+                    width: 25px;
+                    height: 12px;
+                    background: url(../assets/img/tivi/ic2.png) no-repeat top center;
+                    background-size: contain;
+                    margin-top: -1px;
+                    margin-left: 10%;
+                }
+                ._title_name {
+                    margin: 30px;
                     overflow: hidden;
-                    border-bottom: 1px solid #6a6f75;
-                    margin-bottom: 30px;
-                    ._stats_1 {
-                        width: 50%;
+                    min-height: 113px;
+                    ._avt {
+                        width: 15%;
+                        padding: 0;
                         float: left;
-                        margin-bottom: 50px;
-                        h3 {
-                            text-transform: uppercase;
+                        border: 4px solid #2dacd1;
+                        border-radius: 50%;
+                        box-sizing: border-box;
+                        background: #c7c4c0;
+                        img {
+                            width: 100%;
                         }
-                        h1 {
+                    }
+                    h3 {
+                        width: 85%;
+                        float: right;
+                        margin: 0;
+                        padding: 32px 20px;
+                        font-size: 38px;
+                        font-weight: 300;
+                    }
+                }
+            }
+            ._ctn {
+                overflow: hidden;
+                margin: 20px 50px;
+                margin-bottom: 0;
+                ._left_6 {
+                    width: 60%;
+                    float: left;
+                    h3 {
+                        margin: 0;
+                        text-transform: uppercase;
+                        color: #17abce;
+                        padding: 10px;
+                        margin-bottom: 7px;
+                    }
+                    ._ctn_drink {
+                        overflow: hidden;
+                        height: 235px;
+                        a {
+                            display: inline-block;
+                            width: 100%;
+                            overflow: hidden;
+                            font-size: 20px;
+                            color: #fff;
+                            padding: 14px 15px;
+                            span {
+                                color: #dd5e44;
+                            }
+                        }
+                        .isActive {
+                            background: rgba(156, 151, 151, 0.6);
+                            border-radius: 30px;
+                            overflow: hidden;
+                            padding: 12px 15px;
+                            i {
+                                background: url(../assets/img/tivi/ic4.png) no-repeat center center;
+                                background-size: contain;
+                                width: 20px;
+                                height: 20px;
+                                display: inline-block;
+                                float: right;
+                            }
+                        }
+                        a:hover {
+                            background: rgba(156, 151, 151, 0.6);
+                            border-radius: 30px;
+                            padding: 12px 15px;
+                            i {
+                                background: url(../assets/img/tivi/ic4.png) no-repeat center center;
+                                background-size: contain;
+                                width: 20px;
+                                height: 20px;
+                                display: inline-block;
+                                float: right;
+                            }
+                        }
+                    }
+                    ._drink_times {
+                        overflow: hidden;
+                        margin-top: 20px;
+                        ._times {
+                            width: 50%;
+                            float: left;
+                            margin-bottom: 10px;
+                            h3 {
+                                padding: 10px 0;
+                                margin-bottom: 0;
+                            }
+                            h1 {
+                                font-size: 36px;
+                                font-weight: 300;
+                            }
+                        }
+                    }
+                }
+                ._right_4 {
+                    width: 40%;
+                    float: right;
+                    padding: 0 30px;
+                    ._ingredient_img {
+                        img {}
+                    }
+                    ._ingredient_content {
+                        position: relative;
+                        ._ingredient_img_bg {
+                            position: relative;
+                            z-index: 5;
+                            height: 293px;
+                        }
+                        div {
+                            margin: 0 auto;
+                            left: 0px;
+                            right: 0px;
+                            height: 0;
+                            position: absolute;
+                        }
+                        ._ingre_1 {
+                            top: 0px;
+                            width: 100%;
+                            height: 100%; // width: 150px;
+                            border-top: calc(293px / 5) solid;
+                            border-left: calc(55px / 5) solid transparent;
+                            border-right: calc(55px / 5) solid transparent;
+                        }
+                        ._ingre_2 {
+                            top: calc(100% / 5);
+                            width: calc((100% - 60%) * (4 / 5) + 60%);
+                            border-top: calc(293px / 5) solid;
+                            border-left: calc(55px / 5) solid transparent;
+                            border-right: calc(55px / 5) solid transparent;
+                        }
+                        ._ingre_3 {
+                            top: calc(100% * 2 / 5);
+                            width: calc((100% - 60%) * (3 / 5) + 60%);
+                            border-top: calc(293px / 5) solid;
+                            border-left: calc(55px / 5) solid transparent;
+                            border-right: calc(55px / 5) solid transparent;
+                        }
+                        ._ingre_4 {
+                            top: calc(100% * 3 / 5);
+                            width: calc((100% - 60%) * (2 / 5) + 60%);
+                            border-top: calc(293px / 5) solid;
+                            border-left: calc(55px / 5) solid transparent;
+                            border-right: calc(55px / 5) solid transparent;
+                        }
+                        ._ingre_5 {
+                            top: calc(100% * 4 / 5);
+                            width: calc((100% - 60%) * (1 / 5) + 60%);
+                            border-top: calc(293px / 5) solid;
+                            border-left: calc(55px / 5) solid transparent;
+                            border-right: calc(55px / 5) solid transparent;
+                        }
+                        .color_defaul {
+                            border-top-color: rgba(0, 0, 0, 0);
+                        }
+                        .color_1 {
+                            border-top-color: #ec3504 !important;
+                        }
+                        .color_2 {
+                            border-top-color: #1fec04 !important;
+                        }
+                        .color_3 {
+                            border-top-color: #ecb604 !important;
+                        }
+                        .color_4 {
+                            border-top-color: #04e4ec !important;
+                        }
+                        .color_5 {
+                            border-top-color: #ba77f8 !important;
+                        }
+                        .color_6 {
+                            border-top-color: #1b04ec !important;
+                        }
+                        .color_7 {
+                            border-top-color: #d45a7f !important;
+                        }
+                        .color_8 {
+                            border-top-color: #b3d7e2 !important;
+                        }
+                        .color_9 {
+                            border-top-color: #ac847a !important;
+                        }
+                        .color_10 {
+                            border-top-color: #a3d85f !important;
+                        }
+                    }
+                    ._ingredient_ctn {
+                        width: 100%;
+                        margin: 0 auto;
+                        margin-top: 20px;
+                        overflow: hidden; // height: 192px;
+                        h3 {
                             margin: 0;
-                            font-size: 56px;
-                            font-weight: 300;
-                            padding: 10px 0;
+                            text-transform: uppercase;
+                            color: #17abce;
+                            margin-bottom: 15px;
                         }
                         p {
-                            color: #17abce;
+                            font-size: 16px;
+                            width: 50%;
+                            float: left;
+                            padding-right: 15px;
+                            i {
+                                width: 10px;
+                                height: 10px;
+                                border-radius: 50%;
+                                display: inline-block;
+                                border: none;
+                                margin-right: 7px;
+                            }
+                            .ingre_color_1 {
+                                background: #ec3504;
+                            }
+                            .ingre_color_2 {
+                                background: #1fec04;
+                            }
+                            .ingre_color_3 {
+                                background: #ecb604;
+                            }
+                            .ingre_color_4 {
+                                background: #04e4ec;
+                            }
+                            .ingre_color_5 {
+                                background: #ba77f8;
+                            }
+                            .ingre_color_6 {
+                                background: #1b04ec;
+                            }
+                            .ingre_color_7 {
+                                background: #d45a7f;
+                            }
+                            .ingre_color_8 {
+                                background: #b3d7e2;
+                            }
+                            .ingre_color_9 {
+                                background: #ac847a;
+                            }
+                            .ingre_color_10 {
+                                background: #a3d85f;
+                            }
+                        }
+                        p._ingre_1 {
+                            i {
+                                background: #dd5e44;
+                            }
+                        }
+                        p._ingre_2 {
+                            i {
+                                background: #3396ac;
+                            }
+                        }
+                        p._ingre_3 {
+                            i {
+                                background: #dce193;
+                            }
                         }
                     }
-                    ._drink_served {
-                        h3 {
-                            color: #d9de91;
-                        }
+                }
+            }
+            ._stats_header {
+                padding: 10px 0;
+                margin-bottom: 70px;
+                h3 {
+                    margin: 0;
+                    background: url(../assets/img/tivi/ic6.png) no-repeat left center;
+                    background-size: contain;
+                    padding-left: 50px;
+                    text-transform: uppercase;
+                }
+            }
+            ._stats_ctn {
+                overflow: hidden;
+                border-bottom: 1px solid #6a6f75;
+                margin-bottom: 30px;
+                ._stats_1 {
+                    width: 50%;
+                    float: left;
+                    margin-bottom: 50px;
+                    h3 {
+                        text-transform: uppercase;
                     }
-                    ._avg_time {
-                        h3 {
-                            color: #68a96e;
-                        }
+                    h1 {
+                        margin: 0;
+                        font-size: 56px;
+                        font-weight: 300;
+                        padding: 10px 0;
                     }
-                    ._server_speed {
-                        h3 {
-                            color: #dd5e44;
-                        }
+                    p {
+                        color: #17abce;
                     }
-                    ._pickup_slide {
-                        h3 {
-                            color: #17abce;
-                        }
-                        p {
+                }
+                ._drink_served {
+                    h3 {
+                        color: #d9de91;
+                    }
+                }
+                ._avg_time {
+                    h3 {
+                        color: #68a96e;
+                    }
+                }
+                ._server_speed {
+                    h3 {
+                        color: #dd5e44;
+                    }
+                }
+                ._pickup_slide {
+                    h3 {
+                        color: #17abce;
+                    }
+                    p {
+                        color: #fff;
+                    }
+                }
+            }
+            ._slider {
+                ._slider_title {
+                    h3 {
+                        text-transform: uppercase;
+                        color: #17abce;
+                        i {
                             color: #fff;
                         }
                     }
+                    h4 {}
+                    p {
+                        color: #8e8d8d;
+                    }
                 }
-                ._slider {
-                    ._slider_title {
-                        h3 {
-                            text-transform: uppercase;
-                            color: #17abce;
-                            i {
-                                color: #fff;
-                            }
+                ._slider_ctn {
+                    .carousel-control.left {
+                        display: none;
+                    }
+                    .carousel-control.right {
+                        display: none;
+                    }
+                    .carousel-indicators {
+                        position: absolute;
+                        left: 50%;
+                        z-index: 15;
+                        width: 60%;
+                        padding-left: 0;
+                        text-align: center;
+                        list-style: none;
+                        left: auto;
+                        right: 0;
+                        margin-left: 0;
+                        text-align: right;
+                        bottom: 0 !important;
+                        margin: 0;
+                    }
+                    .carousel-indicators {
+                        li {
+                            margin-left: 5px;
+                            width: 7px;
+                            height: 7px;
                         }
-                        h4 {}
+                    }
+                    ._slider_p {
                         p {
-                            color: #8e8d8d;
-                        }
-                    }
-                    ._slider_ctn {
-                        .carousel-control.left {
-                            display: none;
-                        }
-                        .carousel-control.right {
-                            display: none;
-                        }
-                        .carousel-indicators {
-                            position: absolute;
-                            left: 50%;
-                            z-index: 15;
-                            width: 60%;
-                            padding-left: 0;
-                            text-align: center;
-                            list-style: none;
-                            left: auto;
-                            right: 0;
-                            margin-left: 0;
-                            text-align: right;
-                            bottom: 0 !important;
-                            margin: 0;
-                        }
-                        .carousel-indicators {
-                            li {
-                                margin-left: 5px;
-                                width: 7px;
-                                height: 7px;
-                            }
-                        }
-                        ._slider_p {
-                            p {
-                                text-align: left;
-                                margin: 10px 0;
-                                padding-bottom: 10px;
-                            }
+                            text-align: left;
+                            margin: 10px 0;
+                            padding-bottom: 10px;
                         }
                     }
                 }
-                ._playing {
+            }
+            ._playing {
+                overflow: hidden;
+                margin-top: 50px;
+                ._wait_time {
+                    width: 20%;
+                    float: left;
+                    h3 {
+                        margin: 0;
+                        text-transform: uppercase;
+                        margin-bottom: 7px;
+                    }
+                    h1 {
+                        font-size: 90px;
+                        font-weight: 300;
+                        color: #dc5d43;
+                    }
+                }
+                ._btn_play_now {
+                    width: 75%;
+                    float: right;
                     overflow: hidden;
-                    margin-top: 50px;
+                    position: relative;
+                    background: #fff; // border-radius: 40px;
+                    margin-top: 30px;
+                    iframe {
+                        width: 100%;
+                        height: 80px !important;
+                        margin-bottom: -3px;
+                        #main {
+                            div {
+                                background: #fff;
+                            }
+                        }
+                    }
+                    h3 {
+                        display: inline-block;
+                        width: 60%;
+                        color: #3497ad;
+                        font-size: 34px;
+                        padding: 14px 50px 15px;
+                        margin: 0;
+                        i {
+                            background: url(../assets/img/tivi/ic4.jpg) no-repeat left center;
+                            width: 48px;
+                            height: 30px;
+                            display: inline-block;
+                            background-size: contain;
+                            margin-top: -5px;
+                            margin-right: 7px;
+                        }
+                        span {
+                            font-size: 21px;
+                            font-weight: 300;
+                            margin-left: 20px;
+                        }
+                    }
+                    a {
+                        display: inline-block;
+                        text-transform: uppercase;
+                        color: #fff;
+                        font-size: 24px;
+                        padding: 25px 60px;
+                        background: #3497ad;
+                        border-radius: 40px;
+                        float: right;
+                    }
+                }
+            }
+        }
+    }
+}
+
+._switch_button {
+    width: 100%;
+}
+
+._fifo {
+    .table {
+        thead {
+            tr {
+                th {
+                    min-width: 130px;
+                }
+            }
+        }
+        tbody {
+            tr {
+                td {
+                    table {
+                        tbody {}
+                    }
+                }
+            }
+        }
+    }
+}
+
+._search_data {
+    ._search_form {
+        position: relative;
+        input {
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            overflow: hidden;
+            display: inline-block;
+            border-radius: 5px;
+            padding-right: 55px;
+            color: #989494;
+        }
+        a {
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            overflow: hidden;
+            display: inline-block;
+            border-radius: 5px;
+            color: #0e0d0d;
+            position: absolute;
+            right: 0;
+            z-index: 500;
+            top: 0;
+            border-radius: 0 5px 5px 0;
+            background: #ddd;
+            border-left: 1px solid #afacac;
+            
+        }
+        a:hover{
+            background: #bbb;
+        }
+    }
+}
+
+// ========== response ============
+@media (min-width: 1199px) {
+    ._tivi_showing {
+        ._tivi_container {
+            ._container_tivi {
+                ._playing {
                     ._wait_time {
-                        width: 20%;
-                        float: left;
+                        width: 30%;
                         h3 {
-                            margin: 0;
-                            text-transform: uppercase;
-                            margin-bottom: 7px;
+                            font-size: 16px;
                         }
                         h1 {
-                            font-size: 90px;
-                            font-weight: 300;
-                            color: #dc5d43;
+                            font-size: 70px;
                         }
                     }
                     ._btn_play_now {
-                        width: 75%;
-                        float: right;
-                        overflow: hidden;
-                        position: relative;
-                        background: #fff;
-                        // border-radius: 40px;
-                        margin-top: 30px;
-                        iframe{
-                            width: 100%;
-                            height: 80px !important;
-                            margin-bottom: -3px;
-                            #main{
-                                div{
-                                    background: #fff;
-                                }
-                            }
-                        }
-                        h3 {
-                            display: inline-block;
-                            width: 60%;
-                            color: #3497ad;
-                            font-size: 34px;
-                            padding: 14px 50px 15px;
-                            margin: 0;
-                            i {
-                                background: url(../assets/img/tivi/ic4.jpg) no-repeat left center;
-                                width: 48px;
-                                height: 30px;
-                                display: inline-block;
-                                background-size: contain;
-                                margin-top: -5px;
-                                margin-right: 7px;
-                            }
-                            span {
-                                font-size: 21px;
-                                font-weight: 300;
-                                margin-left: 20px;
-                            }
-                        }
-                        a {
-                            display: inline-block;
-                            text-transform: uppercase;
-                            color: #fff;
-                            font-size: 24px;
-                            padding: 25px 60px;
-                            background: #3497ad;
-                            border-radius: 40px;
-                            float: right;
-                        }
+                        width: 60%;
+                        margin-top: 0px;
                     }
                 }
-            }
-        }
-    }
-    ._switch_button{
-        width: 100%;
-    }
-    ._fifo{
-        .table {
-            thead {
-                tr {
-                    th{
-                        min-width : 130px;
-                    }
+                ._stats_header {
+                    margin-bottom: 40px;
                 }
-            }
-            tbody{
-                tr{
-                    td{
-                        table{
-                            tbody{
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
-    // ========== response ============
-
-    @media (min-width: 1199px){
-        ._tivi_showing{
-            ._tivi_container{
-                ._container_tivi{
-                    ._playing{
-                        ._wait_time{
-                            width: 30%;
-                            h3{
-                                font-size: 16px;
-                            }
-                            h1{
-                                font-size: 70px;
-                            }
-                        }
-                        ._btn_play_now{
-                            width: 60%;
-                            margin-top: 0px;
-                        }
-                    }
-                    ._stats_header{
-                        margin-bottom: 40px; 
-                    }
-                    ._stats_ctn{
+                ._stats_ctn {
+                    margin-bottom: 20px;
+                    ._stats_1 {
                         margin-bottom: 20px;
-                        ._stats_1{
-                            margin-bottom: 20px;
-                            h3{
-                                font-size: 14px;
-                            }
-                            h1{
-                                font-size: 42px;
+                        h3 {
+                            font-size: 14px;
+                        }
+                        h1 {
+                            font-size: 42px;
+                        }
+                    }
+                    ._pickup_slide {
+                        p {
+                            margin-bottom: 7px;
+                        }
+                    }
+                }
+                ._order h3 {
+                    padding-left: 45px;
+                    font-size: 22px;
+                }
+                ._ctn {
+                    ._right_4 {
+                        ._ingredient_content {
+                            ._ingredient_img_bg {
+                                height: auto;
                             }
                         }
-                        ._pickup_slide{
-                            p{
+                        ._ingredient_ctn {
+                            h3 {
+                                font-size: 18px;
+                                margin-bottom: 0px;
+                            }
+                            p {
+                                width: 100%;
+                                padding: 0;
                                 margin-bottom: 7px;
                             }
                         }
                     }
-                    ._order h3{
-                        padding-left: 45px;
-                        font-size: 22px;
-                    }
-                    ._ctn{
-                        ._right_4{
-                            ._ingredient_content{
-                                ._ingredient_img_bg{
-                                    height: auto;
+                    ._left_6 {
+                        h3 {
+                            padding: 0 10px;
+                        }
+                        ._drink_times {
+                            ._times {
+                                h3 {
+                                    font-size: 14px;
                                 }
-                            }
-                            ._ingredient_ctn{
-                                h3{
-                                    font-size: 18px;
-                                    margin-bottom: 0px;
-                                }
-                                p{
-                                    width: 100%;
-                                    padding: 0;
-                                    margin-bottom: 7px;
+                                h1 {
+                                    font-size: 26px;
                                 }
                             }
                         }
-                        ._left_6{
-                            h3{
-                                padding: 0 10px;
-                            }
-                            ._drink_times{
-                                ._times{
-                                    h3{
-                                        font-size: 14px;
-                                    }
-                                    h1{
-                                        font-size: 26px;
-                                    }
-                                }
-                            }
-                            ._ctn_drink{
-                                height: 100px;
-                            }
+                        ._ctn_drink {
+                            height: 100px;
                         }
                     }
-                } 
-            } 
+                }
+            }
         }
     }
+}

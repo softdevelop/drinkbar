@@ -28,6 +28,7 @@
 			filter_type: ''
 		};
 		$scope.isShowFilterBrand = false;
+		$scope.keywork='';
 
 		// ============ filter ====================
 		$scope.changeFilter = function (field, value) {
@@ -39,6 +40,19 @@
 			if($scope.data_filter.filter_brand !== '' && $scope.data_filter.filter_type !== ''){
 				returnDataFilter($scope.data_filter);
 			}
+		}
+
+		// ============= change keywork ============
+		$scope.changeKeywork = function(keywork){
+			$scope.keywork = keywork;
+		}
+
+		// ============== search data ==============
+		$scope.searchData = function(){
+			IngredientService.searchData($rootScope.userLogin.token, $scope.keywork, $rootScope.offset).success(function(res){
+				$rootScope.listData = res.results;
+				$scope.bigTotalItems = res.count;
+			})
 		}
 
 		// =============== return data filter ============

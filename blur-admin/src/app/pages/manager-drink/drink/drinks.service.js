@@ -11,6 +11,14 @@
                         }
                     });
                 },
+                searchData: function (token, keywork, offset) {
+                    return $http.get(AppSetting.BASE_URL + '/api/drink/?search='+keywork+'&limit=100&offset=' + offset, {
+                        headers: {
+                            'Content-Type': undefined,
+                            'Authorization': 'Token ' + token
+                        }
+                    });
+                },
                 created: function (data, token) {
                     var fd = new FormData();
                     

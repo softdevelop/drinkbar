@@ -17,11 +17,25 @@
 		$scope.bigTotalItems = 0;
 		$scope.bigCurrentPage = 1;
 		$rootScope.offset = 0;
+		$scope.keywork = '';
 
 		// ================ pagination ====================
 		$scope.changePage = function (page_index) {
 			$rootScope.offset = page_index > 1 ? ((page_index - 1) * 10) : 0;
 			getList();
+		}
+
+		// ============= change keywork ============
+		$scope.changeKeywork = function(keywork){
+			$scope.keywork = keywork;
+		}
+
+		// ============== search data ==============
+		$scope.searchData = function(){
+			DrinkService.searchData($rootScope.userLogin.token, $scope.keywork, $rootScope.offset).success(function(res){
+				$rootScope.listData = res.results;
+				$scope.bigTotalItems = res.count;
+			})
 		}
 		
 		// ================= get list ===============

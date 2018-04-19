@@ -1,7 +1,15 @@
 
-<div class="" style="margin-bottom : 15px;">
+<div class="" style="margin-bottom : 15px; display: inline-block; overflow : hidden;">
 	<a class="btn btn-primary" href="#/manager-user/create-user" style="background: #209e91; border-color: #209e91;">Create</a>
 </div>
+
+<div class="_search_data pull-right">
+    <div class="_search_form">
+        <input type="text" name="search" ng-model="keywork" ng-keyup="$event.keyCode == 13 && searchData()" ng-change="changeKeywork(keywork)">
+        <a href="" ng-click="searchData()"><i class="ion-search"></i></a>
+	</div>
+</div>
+
 
 <div ba-panel="" ba-panel-title="List Users" ba-panel-class="with-scroll">
 	<div class="panel-body">

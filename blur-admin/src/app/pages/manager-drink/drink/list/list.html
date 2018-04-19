@@ -1,5 +1,12 @@
-<div class="" style="margin-bottom : 15px;">
+<div class="" style="margin-bottom : 15px; display: inline-block; overflow : hidden;">
     <a class="btn btn-primary" href="#/manager-drink/drink/create" style="background: #209e91; border-color: #209e91;">Create</a>
+</div>
+
+<div class="_search_data pull-right">
+    <div class="_search_form">
+        <input type="text" name="search" ng-model="keywork" ng-keydown="$event.keyCode === 13 && searchData()" ng-change="changeKeywork(keywork)">
+        <a href="" ng-click="searchData()"><i class="ion-search"></i></a>
+    </div>
 </div>
 
 <div ba-panel="" ba-panel-title="List Drink" ba-panel-class="with-scroll">
@@ -37,8 +44,12 @@
                             <i class="fa fa-sign-in-alt" style="margin-right : 7px;"></i>On</button>
                         <button style="margin : 5px auto; min-width : 100px;" ng-if="!item.is_have_ice" type="button" class="btn btn-danger btn-with-icon">
                             <i class="fa fa-sign-out-alt" style="margin-right : 7px;"></i>Off</button> -->
-                            <button style="margin : 5px auto;" ng-if="item.is_have_ice" type="button" class="btn btn-success btn-icon"><i class="ion-android-checkmark-circle"></i></button>
-                            <button style="margin : 5px auto;" ng-if="!item.is_have_ice" type="button" class="btn btn-danger btn-icon"><i class="ion-close"></i></button>
+                        <button style="margin : 5px auto;" ng-if="item.is_have_ice" type="button" class="btn btn-success btn-icon">
+                            <i class="ion-android-checkmark-circle"></i>
+                        </button>
+                        <button style="margin : 5px auto;" ng-if="!item.is_have_ice" type="button" class="btn btn-danger btn-icon">
+                            <i class="ion-close"></i>
+                        </button>
                     </td>
                     <td class="ng-binding">
                         {{item.glass.name}}

@@ -11,11 +11,12 @@
 
     function ManagerUserCtrl($rootScope, ManagerUserService, $window, $scope, fileReader, $filter, $uibModal, ProfileService, baProgressModal, toastr) {
         $rootScope.listUser = [];
-        
+
         $scope.maxSize = 10;
         $rootScope.bigTotalItems = 0;
         $scope.bigCurrentPage = 1;
         $rootScope.offset = 0;
+        $scope.keywork='';
 
         $scope.currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
@@ -37,12 +38,24 @@
         };
 
         // ================ pagination ====================
-        $scope.changePage =  function(page_index){
-            $rootScope.offset = page_index > 1 ? ((page_index - 1)*10) : 0;
+        $scope.changePage = function (page_index) {
+            $rootScope.offset = page_index > 1 ? ((page_index - 1) * 10) : 0;
             getAllUser();
         }
 
-        $scope.selectPage = function(page_number, e){
+        $scope.selectPage = function (page_number, e) {}
+
+        // ============= change keywork ============
+        $scope.changeKeywork = function (keywork) {
+            $scope.keywork = keywork;
+        }
+
+        // ============== search data ==============
+        $scope.searchData = function () {
+            ManagerUserService.searchData($rootScope.userLogin.token, $scope.keywork, $rootScope.offset).success(function (res) {
+                $rootScope.listUser = res.results;
+                $scope.bigTotalItems = res.count;
+            })
         }
 
         // ================= open modal info of user ============================
@@ -67,20 +80,20 @@
         }
 
         // =========== open modal confirm delete Glass ===========
-		$scope.confirmDelete = function(data){
-			var page = 'app/pages/manager-user/confirm/index.html';
+        $scope.confirmDelete = function (data) {
+            var page = 'app/pages/manager-user/confirm/index.html';
             $uibModal.open({
                 animation: true,
                 templateUrl: page,
-				size: 'sm',
-				resolve: {
+                size: 'sm',
+                resolve: {
                     items: function () {
                         return data;
                     }
                 },
                 controller: 'ManagerUserDeleteCtrl',
             });
-		}
+        }
 
         // ===================== function get list user ============================
         function getAllUser() {
@@ -102,10 +115,10 @@
     };
 
     // controler managerUserDeleteCtrl
-	function ManagerUserDeleteCtrl($scope, toastr, ManagerUserService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
-		$scope.item_del = items;
+    function ManagerUserDeleteCtrl($scope, toastr, ManagerUserService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance) {
+        $scope.item_del = items;
 
-		// ===================== function get list user ============================
+        // ===================== function get list user ============================
         function getAllUser() {
             ManagerUserService.getAllUser($rootScope.userLogin.token, $rootScope.offset).success(function (res) {
                 $rootScope.listUser = res.results;
@@ -116,16 +129,16 @@
             });
         }
 
-		// =========== function delete glass =============
-		$scope.remove = function(data){
-			ManagerUserService.deleteUser(data.id, $rootScope.userLogin.token).success(function(res){
-				toastr.success('Deleted success!');
-				$uibModalInstance.close();
-				getAllUser();
-			}).error(function(err, status, res){
-				toastr.error(err.detail);
-			})
-		}
-	}
+        // =========== function delete glass =============
+        $scope.remove = function (data) {
+            ManagerUserService.deleteUser(data.id, $rootScope.userLogin.token).success(function (res) {
+                toastr.success('Deleted success!');
+                $uibModalInstance.close();
+                getAllUser();
+            }).error(function (err, status, res) {
+                toastr.error(err.detail);
+            })
+        }
+    }
 
 })();
