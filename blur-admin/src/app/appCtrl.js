@@ -7,7 +7,7 @@
         })
         .controller('AppCtrl', AppCtrl);
 
-    function AppCtrl($scope, $state, $timeout, $window, $location, $rootScope) {
+    function AppCtrl($scope, $state, $timeout, $window, $location, $rootScope, SettingsService, toastr) {
         $scope.appState = $state;
         $scope.currentUser = {};
         $scope.$watch('appState.current', function (value) {
@@ -26,5 +26,6 @@
                 }
             }
         }, true);
+
     }
 })();
