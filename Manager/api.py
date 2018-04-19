@@ -557,7 +557,7 @@ class IngredientList(generics.ListCreateAPIView):
 
         if is_admin:
             ret = self.queryset.all()
-        return ret
+        return ret.order_by('brand')
 
 class IngredientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ingredient
@@ -577,9 +577,15 @@ class IngredientTypeDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class IngredientBrandTypeList(generics.ListAPIView):
     queryset = IngredientBrand.objects.all().order_by('name')
-    serializer_class = IngredientTypeSerializer
+    serializer_class = IngredientBrandSerializer
     permission_classes = [IsAuthenticated]
     paginator = None
+
+    def get_serializer_class(self):
+        ingredients = self.request.GET.get('ingredients', False)
+        if ingredients:
+            return IngredientBrandWithIngredientSerializer
+        return IngredientBrandSerializer
 
     def get_queryset(self):
         try:
