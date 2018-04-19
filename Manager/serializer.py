@@ -98,9 +98,17 @@ class GarnishSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class IngredientSmallSerializer(serializers.ModelSerializer):
+    place_number = serializers.SerializerMethodField()
     class Meta:
         model = Ingredient
-        fields = ('id','name',)
+        fields = ('id','name','place_number')
+
+    def get_place_number(self,obj):
+        try:
+            # filter(order__status=Order.Status.procesing)
+            return obj.robots.first().place_number
+        except Exception as e:
+            return None
         
 class DrinkGarnishSerializer(serializers.ModelSerializer):
     garnish = GarnishSerializer(read_only=True)
@@ -111,12 +119,15 @@ class DrinkGarnishSerializer(serializers.ModelSerializer):
 class DrinkIngredientSerializer(serializers.ModelSerializer):
     ingredient = IngredientSmallSerializer(read_only=True)
     unit = serializers.SerializerMethodField()
+
     class Meta:
         model = DrinkIngredient
         fields = ('ingredient','unit','ratio')
 
     def get_unit(self,obj):
         return obj.get_unit_display()
+
+
 
 class DrinkUserOrdersSerializer(serializers.ModelSerializer):
     class Meta:
@@ -283,6 +294,11 @@ class IngredientListSerializer(IngredientCreateSerializer):
     type = IngredientTypeSerializer(read_only=True)
     brand = IngredientBrandSerializer(read_only=True)
 
+class IngredientBrandWithIngredientSerializer(IngredientBrandSerializer):
+    ingredient_brands = IngredientCreateSerializer(read_only=True,many=True)
+    class Meta:
+        model = IngredientBrand
+        fields = '__all__'
 
 class IngredientHistorySerializer(serializers.ModelSerializer):
     ingredient_view = IngredientCreateSerializer(source='ingredient' ,read_only=True)
