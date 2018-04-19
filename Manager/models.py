@@ -143,11 +143,16 @@ def update_ingredient_price(sender, instance, raw, using, update_fields, **kwarg
     new_price = instance.price/float(instance.quanlity_of_bottle)
     new_price = float(fpformat.fix(new_price, 2))
 
-    for drink in instance.drinks.all():
-        drink.drink.price += (new_price-instance.price_per_ml)*\
-                    drink.change_to_ml(drink.drink.total_part,\
-                    drink.drink.glass.change_to_ml)
-        drink.drink.save()
+    if not new_price==instance.price_per_ml:
+        try:
+            for drink in instance.drinks.all():
+                drink.drink.price += (new_price-instance.price_per_ml)*\
+                            drink.change_to_ml(drink.drink.total_part,\
+                            drink.drink.glass.change_to_ml)
+                drink.drink.save()
+        except Exception as e:
+            pass
+    
     instance.price_per_ml = new_price
 
 class DrinkCategory(CategoryBase):
@@ -338,8 +343,11 @@ class DrinkIngredient(models.Model):
     def change_to_ml(self, total_part=0, glass=0):
         if self.unit == DrinkIngredient.CONST_UNIT_ML:
             return self.ratio
-        ret = float(self.ratio/total_part*glass)
-        ret = fpformat.fix(ret, 2) 
+        try:
+            ret = float(self.ratio/total_part*glass)
+            ret = fpformat.fix(ret, 2) 
+        except Exception as e:
+            ret = 0
         return float(ret)
 
 class DrinkGarnish(models.Model):
@@ -520,10 +528,16 @@ def create_ingredient_history(sender, instance=None, **kwargs):
     else:
         if instance.ingredient.bottles<instance.quantity:
             raise api_utils.BadRequest('OVER THE BOTTEL IN STORAGE')
+        if instance.machine.ingredients.filter(ingredient=instance.ingredient):
+            if not instance.machine.ingredients.get(ingredient=instance.ingredient).place_number == instance.place_number:
+                raise api_utils.BadRequest('THIS INGREDIENT IS EXIST AT {}'.format(instance.machine.ingredients.get(ingredient=instance.ingredient).place_number))
         instance.ingredient.bottles -= instance.quantity
 
         if instance.place_number > 77 or instance.place_number<1 :
             raise api_utils.BadRequest('PLACE IS NOT TRUE, DOUBLE CHECK!')
+        """
+            Replace A bottel
+        """
         if not instance.machine.ingredients.filter(place_number=instance.place_number)\
             .update(last_ingredient=F('ingredient'), ingredient=instance.ingredient,\
                     last_bottle=F('remain_of_bottle'),\
@@ -545,8 +559,16 @@ def delete_ingredient_history(sender, instance=None, created=False, **kwargs):
         instance.ingredient.bottles -= instance.quantity
     else:
         instance.ingredient.bottles += instance.quantity
-        instance.machine.ingredients.filter(place_number=instance.place_number)\
-                .update(remain_of_bottle=F('last_bottle'),ingredient=F('last_ingredient'))
+        try:
+            if instance.machine.ingredients.filter(place_number=instance.place_number,last_ingredient__isnull=True):
+                # New
+                instance.machine.ingredients.get(place_number=instance.place_number).delete()                
+            else:
+                # Replace
+                instance.machine.ingredients.filter(place_number=instance.place_number)\
+                    .update(remain_of_bottle=F('last_bottle'),ingredient=F('last_ingredient'))
+        except Exception as e:
+            pass
     instance.ingredient.save()
 
 class SettingBar(models.Model):

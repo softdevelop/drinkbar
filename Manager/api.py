@@ -474,7 +474,10 @@ class DrinkList(generics.ListCreateAPIView):
 
         ingredient_by = self.request.GET.get('ingredient_by', None)
         if ingredient_by:
-            ret = ret.filter(ingredients__ingredient__type_search=ingredient_by)
+            ingredient_by = ingredient_by.split(",")
+            temp = DrinkIngredient.objects.exclude(ingredient__in=ingredient_by).values_list('drink',flat=True)
+            temp = DrinkIngredient.objects.exclude(drink__in=temp).values_list('drink',flat=True)
+            ret = ret.filter(id__in=temp)
 
         myfavorite = self.request.GET.get('myfavorite', None)
         if myfavorite:
@@ -547,6 +550,10 @@ class IngredientList(generics.ListCreateAPIView):
         brand = self.request.GET.get('brand', None)
         if brand:
             ret = ret.filter(brand=brand)
+
+        ingredient_by = self.request.GET.get('ingredient_by', None)
+        if ingredient_by:
+            ret = ret.filter(type_search=ingredient_by)
 
         if is_admin:
             ret = self.queryset.all()
