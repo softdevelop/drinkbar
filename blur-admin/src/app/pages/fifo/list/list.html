@@ -7,8 +7,10 @@
                     <th style="text-align : left;">QR Code Link</th>
                     <th style="text-align : left;">Overall drink order status </th>
                     <th style="text-align : left;">Drink Time</th>
-                    <th style="text-align : left;">Glass For Order</th>
+
+                    <th style="text-align : left; min-width: 200px;">Glass For Order</th>
                     <th style="text-align : left;">Glass Status</th>
+
                     <th style="text-align : left;">Ice Status</th>
 
                     <th style="text-align : left; min-width: 250px;">Drink</th>
@@ -68,24 +70,29 @@
                     <td class="ng-binding" style="text-align : left;">
                         {{ item.user.email }}
                     </td>
+
                     <td class="ng-binding" style="text-align : left;">
                         <!-- <img src="{{item.qr_code}}" alt="" class="" width="20px"> -->
                         <a href="" data-toggle="modal" ng-click="showQR(item.qr_code)">View QR Code</a>
                     </td>
+
                     <td class="ng-binding" style="text-align : left;">{{item.status_view}}
                     </td>
+
                     <td class="ng-binding" style="text-align : left;">
                         
                     </td>
+
                     <td class="ng-binding" style="text-align : left;  padding : 0 !important;">
                         <table class="table-bordered" style="width: 100%; height: 100%;">
                             <tbody>
                                 <tr ng-repeat="pro in item.products" class="ng-scope">
-                                    <td style="padding: 5px 7px;">{{pro.drink.glass_ml}}</td>
+                                    <td style="padding: 5px 7px;">{{pro.drink.glass.name}} - {{ pro.drink.glass.change_to_ml }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </td>
+
                     <td class="ng-binding" style="text-align : left; padding: 0 !important;">
                         <table class="table-bordered" style="width: 100%; height: 100%;">
                             <tbody>
