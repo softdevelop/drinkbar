@@ -3,7 +3,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th style="text-align : left;">Username</th>
+                    <th style="text-align : left; min-width: 200px;">Username</th>
                     <th style="text-align : left;">QR Code Link</th>
                     <th style="text-align : left;">Overall drink order status </th>
                     <th style="text-align : left;">Drink Time</th>
@@ -11,45 +11,45 @@
                     <th style="text-align : left;">Glass Status</th>
                     <th style="text-align : left;">Ice Status</th>
 
-                    <th style="text-align : left;">Drink</th>
+                    <th style="text-align : left; min-width: 250px;">Drink</th>
                     <th style="text-align : left;">Drink One Status</th>
                     
-                    <th style="text-align : left;">Ingredient 1</th>
+                    <th style="text-align : left; min-width: 200px;">Ingredient 1</th>
                     <th style="text-align : left;">Grid Placement 1</th>
                     <th style="text-align : left;">ML 1</th>
                     <th style="text-align : left;">Ingredient Status 1</th>
                     
-                    <th style="text-align : left;">Ingredient 2</th>
+                    <th style="text-align : left; min-width: 200px;">Ingredient 2</th>
                     <th style="text-align : left;">Grid Placement 2</th>
                     <th style="text-align : left;">ML 2</th>
                     <th style="text-align : left;">Ingredient Status 2</th>
                     
-                    <th style="text-align : left;">Ingredient 3</th>
+                    <th style="text-align : left; min-width: 200px;">Ingredient 3</th>
                     <th style="text-align : left;">Grid Placement 3</th>
                     <th style="text-align : left;">ML 3</th>
                     <th style="text-align : left;">Ingredient Status 3</th>
                     
-                    <th style="text-align : left;">Ingredient 4</th>
+                    <th style="text-align : left; min-width: 200px;">Ingredient 4</th>
                     <th style="text-align : left;">Grid Placement 4</th>
                     <th style="text-align : left;">ML 4</th>
                     <th style="text-align : left;">Ingredient Status 4</th>
                     
-                    <th style="text-align : left;">Ingredient 5</th>
+                    <th style="text-align : left; min-width: 200px;">Ingredient 5</th>
                     <th style="text-align : left;">Grid Placement 5</th>
                     <th style="text-align : left;">ML 5</th>
                     <th style="text-align : left;">Ingredient Status 5</th>
                     
-                    <th style="text-align : left;">Ingredient 6</th>
+                    <th style="text-align : left; min-width: 200px;">Ingredient 6</th>
                     <th style="text-align : left;">Grid Placement 6</th>
                     <th style="text-align : left;">ML 6</th>
                     <th style="text-align : left;">Ingredient Status 6</th>
                     
-                    <th style="text-align : left;">Ingredient 7</th>
+                    <th style="text-align : left; min-width: 200px;">Ingredient 7</th>
                     <th style="text-align : left;">Grid Placement 7</th>
                     <th style="text-align : left;">ML 7</th>
                     <th style="text-align : left;">Ingredient Status 7</th>
                     
-                    <th style="text-align : left;">Ingredient 8</th>
+                    <th style="text-align : left; min-width: 200px;">Ingredient 8</th>
                     <th style="text-align : left;">Grid Placement 8</th>
                     <th style="text-align : left;">ML 8</th>
                     <th style="text-align : left;">Ingredient Status 8</th>
@@ -137,7 +137,15 @@
                             </tbody>
                         </table>
                     </td>
-                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[0]" style="padding: 5px 7px;">{{pro.drink.ingredients[0].ingredient.place_number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                     <td class="ng-binding" style="text-align : left; padding : 0 !important;">
                         <table class="table-bordered" style="width: 100%; height: 100%;">
                             <tbody>
@@ -167,7 +175,15 @@
                             </tbody>
                         </table>
                     </td>
-                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[1]" style="padding: 5px 7px;">{{pro.drink.ingredients[1].ingredient.place_number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                     <td class="ng-binding" style="text-align : left; padding : 0 !important;">
                         <table class="table-bordered" style="width: 100%; height: 100%;">
                             <tbody>
@@ -197,7 +213,15 @@
                             </tbody>
                         </table>
                     </td>
-                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[2]" style="padding: 5px 7px;">{{pro.drink.ingredients[2].ingredient.place_number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                     <td class="ng-binding" style="text-align : left; padding : 0 !important;">
                         <table class="table-bordered" style="width: 100%; height: 100%;">
                             <tbody>
@@ -227,7 +251,15 @@
                             </tbody>
                         </table>
                     </td>
-                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[3]" style="padding: 5px 7px;">{{pro.drink.ingredients[3].ingredient.place_number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                     <td class="ng-binding" style="text-align : left; padding : 0 !important;">
                         <table class="table-bordered" style="width: 100%; height: 100%;">
                             <tbody>
@@ -257,7 +289,15 @@
                             </tbody>
                         </table>
                     </td>
-                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[4]" style="padding: 5px 7px;">{{pro.drink.ingredients[4].ingredient.place_number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                     <td class="ng-binding" style="text-align : left; padding : 0 !important;">
                         <table class="table-bordered" style="width: 100%; height: 100%;">
                             <tbody>
@@ -287,7 +327,15 @@
                             </tbody>
                         </table>
                     </td>
-                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[5]" style="padding: 5px 7px;">{{pro.drink.ingredients[5].ingredient.place_number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                     <td class="ng-binding" style="text-align : left; padding : 0 !important;">
                         <table class="table-bordered" style="width: 100%; height: 100%;">
                             <tbody>
@@ -317,7 +365,15 @@
                             </tbody>
                         </table>
                     </td>
-                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[6]" style="padding: 5px 7px;">{{pro.drink.ingredients[6].ingredient.place_number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                     <td class="ng-binding" style="text-align : left; padding : 0 !important;">
                         <table class="table-bordered" style="width: 100%; height: 100%;">
                             <tbody>
@@ -347,7 +403,15 @@
                             </tbody>
                         </table>
                     </td>
-                    <td></td>
+                    <td class="ng-binding" style="text-align : left; padding : 0 !important;">
+                        <table class="table-bordered" style="width: 100%; height: 100%;">
+                            <tbody>
+                                <tr ng-repeat="pro in item.products" class="ng-scope">
+                                    <td ng-if="pro.drink.ingredients[7]" style="padding: 5px 7px;">{{pro.drink.ingredients[7].ingredient.place_number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
                     <td class="ng-binding" style="text-align : left; padding : 0 !important;">
                         <table class="table-bordered" style="width: 100%; height: 100%;">
                             <tbody>
