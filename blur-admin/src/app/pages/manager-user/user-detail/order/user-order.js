@@ -11,6 +11,7 @@
     /** @ngInject */
     function UserOrderCtrl(items, $stateParams, $window, fileReader, $filter, $uibModal, ProfileService, baProgressModal, $scope, toastr, $rootScope, ManagerUserService, $uibModalInstance) {
         $scope.products = items.products;
+        $scope.data_order = items;
 
         $scope.openDrinkDetail = function(id){
             var url_redirect = '#/manager-drink/drink/detail/' + id ;

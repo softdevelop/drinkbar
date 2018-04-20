@@ -21,7 +21,7 @@
 		// ================ pagination ====================
         $scope.changePage =  function(page_index){
             $rootScope.offset = page_index > 1 ? ((page_index - 1)*10) : 0;
-            getAllUser();
+            getList();
         }
 
         $scope.selectPage = function(page_number, e){
@@ -31,6 +31,7 @@
 		function getList(){
 			IngredientBrandService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listData = res.results;
+				$scope.bigTotalItems = res.count;
 			}).error(function(err, status, res){
 				toastr.error(err.detail);
 			});

@@ -51,6 +51,7 @@
             <thead>
                 <tr class="sortable ">
                     <th class="" style="text-align : left;">Name</th>
+                    <th style="text-align: center;">Image</th>
                     <th>Type</th>
                     <th>Brand</th>
                     <th>Bottles</th>
@@ -62,6 +63,11 @@
                 <tr ng-repeat="item in listData" class="ng-scope">
                     <td class="ng-binding" style="text-align : left;">
                         <a href="#/manager-ingredient/ingredient/detail/{{item.id}}">{{item.name}}</a>
+                    </td>
+                    <td class="ng-binding">
+                        <div class="" style="text-align: center; padding: 10px; margin: 0 auto; width: 100px;">
+                            <img src="{{item.image}}" style="width: 100%;">
+                        </div>
                     </td>
                     <td class="ng-binding">
                         <span>

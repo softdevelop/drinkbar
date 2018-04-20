@@ -4,18 +4,22 @@
 
 <div ba-panel="" ba-panel-title="Robots" ba-panel-class="with-scroll">
     <div class="panel-body">
-        <table class="table table-striped">
+        <table class="table table-striped" st-table="editableTableData">
             <thead>
                 <tr>
                     <th style="text-align : left;">Id</th>
+                    <!-- <th>Name</th> -->
                     <th>Status</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in listData" class="ng-scope">
+                <tr ng-repeat="item in listData" class="ng-scope editable-tr-wrap">
                     <td class="ng-binding" style="text-align : left;">
                         <a href="#/robot/detail/{{item.id}}">{{item.id}}</a>
                     </td>
+                    <!-- <td class="ng-binding">
+                        <span editable-text="item.name" blur="cancel">{{item.name}}</span>
+                    </td> -->
                     <td class="ng-binding">
                         <div class="_status">
                             <ba-switcher switcher-style="success" switcher-value="item.status" ng-click="changeSwitch(item)"></ba-switcher>

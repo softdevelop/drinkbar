@@ -224,7 +224,7 @@
                         <tr ng-repeat="item in user_order" class="ng-scope">
                             <td class="table-id ng-binding">{{item.id}}</td>
                             <td class="ng-binding">
-                                {{item.creation_date | date:'MM/dd/yyyy'}}
+                                {{item.creation_date | date:' h:mm:ss a -- MM/dd/yyyy'}}
                             </td>
                             <td class="ng-binding">
                                 <!-- <div class="_status">

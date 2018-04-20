@@ -9,7 +9,7 @@
  	.controller('BaSidebarCtrl', BaSidebarCtrl);
 
  	/** @ngInject */
- 	function BaSidebarCtrl($scope, baSidebarService, BarLeftService, $rootScope, toastr, SettingsService) {
+ 	function BaSidebarCtrl($uibModal, $scope, baSidebarService, BarLeftService, $rootScope, toastr, SettingsService) {
 
 		// $scope.menuItems = baSidebarService.getMenuItems();
 		$scope.menuItems = [
@@ -173,15 +173,23 @@
         getElement();
 
         var _index = 0;
-        $rootScope.changeBarStatus = function(stt){
+        $rootScope.changeBarStatus = function(data){
         	_index ++;
         	if(_index == 2){
-        		SettingsService.updated($rootScope.detail_settings, $rootScope.userLogin.token).success(function(res){
-        			toastr.success('Change Bar status success!');
-        			_index = 0;
-        		}).error(function(err, stt, res){
-        			toastr.error(err.detail)
-        		})
+        		_index = 0;
+
+        		var page = 'app/pages/dashboard/confirm-status-bar/index.html';
+        		$uibModal.open({
+        			animation: true,
+        			templateUrl: page,
+        			size: 'sm',
+        			resolve: {
+        				items: function () {
+        					return data;
+        				}
+        			},
+        			controller: 'ChangeStatusBarCtrl',
+        		});
         	}
         }
     }

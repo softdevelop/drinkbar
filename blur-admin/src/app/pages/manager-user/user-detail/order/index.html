@@ -12,15 +12,23 @@
                     <thead>
                         <tr>
                             <th class="table-id border_top_1">Drink Name</th>
+                            <th class="border_top_1">Image Order</th>
                             <th class="border_top_1">Garnishes</th>
                             <th class="border_top_1">Ice</th>
                             <th class="border_top_1">Quantity</th>
+                            <th class="border_top_1" style="width: 120px;">QR Code</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="item in products">
                             <td class="ng-binding border_top_1" style="width : 30%; text-align : left;">
                                 <a href="" ng-click="openDrinkDetail(item.drink.id)">{{item.drink.name}}</a>
+                            </td>
+                            <td class="ng-binding border_top_1">
+                                <!-- <p style="margin-bottom : 0px;">{{item.drink.image}}</p> -->
+                                <div class="" style="padding: 5px; width: 100px; margin: 0 auto;">
+                                    <img src="{{item.drink.image}}" style="width: 100%;">
+                                </div>
                             </td>
                             <td class="ng-binding border_top_1">
                                 <p style="margin-bottom : 0px;" ng-repeat="gar in item.garnishes">{{gar.garnish.name}}</p>
@@ -30,6 +38,9 @@
                             </td>
                             <td class="ng-binding border_top_1">
                                 {{ item.quantity }}
+                            </td>
+                            <td style="width: 120px; border: 1px solid rgba(107, 105, 105, 0.2);">
+                                <a href="" style="width: 140px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: inline-block;">{{data_order.qr_code}}</a>
                             </td>
                         </tr>
                     </tbody>

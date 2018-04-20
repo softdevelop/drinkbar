@@ -45,6 +45,8 @@
             ManagerUserService.getUser($scope.user_id, $rootScope.userLogin.token).success(function(res){
                 $scope.data_profile = res;
                 $scope.birthday = new Date(res.birthday);
+                $scope.date_joined = new Date(res.date_joined);
+                $scope.last_login = new Date(res.last_login);
             }).error(function (err, status, response) {
                 toastr.error( err.detail);
             });

@@ -13,7 +13,7 @@
 		
 		$stateProvider.state('list-separate-glass', {
 			url: '/manager-drink/separate-glass/list',
-			title: 'Separate Glass / List',
+			title: 'Glassware / List',
 			templateUrl: 'app/pages/manager-drink/separate-glass/list/list-separate-glass.html',
 			controller: 'SeparateGlassListCtrl',
 		});

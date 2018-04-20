@@ -13,7 +13,7 @@
 		
 		$stateProvider.state('list-fifo', {
 			url: '/fifo/list',
-			title: 'Fifo / List',
+			title: 'FIFO',
 			templateUrl: 'app/pages/fifo/list/list.html',
 			controller: 'FifoListCtrl',
 		});

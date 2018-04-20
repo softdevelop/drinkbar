@@ -13,7 +13,7 @@
 		
 		$stateProvider.state('list-order', {
 			url: '/order/list',
-			title: 'Order / List',
+			title: 'Order History',
 			templateUrl: 'app/pages/order/list/list.html',
 			controller: 'OrderListCtrl',
 		});
