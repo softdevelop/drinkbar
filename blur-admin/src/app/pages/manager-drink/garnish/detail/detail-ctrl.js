@@ -15,6 +15,7 @@
 		$scope.data_detail = {
 			id : $scope.paramt_id
 		};
+		$scope.isChangeImage = true;
 		
 		// ========= function get data glass by id ===========
 		function getElement(){

@@ -6,6 +6,26 @@
                 <input class="form-control" type="text" name="name" placeholder="Name" ng-model="data_create.name" ng-change="changeInfo('name', data_create.name)"
                     required>
             </div>
+
+            <div class="form-group">
+                <label for="">Image</label>
+                <div>
+                    <div class="userpic">
+                        <div ng-show="isChangeImage" class="userpic-wrapper">
+                            <img style="width: 100% !important;" src="{{ data_create.image }}" ng-click="uploadPicture()">
+                        </div>
+                        <div ng-show="!isChangeImage" class="userpic-wrapper">
+                            <img style="width: 100% !important;" src="{{ image }}" ng-click="uploadPicture('image')">
+                        </div>
+                        <i ng-show="!isChangeImage" class="ion-ios-close-outline" ng-click="removePicture('image')" ng-if="!noPicture"></i>
+                        <a href class="change-userpic" ng-click="uploadPicture('image')">Change Image</a>
+
+                        <input type='file' id="uploadImage" ng-show="false" ng-model-instant onchange="angular.element(this).scope().imageUpload(event, 'image')"
+                        />
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
                 <label class="checkbox-inline custom-checkbox nowrap">
                     <input type="checkbox" ng-model="data_create.active" ng-click="changeInfo('active', data_create.active)">
