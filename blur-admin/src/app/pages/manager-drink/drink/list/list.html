@@ -5,7 +5,9 @@
 <div class="_search_data pull-right">
     <div class="_search_form">
         <input type="text" name="search" ng-model="keywork" ng-keydown="$event.keyCode === 13 && searchData()" ng-change="changeKeywork(keywork)">
-        <a href="" ng-click="searchData()"><i class="ion-search"></i></a>
+        <a href="" ng-click="searchData()">
+            <i class="ion-search"></i>
+        </a>
     </div>
 </div>
 
@@ -14,13 +16,33 @@
         <table class="table table-striped sortable" st-table="listData">
             <thead>
                 <tr>
-                    <th class="table-id" st-sort="id" st-sort-default="true">#</th>
-                    <th>Name</th>
+                    <th class="table-id">#</th>
+                    <th ng-model="static_sort.name" ng-click="sortData('name', static_sort.name)">
+                        <span ng-show="static_sort.name === 'name'" class="ion-arrow-up-b"></span>
+                        <span ng-show="static_sort.name === '-name'" class="ion-arrow-down-b"></span>
+                        Name
+                    </th>
                     <th style="text-align : center;">Image</th>
-                    <th>Status</th>
-                    <th>Glass</th>
-                    <th>Numbers bought</th>
-                    <th>Price</th>
+                    <th ng-model="static_sort.status" ng-click="sortData('status', static_sort.status)">
+                        <span ng-show="static_sort.status === 'status'" class="ion-arrow-up-b"></span>
+                        <span ng-show="static_sort.status === '-status'" class="ion-arrow-down-b"></span>
+                        Status
+                    </th>
+                    <th ng-model="static_sort.glass" ng-click="sortData('glass', static_sort.glass)">
+                        <span ng-show="static_sort.glass === 'glass'" class="ion-arrow-up-b"></span>
+                        <span ng-show="static_sort.glass === '-glass'" class="ion-arrow-down-b"></span>
+                        Glass
+                    </th>
+                    <th ng-model="static_sort.numbers_bought" ng-click="sortData('numbers_bought', static_sort.numbers_bought)">
+                        <span ng-show="static_sort.numbers_bought === 'numbers_bought'" class="ion-arrow-up-b"></span>
+                        <span ng-show="static_sort.numbers_bought === '-numbers_bought'" class="ion-arrow-down-b"></span>
+                        Numbers bought
+                    </th>
+                    <th ng-model="static_sort.price" ng-click="sortData('price', static_sort.price)">
+                            <span ng-show="static_sort.price === 'price'" class="ion-arrow-up-b"></span>
+                            <span ng-show="static_sort.price === '-price'" class="ion-arrow-down-b"></span>
+                        Price
+                    </th>
                     <!-- <th>Is have ice</th> -->
                     <th>Action</th>
                 </tr>

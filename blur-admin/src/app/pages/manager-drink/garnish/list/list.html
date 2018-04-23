@@ -9,6 +9,7 @@
                 <tr>
                     <th class="table-id">#</th>
                     <th>Name</th>
+                    <th>Image</th>
                     <th>Active</th>
                     <th>Action</th>
                 </tr>
@@ -18,6 +19,11 @@
                     <td class="table-id ng-binding">{{item.id}}</td>
                     <td class="ng-binding">
                         <a href="#/manager-drink/garnish/detail/{{item.id}}">{{item.name}}</a>
+                    </td>
+                    <td>
+                        <div style="width : 100px;">
+                            <img src="{{ item.image }}" alt="" style="width : 100%;">
+                        </div>
                     </td>
                     <td class="ng-binding">
                         <!-- <label class="checkbox-inline custom-checkbox nowrap">

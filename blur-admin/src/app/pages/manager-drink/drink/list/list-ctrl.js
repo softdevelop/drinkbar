@@ -18,11 +18,123 @@
 		$scope.bigCurrentPage = 1;
 		$rootScope.offset = 0;
 		$scope.keywork = '';
+		$scope.sort = '';
+		$scope.arr_sort = [];
+		// $scope.arr_sort = ['name', 'status', 'numbers_bought', 'price', 'glass'];
+		$scope.static_sort = {
+			name : '',
+			status : '',
+			numbers_bought : '',
+			price : '',
+			glass : ''
+		}
 
 		// ================ pagination ====================
 		$scope.changePage = function (page_index) {
 			$rootScope.offset = page_index > 1 ? ((page_index - 1) * 10) : 0;
 			getList();
+		}
+
+		// ============== sort data =================
+		$scope.sortData = function(name, data){
+			console.log('===> sort data')
+			console.log(data)
+			if(name === 'name'){
+				var _sort = $scope.static_sort.name = data === '' ? 'name' : (data === 'name' ? '-name' : 'name') ;
+				
+				var _check_index =0;
+				for (var key in $scope.arr_sort) {
+					var _data = $scope.arr_sort[key];
+					if(_data !== name){
+						_check_index ++;
+					} 
+				}
+				if(_check_index === $scope.arr_sort.length){
+					$scope.arr_sort.push(name);
+				}
+			}
+			if(name === 'status'){
+				var _sort = $scope.static_sort.status = data === '' ? 'status' : (data === 'status' ? '-status' : 'status') ;
+				// $scope.arr_sort[1] = $scope.static_sort.status;
+
+				var _check_index =0;
+				for (var key in $scope.arr_sort) {
+					var _data = $scope.arr_sort[key];
+					if(_data !== name){
+						_check_index ++;
+					} 
+				}
+				if(_check_index === $scope.arr_sort.length){
+					$scope.arr_sort.push(name);
+				}
+			}
+			if(name === 'numbers_bought'){
+				var _sort = $scope.static_sort.numbers_bought = data === '' ? 'numbers_bought' : (data === 'numbers_bought' ? '-numbers_bought' : 'numbers_bought') ;
+				// $scope.arr_sort[2] = $scope.static_sort.numbers_bought;
+
+				var _check_index =0;
+				for (var key in $scope.arr_sort) {
+					var _data = $scope.arr_sort[key];
+					if(_data !== name){
+						_check_index ++;
+					} 
+				}
+				if(_check_index === $scope.arr_sort.length){
+					$scope.arr_sort.push(name);
+				}
+			}
+			if(name === 'price'){
+				var _sort = $scope.static_sort.price = data === '' ? 'price' : (data === 'price' ? '-price' : 'price') ;
+				// $scope.arr_sort[3] = $scope.static_sort.price;
+
+				var _check_index =0;
+				for (var key in $scope.arr_sort) {
+					var _data = $scope.arr_sort[key];
+					if(_data !== name){
+						_check_index ++;
+					} 
+				}
+				if(_check_index === $scope.arr_sort.length){
+					$scope.arr_sort.push(name);
+				}
+			}
+			if(name === 'glass'){
+				var _sort = $scope.static_sort.glass = data === '' ? 'glass' : (data === 'glass' ? '-glass' : 'glass') ;
+				// $scope.arr_sort[4] = $scope.static_sort.glass;
+
+				var _check_index =0;
+				for (var key in $scope.arr_sort) {
+					var _data = $scope.arr_sort[key];
+					if(_data !== name){
+						_check_index ++;
+					} 
+				}
+				if(_check_index === $scope.arr_sort.length){
+					$scope.arr_sort.push(name);
+				}
+			}
+
+			console.log($scope.arr_sort)
+
+			var str_sort = '';
+
+			for (var i in $scope.arr_sort) {
+				var _data = $scope.arr_sort[i];
+				if(str_sort === ''){
+					str_sort += $scope.static_sort[_data];
+				} else{
+					str_sort = str_sort + ','+$scope.static_sort[_data]
+				}
+			}
+
+			console.log(str_sort)
+
+			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, str_sort).success(function(res){
+				$rootScope.listData = res.results;
+				$scope.bigTotalItems = res.count;
+			}).error(function(err, status, res){
+				toastr.error(err.detail);
+			});
 		}
 
 		// ============= change keywork ============
@@ -32,15 +144,17 @@
 
 		// ============== search data ==============
 		$scope.searchData = function(){
-			DrinkService.searchData($rootScope.userLogin.token, $scope.keywork, $rootScope.offset).success(function(res){
+			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, $scope.sort).success(function(res){
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
-			})
+			}).error(function(err, status, res){
+				toastr.error(err.detail);
+			});
 		}
 		
 		// ================= get list ===============
 		function getList(){
-			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
+			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, $scope.sort).success(function(res){
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
 			}).error(function(err, status, res){

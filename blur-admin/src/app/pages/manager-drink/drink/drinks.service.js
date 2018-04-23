@@ -3,22 +3,30 @@
     angular.module('BlurAdmin')
         .factory('DrinkService', function ($http, AppSetting) {
             return {
-                getList: function (token, offset) {
-                    return $http.get(AppSetting.BASE_URL + '/api/drink/?limit=100&offset=' + offset, {
+                getList: function (token, offset, keywork, sort) {
+                    return $http.get(AppSetting.BASE_URL + '/api/drink/?limit=100&offset=' + offset + '&search=' + keywork + '&sort='+sort, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
                         }
                     });
                 },
-                searchData: function (token, keywork, offset) {
-                    return $http.get(AppSetting.BASE_URL + '/api/drink/?search='+keywork+'&limit=100&offset=' + offset, {
-                        headers: {
-                            'Content-Type': undefined,
-                            'Authorization': 'Token ' + token
-                        }
-                    });
-                },
+                // searchData: function (token, keywork, offset) {
+                //     return $http.get(AppSetting.BASE_URL + '/api/drink/?search='+keywork+'&limit=100&offset=' + offset, {
+                //         headers: {
+                //             'Content-Type': undefined,
+                //             'Authorization': 'Token ' + token
+                //         }
+                //     });
+                // },
+                // sortData: function (token, sort, offset) {
+                //     return $http.get(AppSetting.BASE_URL + '/api/drink/?search='+keywork+'&limit=100&offset=' + offset, {
+                //         headers: {
+                //             'Content-Type': undefined,
+                //             'Authorization': 'Token ' + token
+                //         }
+                //     });
+                // },
                 created: function (data, token) {
                     var fd = new FormData();
                     

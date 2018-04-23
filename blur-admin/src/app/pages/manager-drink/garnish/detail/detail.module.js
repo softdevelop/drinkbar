@@ -13,7 +13,7 @@
 		
 		$stateProvider.state('detail-garnish', {
 			url: '/manager-drink/garnish/detail/:id',
-			title: 'Ingredient Brand / Detail',
+			title: 'Garnish / Detail',
 			templateUrl: 'app/pages/manager-drink/garnish/detail/detail.html',
 			controller: 'GarnishDetailCtrl',
 		});
