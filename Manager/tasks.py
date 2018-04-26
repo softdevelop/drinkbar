@@ -7,7 +7,7 @@ from django.core import mail
 
 # from mailin import Mailin
 import base64 
-
+from pprint import pprint
 def send_pushnotifs(channels, message, auto_increment=True):
     print ('>>> task send_pushnotifs running with channels "{}" and message "{}"'.format(channels, message))
 
@@ -123,3 +123,13 @@ def refund_paypal(transaction_id):
     response = requests.request("POST", url, data=push_data, headers=headers)
 
     print (response)
+
+from twitter import *
+def twitter(html=None):
+    # pprint(vars(twitter))
+    api = Twitter.Api(consumer_key=settings.CONSUMER_KEY,
+                      consumer_secret=settings.CONSUMER_SECRET,
+                      access_token_key=settings.ACCESS_TOKEN,
+                      access_token_secret=settings.ACCESS_TOKEN_SECRET)
+    return api.GetSearch(
+    raw_query="q=%23hiefficiencybar%20&result_type=recent&since=2014-07-19&count=100")

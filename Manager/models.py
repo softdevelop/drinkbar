@@ -215,6 +215,8 @@ class SeparateGlass(models.Model):
 class Garnish(models.Model):
     name = models.CharField(max_length=200, unique=True)
     active = models.BooleanField(default=True)
+    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),
+                        blank=True, null=True, upload_to='garnish')
     def __unicode__(self):
         return self.name
 

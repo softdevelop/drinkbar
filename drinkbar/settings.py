@@ -173,13 +173,19 @@ USE_TZ = True
 
 
 # send mail
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'user123example@gmail.com'
-EMAIL_HOST_PASSWORD = 'A123123Z'
-EMAIL_PORT = 587
+EMAIL_HOST = 'a2plcpnl0236.prod.iad2.secureserver.net'
+EMAIL_HOST_USER = 'thankyou@hiefficiencybar.com'
+EMAIL_HOST_PASSWORD = '123123123'
+EMAIL_PORT = 25
 EMAIL_USE_TLS = True
-EMAIL_FROM='user123example@gmail.com'
+EMAIL_FROM='thankyou@hiefficiencybar.com'
 
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = 'user123example@gmail.com'
+# EMAIL_HOST_PASSWORD = 'A123123Z'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_FROM='user123example@gmail.com'
 #Payment setting.
 
 STRIPE_KEYS = {
@@ -198,6 +204,13 @@ STATIC_URL = SITE_URL+"/static/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = SITE_URL+"/media/"
 
+#twitter
+CONSUMER_KEY = 'zkp9NnO9VQdQXgpMYk8g6mRAl'
+CONSUMER_SECRET = 'h7CBMYiGGQGkeJYrSvCcxwlOaiDi4KwXBWgt9C54QqboCBtHLE'
+ACCESS_TOKEN = '839669582478524416-JnmOlZwoiYNxlOoxDWZ0KAGpHy929f6'
+ACCESS_TOKEN_SECRET = '4lWN4BbD120Zz7foBaSUfglkXBs0XME08cRPLzJSUKIQG'
+TWITTER_EMAIL = 'HiEfficiencyBar@gmail.com'
+TWITTER_PASSWORD = 'RyanHoover1!!'
 
 try:
     from .settings_local import *
