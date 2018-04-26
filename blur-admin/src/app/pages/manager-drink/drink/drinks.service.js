@@ -4,7 +4,7 @@
         .factory('DrinkService', function ($http, AppSetting) {
             return {
                 getList: function (token, offset, keywork, sort) {
-                    return $http.get(AppSetting.BASE_URL + '/api/drink/?limit=100&offset=' + offset + '&search=' + keywork + '&sort='+sort, {
+                    return $http.get(AppSetting.BASE_URL + '/api/drink/?admin=true&limit=100&offset=' + offset + '&search=' + keywork + '&sort='+sort, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -29,7 +29,6 @@
                 // },
                 created: function (data, token) {
                     var fd = new FormData();
-                    
                     data.ingredients.forEach(function (el) {
                         // el.ingredient = el.ingredient.id;
                         fd.append('ingredients', JSON.stringify(el))

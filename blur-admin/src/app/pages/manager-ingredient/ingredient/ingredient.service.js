@@ -4,7 +4,7 @@
         .factory('IngredientService', function ($http, AppSetting) {
             return {
                 getList: function (token, offset) {
-                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/?limit=10&offset=' + offset, {
+                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/?admin=true&limit=10&offset=' + offset, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token

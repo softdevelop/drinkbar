@@ -143,13 +143,14 @@
                     <tbody>
                         <tr ng-repeat="item in ingredients" class="ng-scope">
                             <td class="ng-binding" style="text-align : left;">
-                                {{item.ingredient.name}}
+                                {{ item.ingredient.name}}
                             </td>
                             <td class="ng-binding">
                                 {{ item.ratio }}
                             </td>
                             <td class="ng-binding">
-                                {{ item.unit }}
+                                <span ng-if="item.unit === '0' || item.unit === 'part' ">Part</span>
+                                <span ng-if="item.unit === '10' || item.unit === 'mL' ">mL</span>
                             </td>
                             <td class="ng-binding" style="width: 30px; text-align : center;">
                                 <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">

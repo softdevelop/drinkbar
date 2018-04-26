@@ -135,6 +135,9 @@
 				});
 
 				// $scope.detail.category = _arr;
+				res.ingredients.forEach(function(el){
+					el.unit = String(el.unit);
+				});
 				$rootScope.ingredients = res.ingredients;
 				$rootScope.garnishs = res.garnishes;
 
@@ -153,9 +156,9 @@
 
 		// =========== function create =================
 		$scope.save = function () {
-			$rootScope.ingredients.forEach(function(el){
-				el.unit = el.unit === 'Part' ? 0 : 10;
-			});
+			// $rootScope.ingredients.forEach(function(el){
+			// 	el.unit = el.unit === 'Part' ? 0 : 10;
+			// });
 
 			// $scope.data_detail.garnishes = $rootScope.garnishs;
 			// $scope.data_detail.ingredients = $rootScope.ingredients;

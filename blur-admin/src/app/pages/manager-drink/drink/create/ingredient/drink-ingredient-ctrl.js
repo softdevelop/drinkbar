@@ -83,7 +83,8 @@
         // ============== add ingredient =============
         $scope.add = function () {
             toastr.success('Add Ingredient success!');
-            $rootScope.ingredients.push($scope.data_create);
+            var _obj = $scope.data_create;
+            $rootScope.ingredients.push(_obj);
             $uibModalInstance.close();
         }
     }

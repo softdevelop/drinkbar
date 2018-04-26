@@ -126,8 +126,6 @@
 
 			var _data = $scope.data_create;
 
-			console.log(_data)
-
 			DrinkService.created(_data, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Created success!');
 				setTimeout(function () {
