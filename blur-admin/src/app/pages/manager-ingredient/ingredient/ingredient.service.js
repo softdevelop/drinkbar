@@ -103,7 +103,7 @@
 
                 },
                 filterData: function (data, token) {
-                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/?type=' + data.filter_type + '&brand=' + data.filter_brand, {
+                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/?type=' + data.filter_type, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
