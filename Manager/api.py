@@ -70,7 +70,8 @@ class UserList(generics.ListCreateAPIView):
         search = self.request.GET.get('search', False)
         if search:
             ret = self.queryset.filter(Q(username__icontains=search)|\
-                Q(email__icontains=search)|Q(id__icontains=search))
+                Q(email__icontains=search)|Q(id__icontains=search)|\
+                Q(first_name__icontains=search)|Q(last_name__icontains=search))
         return ret
 
 
@@ -160,7 +161,7 @@ class UserForgetPassword(APIView):
                 reset_code = user.opt[:8]
                 subject = 'Hi-Effeciency - Reset password requested'
                 html_content = render_to_string('email/password_reset.html', {'user':user.full_name, 'reset_code':reset_code})
-                tasks.send_email(subject, html_content, [email])
+                tasks.send_email(subject, html_content, [email],'ForgotPassword@HiEfficiencyBar.com')
             else:
                 raise api_utils.BadRequest('EMAIL_NOT_EXISTS')
 
@@ -212,7 +213,7 @@ class SendVerificationEmail(APIView):
 
         subject = 'Hi-Efficiency - Validate your account first'
         html_content = render_to_string('email/verify_email.html', {'verification_link':verification_link})
-        tasks.send_email(subject, html_content, [user.email])
+        tasks.send_email(subject, html_content, [user.email], 'Verification@HiEfficiencyBar.com')
 
         return Response({'message': 'An email was sent to your email. '
                                     'Please click on the link in it to verify your email address.'},status=status.HTTP_202_ACCEPTED)
@@ -269,6 +270,9 @@ class UserOrder(generics.ListCreateAPIView):
         is_robot = self.request.GET.get('robot', False)
         if is_robot:
             return OrderMachineSerializer
+        current = self.request.GET.get('current', None)
+        if current:
+            return OrderMachineSerializer
         return OrderSerializer
 
     def get_queryset(self):
@@ -279,7 +283,13 @@ class UserOrder(generics.ListCreateAPIView):
         is_admin = self.request.GET.get('admin', False)
         if not is_admin:
             # user order history
-            return self.queryset.filter(user=self.request.user)
+            ret = self.queryset.filter(user=self.request.user)
+            current = self.request.GET.get('current', None)
+            if current:
+                ret = ret.exclude(status__gte=Order.STATUS_FINISHED).order_by('creation_date').first()
+                if ret:
+                    ret = Order.objects.filter(id=ret.id)
+            return ret
 
         ret = self.queryset.all()        
         search = self.request.GET.get('search', None)
@@ -291,22 +301,49 @@ class UserOrder(generics.ListCreateAPIView):
         if status:
             ret = ret.filter(status=status)
 
+
         return ret
 
     def create(self, request, *args, **kwargs):
         reorder_id = self.request.data.get('order_id', None)
+        tab_id = self.request.data.get('tab_id', None)
         reorder = None
-        stripe_token = self.request.data.get('stripe_token', None)
-        if not stripe_token:
-            raise api_utils.BadRequest("INVALID_STRIPE_TOKEN")
-
-        tabs = request.user.tab.filter(order__isnull=True, quantity__gt=0)
+    
         if reorder_id:
             try:
                 reorder = Order.objects.get(id=reorder_id, user=request.user)
             except Exception as e:
                 raise api_utils.BadRequest("INVALID_ORDER_ID")
             tabs = reorder.products.all()
+            for tab in tabs:
+                garnishes = tab.garnishes.all()
+                new_tab = tab
+                new_tab.pk = None
+                new_tab.order = None
+                new_tab.status=Tab.STATUS_NEW
+                new_tab.quantity_done=0
+                new_tab.save()
+                for garnish in garnishes:
+                    new_tab.garnish.add(garnish)
+            return Response(status=status.HTTP_200_OK)
+
+        if tab_id:
+            try:
+                tab = Tab.objects.get(id=tab_id)
+                new_tab = tab
+                new_tab.pk = None
+                new_tab.order = None
+                new_tab.status=Tab.STATUS_NEW
+                new_tab.quantity_done=0
+                new_tab.save()
+            except Exception as e:
+                raise api_utils.BadRequest("INVALID_DRINK_ID")
+            return Response(status=status.HTTP_200_OK)
+            
+        tabs = request.user.tab.filter(order__isnull=True, quantity__gt=0)
+        stripe_token = self.request.data.get('stripe_token', None)
+        if not stripe_token:
+            raise api_utils.BadRequest("INVALID_STRIPE_TOKEN")
 
         # Get data for new order
         serializer = self.get_serializer(data=request.data)
@@ -337,6 +374,8 @@ class UserOrder(generics.ListCreateAPIView):
         if not robot_will_do:
             raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR DRINK, PLEASE BACK LATER")
         serializer.validated_data['robot']=robot_will_do
+
+        # Add fee and tax
         if total_bill>0:
             if settingbar.fee_unit==SettingBar.CONST_FEE_DOLLAR:
                 total_bill+=settingbar.fee
@@ -364,23 +403,15 @@ class UserOrder(generics.ListCreateAPIView):
         serializer.validated_data['status'] = Order.STATUS_NEW
         order = serializer.create(serializer.validated_data)
 
-        if reorder:
-            for tab in tabs:
-                garnishes = tab.garnishes.all()
-                new_tab = tab
-                new_tab.pk = None
-                new_tab.order=order
-                new_tab.status=Tab.STATUS_NEW
-                new_tab.quantity_done=0
-                new_tab.save()
-                for garnish in garnishes:
-                    new_tab.garnish.add(garnish)
-        else:
-            tabs.update(order=order)
+        tabs.update(order=order)
         
         for tab in Tab.objects.filter(order=order):
             tab.drink.make_drink(robot_will_do,tab.quantity)
 
+        # Send receipt 
+        subject = "Hi-Effeciency - New order"
+        html_content = render_to_string('email/new_order_receipt.html',{'user':request.user.full_name,'order':order})
+        tasks.send_email(subject, html_content, request.user.email)
         # pprint(vars(serializer.data))
         headers = self.get_success_headers(serializer.data)
         return Response(OrderSmallSerializer(order).data, status=status.HTTP_201_CREATED, headers=headers)
@@ -450,18 +481,14 @@ class DrinkList(generics.ListCreateAPIView):
         is_admin = self.request.GET.get('admin', False)
         ret = self.queryset.exclude(Q(ingredients__ingredient__status=Ingredient.CONST_STATUS_BLOCKED)|\
                     Q(glass__status=SeparateGlass.CONST_STATUS_BLOCKED)|\
-                    Q(status=Drink.CONST_STATUS_BLOCKED))
+                    Q(status=Drink.CONST_STATUS_BLOCKED)).filter(creator__is_superuser=True)
         if is_admin:
             print (is_admin)
-            ret = self.queryset.all()
+            ret = self.queryset.filter(creator__is_superuser=True)
 
         search_query = self.request.GET.get('search', None)
         if search_query:
             ret = ret.filter(name__icontains=search_query)
-            
-        type = self.request.GET.get('type', None)
-        if type:
-            ret = ret.filter(type=type)
 
         category = self.request.GET.get('category', None)
         if category:
@@ -484,6 +511,12 @@ class DrinkList(generics.ListCreateAPIView):
             drinks = self.request.user.favorite_drink.all().values_list('id',flat=True)
             return ret.filter(id__in=drinks)
 
+        sort = self.request.GET.get('sort', None)
+        if sort:
+            sort = sort.split(",")
+            sort = list(sort)
+            for s in sort:
+                ret = ret.order_by(s)
         return ret
 
 class DrinkDetial(generics.RetrieveUpdateDestroyAPIView):
@@ -681,7 +714,7 @@ class RobotChange(APIView):
             status_drink=int(status_drink)
             tab = self.request.data.get('drink',0)
             try:
-                tab = order.products.get(drink=tab)
+                tab = order.products.get(id=tab)
             except Exception as e:
                 raise api_utils.BadRequest("INVALID_DRINK")
             # Change ingredient status
@@ -740,5 +773,12 @@ class SettingsAdmin(generics.RetrieveUpdateAPIView):
     queryset = SettingBar
     serializer_class = SettingsForAdminSeirializer
     permission_classes = [IsSuperAdmin]
+
+class Twitter(APIView):
+    
+    def get(self,request,format=None):
+        print tasks.twitter()
+        return Response(status=status.HTTP_200_OK)
+        
 
         

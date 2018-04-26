@@ -141,11 +141,12 @@ class DrinkOrdersSerializer(DrinkUserOrdersSerializer):
     ingredients = DrinkIngredientSerializer(many=True, read_only=True)
     glass_ml = serializers.SerializerMethodField()
     prep_view = serializers.SerializerMethodField()
+    glass = SeparateGlassSerializer(read_only=True)
     class Meta(DrinkUserOrdersSerializer.Meta):
         model = Drink
         fields = DrinkUserOrdersSerializer.Meta.fields+('ingredients',\
             'total_part','glass_ml','ml_per_part','prep','prep_view',\
-            'estimate_time')
+            'estimate_time','glass')
 
     def get_prep_view(self,obj):
         return obj.get_prep_display()
