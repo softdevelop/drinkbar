@@ -36,6 +36,7 @@
 			if (field === 'filter_type') {
 				getListBrand(value);
 				$scope.isShowFilterBrand = true;
+				returnDataFilter($scope.data_filter)
 			}
 			if($scope.data_filter.filter_brand !== '' && $scope.data_filter.filter_type !== ''){
 				returnDataFilter($scope.data_filter);

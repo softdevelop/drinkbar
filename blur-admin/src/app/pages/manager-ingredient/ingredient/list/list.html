@@ -30,7 +30,6 @@
                 <div class="col-md-2">
                     <div class="form-group">
                         <select class="form-control" name="status" ng-model="data_filter.filter_type" ng-change="changeFilter('filter_type', data_filter.filter_type)">
-                            <option value="">Select Type</option>
                             <option ng-repeat="item in filter_types" class="form-control" value="{{item.id}}">{{item.name}}</option>
                         </select>
                     </div>
@@ -39,7 +38,6 @@
                 <div ng-if="isShowFilterBrand" class="col-md-2">
                     <div class="form-group">
                         <select class="form-control" name="status" ng-model="data_filter.filter_brand" ng-change="changeFilter('filter_brand', data_filter.filter_brand)">
-                            <option value="">Select Brand</option>
                             <option ng-repeat="item in filter_brands" class="form-control" value="{{item.id}}">{{item.name}}</option>
                         </select>
                     </div>

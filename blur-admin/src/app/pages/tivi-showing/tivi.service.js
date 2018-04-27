@@ -1,7 +1,9 @@
 (function () {
     'use strict';
     angular.module('BlurAdmin')
-        .factory('TiviService', function ($http, AppSetting) {
+        .factory('TiviService', function ($http, AppSetting, $rootScope) {
+            var _token = $rootScope.userLogin.token;
+
             return {
                 getList: function (token) {
                     return $http.get(AppSetting.BASE_URL + '/api/robot/', {
@@ -82,6 +84,23 @@
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
+                        }
+                    })
+                },
+                // ============= Twitter ============
+                getTwitter: function(){
+                    return $http.get(AppSetting.BASE_URL + '/api/twitter/', {
+                        headers: {
+                            'Content-Type': undefined,
+                            'Authorization': 'Token ' + _token
+                        }
+                    })
+                },
+                getUserOrderStatus: function(){
+                    return $http.get(AppSetting.BASE_URL + '/api/user/order/?status=', {
+                        headers: {
+                            'Content-Type': undefined,
+                            'Authorization': 'Token ' + _token
                         }
                     })
                 }

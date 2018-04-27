@@ -27,6 +27,10 @@
 		$rootScope.ingredients = [];
 		$rootScope.garnishs = [];
 		$scope.categories = [];
+		$scope.est = {
+			min : 0,
+			sec: 0
+		}
 
 		// ============ load data ==========
 		function loadData() {
@@ -123,7 +127,9 @@
 				}
 				$scope.data_create.garnishes.push(_obj);
 			});
+			
 
+			$scope.data_create.estimate_time = $scope.est.min * 60 + $scope.est.sec;
 			var _data = $scope.data_create;
 
 			DrinkService.created(_data, $rootScope.userLogin.token).success(function (res) {

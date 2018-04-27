@@ -23,20 +23,20 @@
                     <div class="_title">
                         <h3>
                             <i class="ion-android-arrow-down"></i> Now serving</h3>
-                    </div>
-                    <div class="_icon_bottom"></div>
-                    <div class="_title_name">
-                        <div ng-show="user_updated.avatar" class="_avt animated zoomIn">
-                            <img ng-show="user_updated.avatar" src="{{user_updated.avatar}}" alt="" class="img-circle">
-                            <img ng-show="!user_updated.avatar" src="{{user_updated.avatar_url}}" alt="" class="img-circle">
                         </div>
-                        <h3 ng-if="user_updated.first_name" class="animated flash">{{ user_updated.first_name }} {{ user_updated.last_name }}</h3>
+                        <div class="_icon_bottom"></div>
+                        <div class="_title_name">
+                            <div ng-show="user_updated.avatar" class="_avt animated zoomIn">
+                                <img ng-show="user_updated.avatar" src="{{user_updated.avatar}}" alt="" class="img-circle">
+                                <img ng-show="!user_updated.avatar" src="{{user_updated.avatar_url}}" alt="" class="img-circle">
+                            </div>
+                            <h3 ng-if="user_updated.first_name" class="animated flash">{{ user_updated.first_name }} {{ user_updated.last_name }}</h3>
+                        </div>
                     </div>
-                </div>
-                <div class="_ctn">
-                    <div class="_left_6">
-                        <h3>Drink</h3>
-                        <div class="_ctn_drink" id="_ctn_drink">
+                    <div class="_ctn">
+                        <div class="_left_6">
+                            <h3>Drink</h3>
+                            <div class="_ctn_drink" id="_ctn_drink">
                             <!-- <a>
                                 <span>2</span> {{ product.drink.name }}
                                 <i></i>
@@ -79,84 +79,81 @@
                             <div class="_ingre_3 color_3"></div>
                             <div class="_ingre_4 color_4"></div>
                             <div class="_ingre_5 color_5"></div>
- -->
-                        </div>
-                        <div class="_ingredient_ctn" id="_ingredient_ctn">
-                            <h3>Ingredient</h3>
-                            <p class="_ingre_1">
-                                <i></i> Tequila</p>
-                            <p class="_ingre_2">
-                                <i></i> Cointreau</p>
-                            <p class="_ingre_3">
-                                <i></i> Lime Juice</p>
-                        </div>
+                        -->
+                    </div>
+                    <div class="_ingredient_ctn" id="_ingredient_ctn">
+                        <h3>Ingredient</h3>
+                        <!-- <p class="_ingre_1"><i></i> Tequila</p>
+                        <p class="_ingre_2"><i></i> Cointreau</p>
+                        <p class="_ingre_3"><i></i> Lime Juice</p> -->
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="_stats_header">
-                    <h3>Quick stats</h3>
+        </div>
+        <div class="col-md-4">
+            <div class="_stats_header">
+                <h3>Quick stats</h3>
+            </div>
+            <div class="_stats_ctn">
+                <div class="_stats_1 _drink_served">
+                    <h3>Drinks served</h3>
+                    <h1 id="timer_drink_served">0</h1>
+                    <p>Total for Today</p>
                 </div>
-                <div class="_stats_ctn">
-                    <div class="_stats_1 _drink_served">
-                        <h3>Drinks served</h3>
-                        <h1 id="timer_drink_served">0</h1>
-                        <p>Total for Today</p>
-                    </div>
-                    <div class="_stats_1 _avg_time">
-                        <h3>AVG. Time/drink</h3>
-                        <h1>03:25</h1>
-                        <p>Total for Today</p>
-                    </div>
-                    <div class="_stats_1 _server_speed">
-                        <h3>Server Speed</h3>
-                        <h1>75%</h1>
-                        <p>Current Speed</p>
-                    </div>
-                    <div class="_stats_1 _pickup_slide">
-                        <h3>Pickup @ slide</h3>
-                        <p>Jill H.
-                            <span class="pull-right">05</span>
-                        </p>
-                        <p>Jill H.
-                            <span class="pull-right">05</span>
-                        </p>
-                        <p>Jill H.
-                            <span class="pull-right">05</span>
-                        </p>
-                        <p>Jill H.
-                            <span class="pull-right">05</span>
-                        </p>
-                        <p>Jill H.
-                            <span class="pull-right">05</span>
-                        </p>
-                    </div>
+                <div class="_stats_1 _avg_time">
+                    <h3>AVG. Time/drink</h3>
+                    <h1>03:25</h1>
+                    <p>Total for Today</p>
                 </div>
-                <div class="_slider">
-                    <div class="_slider_title">
-                        <h3>Recent posts <i class="pull-right ion-social-twitter"></i></h3>
-                        <h4>The Virtual Bar</h4>
-                        <p>@VirtualBar</p>
-                    </div>
-                    <div style="" class="_slider_ctn">
-                        <div uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
-                            <div uib-slide ng-repeat="slide in slides track by slide.id" index="slide.id">
-                                <div class="_slider_p">
-                                    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-                                        has been the industry's standard dummy text ever since the 1500s</p>
-                                </div>
+                <div class="_stats_1 _server_speed">
+                    <h3>Server Speed</h3>
+                    <h1>75%</h1>
+                    <p>Current Speed</p>
+                </div>
+                <div class="_stats_1 _pickup_slide">
+                    <h3>Pickup @ slide</h3>
+                    <p>Jill H.
+                        <span class="pull-right">05</span>
+                    </p>
+                    <p>Jill H.
+                        <span class="pull-right">05</span>
+                    </p>
+                    <p>Jill H.
+                        <span class="pull-right">05</span>
+                    </p>
+                    <p>Jill H.
+                        <span class="pull-right">05</span>
+                    </p>
+                    <p>Jill H.
+                        <span class="pull-right">05</span>
+                    </p>
+                </div>
+            </div>
+            <div class="_slider">
+
+                <div style="" class="_slider_ctn">
+                    <div uib-carousel active="active" interval="myInterval" no-wrap="noWrapSlides">
+                        <div uib-slide ng-repeat="(key, twitter) in twitters" index="key">
+                            <div class="_slider_title" style="text-align: left;">
+                                <h3>Recent posts <i class="pull-right ion-social-twitter"></i></h3>
+                                <h4>{{ twitter.user.name }}</h4>
+                                <p>@{{ twitter.user.screen_name }}</p>
+                            </div>
+                            <div class="_slider_p">
+                                <p>{{ twitter.text }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                <div class="_playing">
-                    <div class="_wait_time">
-                        <h3>New Order Wait Time</h3>
-                        <h1>05:15</h1>
-                    </div>
-                    <div class="_btn_play_now animated zoomInDown">
+        </div>
+        <div class="col-md-12">
+            <div class="_playing">
+                <div class="_wait_time">
+                    <h3>New Order Wait Time</h3>
+                    <h1>05:15</h1>
+                </div>
+                <div class="_btn_play_now animated zoomInDown">
                         <!-- <h3>
                             <i></i> Livi'n on Prayer
                             <span>- Bon Jovi</span>

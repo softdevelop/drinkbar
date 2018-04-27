@@ -6,10 +6,12 @@
     'use strict';
 
     angular.module('BlurAdmin.pages.detail-ingredient')
-        .controller('IngredientDetailCtrl', IngredientDetailCtrl);
+        .controller('IngredientDetailCtrl', IngredientDetailCtrl)
+        .controller('IngredientDetailExportCtrl', IngredientDetailExportCtrl)
+        .controller('IngredientDetailImportCtrl', IngredientDetailImportCtrl);
 
     /** @ngInject */
-    function IngredientDetailCtrl($stateParams, $scope, IngredientService, toastr, $rootScope, $location, $window) {
+    function IngredientDetailCtrl($stateParams, $scope, IngredientService, toastr, $rootScope, $location, $window, $uibModal) {
         $scope.detail = {};
         $scope.paramt_id = $stateParams.id;
         $scope.data_detail = {
@@ -19,6 +21,37 @@
         $scope.brands = [];
         $scope.isDisable = true;
         $scope.isChangeImage = true;
+
+        // =============== import ingredint ================
+        $scope.openImport = function(filter){
+            var page = 'app/pages/manager-ingredient/ingredient/detail/import/index.html';
+            $uibModal.open({
+                animation: true,
+                templateUrl: page,
+                size: 'md',
+                resolve: {
+                    items: function () {
+                        return filter;
+                    }
+                },
+                controller: 'IngredientDetailImportCtrl',
+            });
+        }
+
+        $scope.openExport = function(filter) {
+            var page = 'app/pages/manager-ingredient/ingredient/detail/export/index.html';
+            $uibModal.open({
+                animation: true,
+                templateUrl: page,
+                size: 'md',
+                resolve: {
+                    items: function () {
+                        return filter;
+                    }
+                },
+                controller: 'IngredientDetailExportCtrl',
+            });
+        }
 
         // ========= function get data glass by id ===========
         function getElement() {
@@ -35,6 +68,10 @@
         }
 
         getElement();
+
+        $rootScope.getElementRoot = function(){
+            getElement();
+        }
 
         // ========== function get list type ============
         function getListType() {
@@ -143,6 +180,65 @@
             });
         }
 
+    };
+
+    // controler IngredientListDeleteCtrl
+    function IngredientDetailImportCtrl($scope, toastr, IngredientService, RobotService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance) {
+        console.log(items)
+        $scope.import = items;
+        $scope.data_import = {};
+
+        $scope.changeInfo = function(field, value){
+            $scope.data_import[field] = value;
+        }
+
+        // ========== import ==========
+        $scope.import = function(){
+            $scope.data_import.type = items.type;
+            $scope.data_import.brand = items.brand;
+            $scope.data_import.ingredient = items.id;
+            $scope.data_import.status = 0;
+            RobotService.importHistoryRobo($scope.data_import, $rootScope.userLogin.token).success(function(res){
+                toastr.success('Import robot success!');
+                $uibModalInstance.close();
+                // $rootScope.robotId = $scope.data_create.machine;
+                // $window.location.href = '#/manager-ingredient/history/list';
+
+                $rootScope.getElementRoot();
+            }).error(function(err, stt, res){
+                toastr.error('Error!');
+            })
+        }
+    };
+
+    // controler IngredientListDeleteCtrl
+    function IngredientDetailExportCtrl($scope, toastr, IngredientService, RobotService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance) {
+        console.log(items)
+        $scope.import = items;
+        $scope.data_import = {};
+
+        $scope.changeInfo = function(field, value){
+            $scope.data_import[field] = value;
+        }
+
+        // ========== import ==========
+        $scope.export = function(){
+            $scope.data_import.type = items.type;
+            $scope.data_import.brand = items.brand;
+            $scope.data_import.ingredient = items.id;
+            $scope.data_import.status = 0;
+            RobotService.importHistoryRobo($scope.data_import, $rootScope.userLogin.token).success(function(res){
+                toastr.success('Export robot success!');
+                $uibModalInstance.close();
+                // $rootScope.robotId = $scope.data_create.machine;
+                // $window.location.href = '#/manager-ingredient/history/list';
+
+                $rootScope.getElementRoot();
+            }).error(function(err, stt, res){
+                toastr.error('Error!');
+            })
+        }
     }
+
 
 })();

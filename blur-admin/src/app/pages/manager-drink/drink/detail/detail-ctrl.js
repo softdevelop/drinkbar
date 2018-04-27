@@ -24,6 +24,10 @@
 		};
 		$scope.isChange = $scope.isChangeIngredient = $scope.isChangeGarnish = false;
 		$scope.categories = [];
+		$scope.est = {
+			min : 0,
+			sec: 0
+		}
 
 		$rootScope.list_categories = $scope.list_glass = $rootScope.ingredients = $rootScope.garnishs = [];
 
@@ -129,6 +133,10 @@
 
 				$scope.categories = res.category;
 
+
+				$scope.est.min = Math.floor($scope.detail.estimate_time / 60);
+				$scope.est.sec = Math.floor($scope.detail.estimate_time % 60);
+
 				var _category = res.category;
 				_category.forEach(function (el) {
 					$scope.data_detail.category.push(el.id)
@@ -181,6 +189,7 @@
 				$scope.data_detail.garnishes.push(_obj);
 			});
 
+			$scope.data_detail.estimate_time = $scope.est.min * 60 + $scope.est.sec;
 			var _data = $scope.data_detail;
 
 			DrinkService.updated(_data, $rootScope.userLogin.token).success(function (res) {
