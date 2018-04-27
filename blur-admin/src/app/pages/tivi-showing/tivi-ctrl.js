@@ -17,7 +17,7 @@
         $scope.status_view = '';
         $scope.pk = undefined;
 
-        $scope.myInterval = 5000;
+        $scope.myInterval = 3000;
         $scope.noWrapSlides = false;
         $scope.active = 0;
         $rootScope.users_orders = [];
@@ -97,9 +97,11 @@
             });
         }
 
+        getTwitter();
+
         setTimeout(function(){
             getTwitter();
-        }, 5000);
+        }, 10000);
 
         // ===================== Counter ===========================
         function animateValue(id, start, end, duration) {
