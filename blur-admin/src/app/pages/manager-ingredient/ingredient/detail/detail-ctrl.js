@@ -38,6 +38,7 @@
             });
         }
 
+        // ============= export ingredient =================
         $scope.openExport = function(filter) {
             var page = 'app/pages/manager-ingredient/ingredient/detail/export/index.html';
             $uibModal.open({
@@ -184,7 +185,6 @@
 
     // controler IngredientListDeleteCtrl
     function IngredientDetailImportCtrl($scope, toastr, IngredientService, RobotService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance) {
-        console.log(items)
         $scope.import = items;
         $scope.data_import = {};
 
@@ -213,7 +213,6 @@
 
     // controler IngredientListDeleteCtrl
     function IngredientDetailExportCtrl($scope, toastr, IngredientService, RobotService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance) {
-        console.log(items)
         $scope.import = items;
         $scope.data_import = {};
 
