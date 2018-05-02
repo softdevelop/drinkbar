@@ -91,7 +91,7 @@
         function getTwitter(){
             TiviService.getTwitter().success(function(res){
                 $scope.twitters = res.result;
-                console.log($scope.twitters)
+                // console.log($scope.twitters)
             }).error(function(err, stt, res){
                 toastr.error(detail.err);
             });
@@ -101,7 +101,7 @@
 
         setTimeout(function(){
             getTwitter();
-        }, 10000);
+        }, 15000);
 
         // ===================== Counter ===========================
         function animateValue(id, start, end, duration) {
