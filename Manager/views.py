@@ -35,3 +35,44 @@ class VerificationEmail(TemplateView):
         else:
             ret['message'] ='INVALID EMAIL VERIFICATION CODE.'
         return ret
+
+class HomePage(TemplateView):
+    template_name = "webpage/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(HomePage,self).get_context_data(**kwargs)
+        context['title'] = "Home"
+        return context
+
+class FrontBarPage(TemplateView):
+    template_name = "webpage/frontBar.html"
+
+
+    def get_context_data(self, **kwargs):
+        context = super(FrontBarPage,self).get_context_data(**kwargs)
+        context['title'] = "Front Bar"
+        return context
+
+class BackBarPage(TemplateView):
+    template_name = "webpage/backBar.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(BackBarPage,self).get_context_data(**kwargs)
+        context['title'] = "Back Bar"
+        return context
+
+class HomeBarPage(TemplateView):
+    template_name = "webpage/homeBar.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeBarPage,self).get_context_data(**kwargs)
+        context['title'] = "Home Bar"
+        return context
+
+class MobileBarPage(TemplateView):
+    template_name = "webpage/mobileBar.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(MobileBarPage,self).get_context_data(**kwargs)
+        context['title'] = "Mobile Bar"
+        return context

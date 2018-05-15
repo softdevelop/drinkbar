@@ -66,6 +66,13 @@ def send_pushnotifs(channels, message, auto_increment=True):
 
 #     return False
 
+from threading import Thread
+
+def send_async_email(msg):
+    print (msg.send())
+    # with app.app_context():
+    #     print (msg.send())
+        # mail.send(msg)
 
 def send_email(subject, html_content, emails, from_email=None):
     if from_email is None:
@@ -79,8 +86,9 @@ def send_email(subject, html_content, emails, from_email=None):
     # fp.close()
     # msg_img.add_header('Content-ID', '<emailheader.png>')
     # msg.attach(msg_img)
-
-    print (msg.send())
+    thr = Thread(target=send_async_email, args=[msg])
+    thr.start()
+    # print (msg.send())
 
 # def send_email_sendingblue(subject, html_content, emails, from_email=None):
 #     m = Mailin("https://api.sendinblue.com/v2.0","yA3MRfQW9wv0jTZp")
@@ -124,12 +132,11 @@ def refund_paypal(transaction_id):
 
     print (response)
 
-from twitter import *
+from twitter import api
 def twitter(html=None):
-    # pprint(vars(twitter))
-    api = Twitter.Api(consumer_key=settings.CONSUMER_KEY,
+    coca = api.Api(consumer_key=settings.CONSUMER_KEY,
                       consumer_secret=settings.CONSUMER_SECRET,
                       access_token_key=settings.ACCESS_TOKEN,
                       access_token_secret=settings.ACCESS_TOKEN_SECRET)
-    return api.GetSearch(
-    raw_query="q=%23hiefficiencybar%20&result_type=recent&since=2014-07-19&count=100")
+    return coca.GetSearch(
+    raw_query="q=%23HiEfficiencyBar&result_type=recent&count=5")

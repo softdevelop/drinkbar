@@ -19,7 +19,12 @@ from django.template.loader import render_to_string
 from datetime import datetime, timedelta
 import hashlib
 import fpformat
+import json
 from pprint import pprint
+from django.forms.models import model_to_dict
+import requests
+import pprint
+from requests_futures.sessions import FuturesSession
 '''
 User API:
 '''
@@ -53,8 +58,14 @@ class UserSignUp(generics.CreateAPIView):
                 serializer = self.get_serializer(data=request.data)
                 serializer.is_valid(raise_exception=True)
                 user = serializer.create(serializer.validated_data)
-
-            serializer = UserWithTokenSerializer(user)
+            if user.is_email_verified:
+                serializer = UserWithTokenSerializer(user)
+            else:
+                push_data = {'email':user.email}
+                session = FuturesSession()
+                future = session.post(settings.SITE_URL + reverse('user-send-verify-email'), data=push_data)
+                # grequests.post(settings.SITE_URL + reverse('user-send-verify-email'), data=push_data)
+                serializer = UserSerializer(user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except IntegrityError as e:
             raise ValidationError({'email': str(e[1])})
@@ -96,17 +107,19 @@ class UserProfile(generics.GenericAPIView):
         elif email and password:
             user = authenticate(username=email, password=password)
         if not user:
-            return Response({'user': 'INVALID_PROFILE'}, status=status.HTTP_400_BAD_REQUEST)
+            raise api_utils.BadRequest("INVALID_PROFILE")
 
         # if request.session.get('_auth_user_id', 0) != user.id:
         #     # create logged in session for the user if not available
         #     utils.login_user(request, user)
         if type(user) == UserBase:
+            if not user.is_email_verified:
+                raise api_utils.BadRequest("EMAIL_WAS_NOT_VERIFIED")
             user.last_login = datetime.now()
             user.save()
             serializer = self.get_serializer(user)
             return Response(serializer.data)
-        return Response({'user': 'INVALID_PROFILE'}, status=status.HTTP_400_BAD_REQUEST)
+        raise api_utils.BadRequest("INVALID_PROFILE")
 
 # Admin see detail user, user update, delete
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -250,6 +263,9 @@ class MyTab(generics.ListAPIView):
     serializer_class = OrderTabSerializer
 
     def get_queryset(self):
+        pending = self.request.GET.get('pending', False)
+        if pending:
+            return Tab.objects.filter(order__isnull=True)
         return Tab.objects.filter(user=self.request.user, order__isnull=True)
 
 class UpdateTab(generics.RetrieveUpdateDestroyAPIView):
@@ -317,26 +333,40 @@ class UserOrder(generics.ListCreateAPIView):
             tabs = reorder.products.all()
             for tab in tabs:
                 garnishes = tab.garnishes.all()
-                new_tab = tab
-                new_tab.pk = None
-                new_tab.order = None
-                new_tab.status=Tab.STATUS_NEW
-                new_tab.quantity_done=0
-                new_tab.save()
-                for garnish in garnishes:
-                    new_tab.garnish.add(garnish)
+                tab_current = Tab.objects.filter(drink=tab.drink, user=request.user, order__isnull=True)
+                if not tab_current:
+                    new_tab = tab
+                    new_tab.pk = None
+                    new_tab.order = None
+                    new_tab.status=Tab.STATUS_NEW
+                    new_tab.quantity_done=0
+                    new_tab.save()
+                    new_tab.garnishes.add(*garnishes)
+                else:
+                    tab_current = tab_current.first()
+                    tab_current.quantity +=1
+                    tab_current.save()
             return Response(status=status.HTTP_200_OK)
 
         if tab_id:
             try:
-                tab = Tab.objects.get(id=tab_id)
-                new_tab = tab
-                new_tab.pk = None
-                new_tab.order = None
-                new_tab.status=Tab.STATUS_NEW
-                new_tab.quantity_done=0
-                new_tab.save()
+                tab = Tab.objects.get(id=tab_id, user=request.user)
+                garnishes = tab.garnishes.all()
+                tab_current = Tab.objects.filter(drink=tab.drink, user=request.user, order__isnull=True)
+                if not tab_current:
+                    new_tab = tab
+                    new_tab.pk = None
+                    new_tab.order = None
+                    new_tab.status=Tab.STATUS_NEW
+                    new_tab.quantity_done=0
+                    new_tab.save()
+                    new_tab.garnishes.add(*garnishes)
+                else:
+                    tab_current = tab_current.first()
+                    tab_current.quantity +=1
+                    tab_current.save()
             except Exception as e:
+                print e
                 raise api_utils.BadRequest("INVALID_DRINK_ID")
             return Response(status=status.HTTP_200_OK)
             
@@ -364,8 +394,17 @@ class UserOrder(generics.ListCreateAPIView):
             for tab in tabs:
                 if tab.drink.is_enough_ingredient(robot,tab.quantity):
                     temp +=1
+                    tab.amount = int(tab.quantity)*float(tab.drink.price)
+                    tab.save()
                     total_bill += int(tab.quantity)*float(tab.drink.price)
                 else:
+                    if tab.quantity==1:
+                        tab.drink.status = Drink.CONST_STATUS_BLOCKED
+                    else:
+                        # Check if still enough for 1 cup
+                        if not tab.drink.is_enough_ingredient(robot,1):
+                            tab.drink.status = Drink.CONST_STATUS_BLOCKED
+                    tab.drink.save()
                     break
             if temp == len(tabs):
                 robot_will_do = robot
@@ -411,7 +450,7 @@ class UserOrder(generics.ListCreateAPIView):
         # Send receipt 
         subject = "Hi-Effeciency - New order"
         html_content = render_to_string('email/new_order_receipt.html',{'user':request.user.full_name,'order':order})
-        tasks.send_email(subject, html_content, request.user.email)
+        tasks.send_email(subject, html_content, [request.user.email])
         # pprint(vars(serializer.data))
         headers = self.get_success_headers(serializer.data)
         return Response(OrderSmallSerializer(order).data, status=status.HTTP_201_CREATED, headers=headers)
@@ -523,6 +562,11 @@ class DrinkDetial(generics.RetrieveUpdateDestroyAPIView):
     queryset = Drink
     serializer_class = DrinkUpdateSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return DrinkSerializer
+        return DrinkUpdateSerializer
      
 class SeparateGlassList(generics.ListCreateAPIView):
     queryset = SeparateGlass.objects.all()
@@ -632,6 +676,15 @@ class IngredientBrandList(generics.ListCreateAPIView):
     queryset = IngredientBrand.objects.all().order_by('name')
     serializer_class = IngredientTypeSerializer
     permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        try:
+            brand = IngredientBrand.objects.get(name=request.data['name'])
+        except Exception as e:
+            pprint(vars(e))
+            brand = IngredientBrand(name=request.data['name'])
+            brand.save()
+        return Response(IngredientTypeSerializer(brand).data,status=status.HTTP_200_OK)
     
 class IngredientBrandDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = IngredientBrand
@@ -777,7 +830,22 @@ class SettingsAdmin(generics.RetrieveUpdateAPIView):
 class Twitter(APIView):
     
     def get(self,request,format=None):
-        print tasks.twitter()
+        data = tasks.twitter()
+        ret = {}
+        result=[]
+        for d in data:
+            d = vars(d)
+            temp = d['_json']
+            result.append(temp)
+        ret['result'] = result
+        return Response(ret,status=status.HTTP_200_OK)
+
+class DoOneTime(APIView):
+    
+    def get(self,request,format=None):
+        drinks = Drink.objects.all()
+        for drink in drinks:
+            drink.set_background_color()
         return Response(status=status.HTTP_200_OK)
         
 

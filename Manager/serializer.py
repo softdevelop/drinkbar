@@ -7,6 +7,7 @@ import api_utils
 from datetime import datetime, timedelta
 from collections import Counter, OrderedDict
 from django.utils import timezone
+from django.db.models import Avg
 
 class UserSignupSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, style={'input_type': 'password'})
@@ -118,13 +119,13 @@ class DrinkGarnishSerializer(serializers.ModelSerializer):
 
 class DrinkIngredientSerializer(serializers.ModelSerializer):
     ingredient = IngredientSmallSerializer(read_only=True)
-    unit = serializers.SerializerMethodField()
+    unit_view = serializers.SerializerMethodField()
 
     class Meta:
         model = DrinkIngredient
-        fields = ('ingredient','unit','ratio')
+        fields = ('ingredient','unit','unit_view','ratio')
 
-    def get_unit(self,obj):
+    def get_unit_view(self,obj):
         return obj.get_unit_display()
 
 
@@ -165,8 +166,10 @@ def drink_add_on(self, ret=None, is_update=False):
                 else:
                     return str(e)
     if (self._context['request'].user.is_superuser and self.initial_data.has_key('image_background')) or is_update==True:
+        # data is array
         ingredients = self.initial_data.getlist('ingredients',None)
     else:
+        # data is string array
         ingredients = ast.literal_eval(self.initial_data['ingredients'])
     tempdict=dict()
     if ingredients:
@@ -221,7 +224,7 @@ class DrinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Drink
         fields = ('id','status','prep','prep_view','numbers_bought','category','glass','ingredients',
-            'garnishes','name','image','image_background','price','creator','creation_date',
+            'garnishes','name','image','image_background','background_color','price','creator','creation_date',
             'key_word','estimate_time','is_have_ice','is_favorite')
         # depth = 1
 
@@ -316,7 +319,7 @@ class RobotSerializer(serializers.ModelSerializer):
     class Meta:
         model = Robot
         fields = ('id','status','creation_date','ingredients')
-        depth = 1
+        depth = 2
 '''
     Tab
 '''
@@ -344,7 +347,7 @@ class UserOrderTabSerializer(serializers.ModelSerializer):
     status_view = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Tab
-        fields = ('id','drink','status','status_view','ice','garnishes','quantity')
+        fields = ('id','drink','status','status_view','ice','garnishes','quantity','amount')
 
     def get_ice(self,obj):
         return obj.get_ice_display()
@@ -402,14 +405,20 @@ class OrderMachineSerializer(OrderSerializer):
     products = OrderTabSerializer(many=True, required=False, read_only=True)
     statistic_orders_today = serializers.SerializerMethodField(read_only=True)
     statistic_orders_drink_today = serializers.SerializerMethodField(read_only=True)
+    statistic_avg_time_per_drink_today = serializers.SerializerMethodField(read_only=True)
     class Meta(OrderSmallSerializer.Meta):
         model = Order
         fields = OrderSmallSerializer.Meta.fields +('user','statistic_orders_today',
-                    'statistic_orders_drink_today') 
+                    'statistic_orders_drink_today','statistic_avg_time_per_drink_today') 
 
     def get_statistic_orders_today(self,obj):
         today = date.today()
         return Order.objects.filter(creation_date__date=today,status=Order.STATUS_FINISHED).count()
+
+    def get_statistic_avg_time_per_drink_today(self,obj):
+        today = date.today()
+        orders = Tab.objects.filter(order__creation_date__date=today).aggregate(Avg('drink__estimate_time'))
+        return orders['drink__estimate_time__avg']
 
     def get_statistic_orders_drink_today(self,obj):
         today = date.today()
@@ -435,7 +444,7 @@ class SettingsForUserSeirializer(serializers.ModelSerializer):
     fee_unit_view = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = SettingBar
-        fields = ('max_drink_order','fee','fee_unit','fee_unit_view','tax')
+        fields = ('bar_status','max_drink_order','fee','fee_unit','fee_unit_view','tax')
     def get_fee_unit_view(self,obj):
         return obj.get_fee_unit_display()
 
@@ -443,4 +452,4 @@ class SettingsForAdminSeirializer(SettingsForUserSeirializer):
 
     class Meta(SettingsForUserSeirializer.Meta):
         model = SettingBar
-        fields = SettingsForUserSeirializer.Meta.fields+('bar_status','bottle_waring')
+        fields = SettingsForUserSeirializer.Meta.fields+('bottle_waring',)

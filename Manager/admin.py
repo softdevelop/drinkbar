@@ -48,7 +48,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 class UserBaseAdmin(UserAdmin):
     list_display = ('id','email','first_name','last_name','birthday')
-
+    ordering = ('-date_joined',)
     fieldsets = (
         (None, {'fields': ('username','email', 'password')}),
         (_('Personal info'),
@@ -123,6 +123,8 @@ class DrinkCategoryAdmin(ImportExportModelAdmin, admin.ModelAdmin):
             'fields': ('parent', 'name','active','image',)
         }),
     )
+    
+
     def _link(self, obj):
         link = str(obj.get_absolute_url()).title()[1:]
         return link.replace("/", ", ")
@@ -171,7 +173,7 @@ class DrinkAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     readonly_fields = ('numbers_bought',)
 
     filter_horizontal = ('category',)
-
+    search_fields = ('name','id',)
     list_filter = ('category',)
     inlines = (DrinkIngredientInline,DrinkGarnishInline)
 

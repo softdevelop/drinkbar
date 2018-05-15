@@ -25,7 +25,11 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(api_urls)),
     url(r'^verify/email/$', views.VerificationEmail.as_view(), name='user-verify-email'), 
-
+    url(r'^$', views.HomePage.as_view(), name='index'), 
+    url(r'^front-bar/$', views.FrontBarPage.as_view(), name='front-bar-page'), 
+    url(r'^back-bar/$', views.BackBarPage.as_view(), name='back-bar-page'), 
+    url(r'^home-bar/$', views.HomeBarPage.as_view(), name='home-bar-page'), 
+    url(r'^mobile-bar/$', views.MobileBarPage.as_view(), name='mobile-bar-page'), 
 ]
 
 if settings.DEBUG:
@@ -33,5 +37,5 @@ if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL.replace(settings.SITE_URL, ''), document_root=settings.MEDIA_ROOT)
 
 urlpatterns += [
-    url(r'^', TemplateView.as_view(template_name="index.html")),
+    url(r'^bluradmin/', TemplateView.as_view(template_name="index.html")),
 ]

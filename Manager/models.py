@@ -24,7 +24,7 @@ from pprint import pprint
 
 class UserBase(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
-    birthday = models.DateField()
+    birthday = models.DateField(null=True, blank=False)
     avatar = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='avatars',
                                  null=True, blank=True)
     avatar_url = models.CharField(max_length=200, null=True, blank=True, default=settings.MEDIA_URL+'avatar_defautl.png')
@@ -142,7 +142,7 @@ class Ingredient(models.Model):
 def update_ingredient_price(sender, instance, raw, using, update_fields, **kwargs):
     new_price = instance.price/float(instance.quanlity_of_bottle)
     new_price = float(fpformat.fix(new_price, 2))
-
+    
     if not new_price==instance.price_per_ml:
         try:
             for drink in instance.drinks.all():
@@ -259,6 +259,7 @@ class Drink(models.Model):
                         blank=True, null=True, upload_to='drink')
     image_background = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), 
                         upload_to='drink', blank=True, null=True)
+    background_color = models.CharField(max_length=200, blank=True, null=True)
     numbers_bought = models.PositiveIntegerField(blank=True, null= True, default=0)
     price = models.FloatField(default=0)
     glass = models.ForeignKey(SeparateGlass,blank=True, null=True, related_name='drinks')
@@ -308,6 +309,13 @@ class Drink(models.Model):
             except Exception as e:
                 print e
 
+    def set_background_color(self):
+        from background_color import background_color
+        import random
+        temp = random.randint(0, len(background_color)-1)
+        self.background_color = background_color[temp]
+        self.save()
+
     def __unicode__(self):
         return self.name
 @receiver(post_save, sender=Drink)
@@ -315,13 +323,16 @@ def update_drink_price(sender, instance, created, raw,
                     using, update_fields, **kwargs):
     if created:
         drink = Drink.objects.get(id=instance.id)
-        price = 0
-        for drink in drink.ingredients.all():
-            price += drink.change_to_ml(drink.drink.total_part,\
-                drink.drink.glass.change_to_ml)*drink.ingredient.price_per_ml
+        if not drink.price:
+            price = 0
+            for drink in drink.ingredients.all():
+                price += drink.change_to_ml(drink.drink.total_part,\
+                    drink.drink.glass.change_to_ml)*drink.ingredient.price_per_ml
 
-        drink.price = price
-        drink.save()
+            drink.price = price
+            drink.save()
+        if not drink.background_color:
+            drink.set_background_color()
 
 class DrinkIngredient(models.Model):
     CONST_UNIT_PART = 0
@@ -492,7 +503,7 @@ class Tab(models.Model):
     quantity = models.PositiveIntegerField(blank=True, null= True, default=0)
     quantity_done = models.PositiveIntegerField(blank=True, null= True, default=0)
     order = models.ForeignKey(Order, related_name='products',blank=True, null= True,)
-
+    amount = models.FloatField(blank=True, null=True)
 
 class RobotIngredient(models.Model):
 
@@ -548,7 +559,14 @@ def create_ingredient_history(sender, instance=None, **kwargs):
                                 robot=instance.machine, ingredient=instance.ingredient,\
                                 remain_of_bottle=instance.ingredient.quanlity_of_bottle)
             temp.save()
-
+        """
+            Re-active drink
+        """
+        drinks = DrinkIngredient.objects.filter(ingredient=instance.ingredient)
+        for drink in drinks:
+            if drink.drink.is_enough_ingredient(instance.machine,1) and drink.drink.status==Drink.CONST_STATUS_BLOCKED:
+                drink.drink.status=Drink.CONST_STATUS_ENABLED
+                drink.drink.save()
     instance.ingredient.save()
     '''
         Not suppor update, change data, quantity, 

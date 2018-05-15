@@ -11,7 +11,9 @@ django-cors-headers
 django-import-export
 django-redis
 facebook-sdk
+python-twitter
 -e git+https://github.com/mobolic/facebook-sdk.git#egg=facebook-sdk
 mysqlclient
 Pillow
 stripe
+requests-futures

@@ -46,5 +46,7 @@ urlpatterns = [
     url(r'^settings/$', api_views.Settings.as_view(), name="robot-detail"),
     url(r'^settings/(?P<pk>[0-9]+)/$', api_views.SettingsAdmin.as_view(), name="robot-detail"),
     url(r'^twitter/$', api_views.Twitter.as_view(), name="twitter"),
+
+    url(r'^do/$', api_views.DoOneTime.as_view(), name="do-one-time"),
     
 ]

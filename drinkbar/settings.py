@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_cleanup',
     'channels',
     'channels_api',
+    'twitter',
 
     'Manager',
 ]
@@ -99,7 +100,14 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'PAGINATE_BY': 10,  # Default to 10
     'PAGINATE_BY_PARAM': 'page_size',  # Allow client to override, using `?page_size=xxx`.
-    'MAX_PAGINATE_BY': 10  # Maximum limit allowed when using `?page_size=xxx`.
+    'MAX_PAGINATE_BY': 10,  # Maximum limit allowed when using `?page_size=xxx`.
+
+
+    # Render data
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
 }
 
 ROOT_URLCONF = 'drinkbar.urls'
@@ -198,7 +206,7 @@ stripe.api_key = STRIPE_KEYS['SECRET_KEY']
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 SITE_URL = "http://hiefficiencybar.com"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'blur-admin/release'),]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'blur-admin/release'), os.path.join(BASE_DIR, 'drinkbar/templates/webpage'),]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = SITE_URL+"/static/" 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
