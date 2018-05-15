@@ -16,7 +16,7 @@
 			name: '',
 			active: false,
 			price: 0,
-			key_word: 0,
+			key_word: '',
 			estimate_time: 0,
 			category: [],
 			ingredients : [],

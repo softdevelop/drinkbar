@@ -66,6 +66,7 @@
 		'BlurAdmin.pages.list-order',
 		// 'BlurAdmin.pages.create-order',
 		'BlurAdmin.pages.detail-order',
+		'BlurAdmin.pages.order-carts',
 		// ============ robot ================
 		'BlurAdmin.pages.list-robot',
 		'BlurAdmin.pages.import-robot',
@@ -243,6 +244,10 @@
 				{
 					title: 'Order Detail',
 					stateRef: 'detail-order/:id'
+				},
+				{
+					title: 'Order Carts',
+					stateRef: 'order-carts'
 				},
 				// ============= Robot ===============
 				{

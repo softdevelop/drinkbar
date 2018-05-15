@@ -4,7 +4,7 @@
         .factory('OrderService', function ($http, AppSetting) {
             return {
                 getList: function (token) {
-                    return $http.get(AppSetting.BASE_URL + '/api/user/order/?admin=true', {
+                    return $http.get(AppSetting.BASE_URL + '/api/user/order/?admin=true&status=30', {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -52,6 +52,15 @@
                 },
                 getElement: function (id, token) {
                     return $http.get(AppSetting.BASE_URL + '/api/user/order/' + id + '/', {
+                        headers: {
+                            'Content-Type': undefined,
+                            'Authorization': 'Token ' + token
+                        }
+                    })
+                },
+                addCart : function(token){
+                    var _url = AppSetting.BASE_URL + '/api/user/me/tab/?pending=true';
+                    return $http.get(_url, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token

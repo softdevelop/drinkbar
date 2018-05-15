@@ -72,7 +72,7 @@
                 />
             </div>
 
-            <button ng-disabled="isDisable" type="button" class="btn btn-primary" ng-click="create()">Create</button>
+            <button ng-disabled="form.$invalid && isDisable" type="button" class="btn btn-primary" ng-click="create()">Create</button>
         </form>
     </div>
 </div>

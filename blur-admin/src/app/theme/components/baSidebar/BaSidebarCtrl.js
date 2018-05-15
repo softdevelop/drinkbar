@@ -87,13 +87,13 @@
 			subMenu : [
 			{
 				stateRef: "list-ingredient-types",
-				title: "Types",
+				title: "List Types",
 				name: 'list-ingredient-types',
 				level: 1,
 			},
 			{
 				stateRef: "list-ingredient-brand",
-				title: "Brand",
+				title: "List Brand",
 				name: 'list-ingredient-brand',
 				level: 1,
 			},

@@ -4,6 +4,7 @@
             <thead>
                 <tr>
                     <th class="table-id ng-binding" style="text-align : left; width: 15px;">#</th>
+                    <th style="text-align : left; min-width: 200px;">Create Date</th>
                     <th style="text-align : left; min-width: 200px;">Username</th>
                     <th style="text-align : left;">QR Code Link</th>
                     <th style="text-align : left;">Overall drink order status </th>
@@ -67,8 +68,12 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in listData | orderBy: '-creation_date'" class="ng-scope">
+                <tr ng-repeat="item in listData" class="ng-scope">
                     <td class="table-id ng-binding" style="width: 15px; text-align: left;">{{ item.id }}</td>
+                    <td class="ng-binding" style="text-align : left;">
+                        {{ item.creation_date | date:'MM/dd/yyyy' }}
+                    </td>
+
                     <td class="ng-binding" style="text-align : left;">
                         {{ item.user.email }}
                     </td>

@@ -40,6 +40,15 @@
 				toastr.error(err.detail);
 			})
 		}
+
+		// ================ add cart ================
+		function addCart(){
+			OrderService.addCart($rootScope.userLogin.token).success(function(res){
+				console.log(res)
+			}).error(function(err, stt, res){
+				toastr.error(err.detail);
+			});
+		}
 		
 		// ================= get list ===============
 		function getList(){

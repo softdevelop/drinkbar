@@ -35,6 +35,33 @@
 			getList();
 		}
 
+		// ============ change Switch ==============
+		$scope.countSwitch = 0;
+		$scope.changeSwitch = function (data) {
+			$scope.countSwitch ++;
+			if($scope.countSwitch == 2){
+				$scope.countSwitch = 0;
+				console.log(data)
+				var _obj = {
+					id : data.id,
+					status : data.status == 0 ? '10' : '0',
+					ingredients : data.ingredients,
+					garnishes : data.garnishes
+				};
+
+				console.log(_obj)
+
+				// // data.status = data.status == 10 ? 0 : 10;
+
+				DrinkService.updated(_obj, $rootScope.userLogin.token).success(function(res){
+					toastr.success('Change status success!');
+					getList();
+				}).error(function(err, status, res){
+					toastr.error(err.detail);
+				})
+			}
+		}
+
 		// ============== sort data =================
 		$scope.sortData = function(name, data){
 			console.log('===> sort data')

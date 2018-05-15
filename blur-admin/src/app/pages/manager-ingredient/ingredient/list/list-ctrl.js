@@ -38,6 +38,11 @@
 				$scope.isShowFilterBrand = true;
 				returnDataFilter($scope.data_filter)
 			}
+
+			if(field === 'filter_brand' & value === ''){
+				returnDataFilter($scope.data_filter);
+			}
+
 			if($scope.data_filter.filter_brand !== '' && $scope.data_filter.filter_type !== ''){
 				returnDataFilter($scope.data_filter);
 			}
@@ -51,6 +56,9 @@
 		// ============== search data ==============
 		$scope.searchData = function(){
 			IngredientService.searchData($rootScope.userLogin.token, $scope.keywork, $rootScope.offset).success(function(res){
+				res.results.forEach(function(el){
+					el.status = el.status === 0 ? true : false;
+				});
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
 			})
@@ -59,8 +67,13 @@
 		// =============== return data filter ============
 		function returnDataFilter(data){
 			IngredientService.filterData(data, $rootScope.userLogin.token).success(function(res){
+				console.log(res)
+				res.results.forEach(function(el){
+					el.status = el.status === 0 ? true : false;
+				});
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
+				console.log($rootScope.listData)
 			}).error(function(err, stt, res){
 				toastr.error(err.detail);
 			});

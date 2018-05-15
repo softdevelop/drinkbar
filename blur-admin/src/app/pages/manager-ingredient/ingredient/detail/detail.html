@@ -18,7 +18,7 @@
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Status</label>
 
-                <select class="form-control" name="status" ng-model="detail.status" ng-change="changeInfo('status', detail.status)" required>
+                <select class="form-control" name="status" ng-model="detail.status" ng-change="changeInfo('status', detail.status)">
                     <option class="form-control" value="0">ON</option>
                     <option class="form-control" value="10">OFF</option>
                 </select>
@@ -41,19 +41,19 @@
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Price</label>
                 <input class="form-control" type="number" name="price" placeholder="Price" ng-model="detail.price" ng-change="changeInfo('price', detail.price)"
-                required>
+                >
             </div>
 
             <div class="form-group">
-                <label style="color : #fff; font-weight : bold;" for="">Bottles</label>
-                <input disabled class="form-control" type="number" name="bottles" placeholder="Bottles" ng-model="detail.bottles" ng-change="changeInfo('bottles', detail.bottles)"
-                required>
+                <label style="color : #fff; font-weight : bold;" for="">Bottel in storage</label>
+                <input class="form-control" type="number" name="bottles" placeholder="Bottles" ng-model="detail.bottles" ng-change="changeInfo('bottles', detail.bottles)"
+                disabled>
             </div>
 
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Quanlity of bottle</label>
                 <input class="form-control" type="number" name="quanlity_of_bottle" placeholder="Quanlity of bottle" ng-model="detail.quanlity_of_bottle"
-                ng-change="changeInfo('quanlity_of_bottle', detail.quanlity_of_bottle)" required>
+                ng-change="changeInfo('quanlity_of_bottle', detail.quanlity_of_bottle)" >
             </div>
 
             <div class="form-group">

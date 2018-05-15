@@ -66,12 +66,13 @@
 			var _key = 1;
 			FifoService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listData = res.results;
+				$scope.bigTotalItems = res.count;
+				console.log($rootScope.listData)
 				// $rootScope.listData.products.forEach(function(el){
 				// 	el.key = _key;
 				// 	_key++;
 				// });
 				$scope.products = $rootScope.listData.products;
-				console.log($scope.products)
 				$scope.bigTotalItems = res.count;
 			}).error(function(err, status, res){
 				toastr.error(err.detail);

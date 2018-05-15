@@ -39,8 +39,8 @@
                         Numbers bought
                     </th>
                     <th ng-model="static_sort.price" ng-click="sortData('price', static_sort.price)">
-                            <span ng-show="static_sort.price === 'price'" class="ion-arrow-up-b"></span>
-                            <span ng-show="static_sort.price === '-price'" class="ion-arrow-down-b"></span>
+                        <span ng-show="static_sort.price === 'price'" class="ion-arrow-up-b"></span>
+                        <span ng-show="static_sort.price === '-price'" class="ion-arrow-down-b"></span>
                         Price
                     </th>
                     <!-- <th>Is have ice</th> -->
@@ -59,19 +59,19 @@
                         </div>
                     </td>
                     <td class="ng-binding align-items-center">
-                        <!-- <div class="_status">
-                                <ba-switcher data-ng-disabled="true" switcher-style="success" switcher-value="item.is_have_ice" ></ba-switcher>
-                            </div> -->
+                        <div class="_status">
+                            <ba-switcher data-ng-disabled="true" switcher-style="success" switcher-value="item.is_have_ice" ng-click="changeSwitch(item)"></ba-switcher>
+                        </div>
                         <!-- <button style="margin : 5px auto; min-width : 100px;" ng-if="item.is_have_ice" type="button" class="btn btn-success btn-with-icon">
                             <i class="fa fa-sign-in-alt" style="margin-right : 7px;"></i>On</button>
                         <button style="margin : 5px auto; min-width : 100px;" ng-if="!item.is_have_ice" type="button" class="btn btn-danger btn-with-icon">
                             <i class="fa fa-sign-out-alt" style="margin-right : 7px;"></i>Off</button> -->
-                        <button style="margin : 5px auto;" ng-if="item.is_have_ice" type="button" class="btn btn-success btn-icon">
+                        <!-- <button style="margin : 5px auto;" ng-if="item.is_have_ice" type="button" class="btn btn-success btn-icon">
                             <i class="ion-android-checkmark-circle"></i>
                         </button>
                         <button style="margin : 5px auto;" ng-if="!item.is_have_ice" type="button" class="btn btn-danger btn-icon">
                             <i class="ion-close"></i>
-                        </button>
+                        </button> -->
                     </td>
                     <td class="ng-binding">
                         {{item.glass.name}}

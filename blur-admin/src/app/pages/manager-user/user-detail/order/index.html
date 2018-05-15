@@ -16,6 +16,7 @@
                             <th class="border_top_1">Garnishes</th>
                             <th class="border_top_1">Ice</th>
                             <th class="border_top_1">Quantity</th>
+                            <th class="border_top_1">Amount</th>
                             <th class="border_top_1" style="width: 120px;">QR Code</th>
                         </tr>
                     </thead>
@@ -38,6 +39,10 @@
                             </td>
                             <td class="ng-binding border_top_1">
                                 {{ item.quantity }}
+                            </td>
+                            <td class="ng-binding border_top_1">
+                                <span ng-if="!item.amount">0</span>
+                                <span ng-if="item.amount">{{ item.amount }}</span>
                             </td>
                             <td style="width: 120px; border: 1px solid rgba(107, 105, 105, 0.2);">
                                 <a href="" style="width: 140px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; display: inline-block;">{{data_order.qr_code}}</a>

@@ -16,7 +16,7 @@
             status : '0',
             price : 0,
             bottles : 0,
-            quanlity_of_bottle : 0,
+            quanlity_of_bottle : 1,
             brand : null,
             image : null
         };
