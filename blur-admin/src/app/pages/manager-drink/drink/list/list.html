@@ -28,6 +28,7 @@
                         <span ng-show="static_sort.status === '-status'" class="ion-arrow-down-b"></span>
                         Status
                     </th>
+                    <th style="text-align : left;">Prep</th>
                     <th ng-model="static_sort.glass" ng-click="sortData('glass', static_sort.glass)">
                         <span ng-show="static_sort.glass === 'glass'" class="ion-arrow-up-b"></span>
                         <span ng-show="static_sort.glass === '-glass'" class="ion-arrow-down-b"></span>
@@ -72,6 +73,9 @@
                         <button style="margin : 5px auto;" ng-if="!item.is_have_ice" type="button" class="btn btn-danger btn-icon">
                             <i class="ion-close"></i>
                         </button> -->
+                    </td>
+                    <td class="ng-binding">
+                        {{item.prep_view}}
                     </td>
                     <td class="ng-binding">
                         {{item.glass.name}}

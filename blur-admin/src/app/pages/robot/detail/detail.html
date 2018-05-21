@@ -35,10 +35,10 @@
                     <tbody>
                         <tr ng-repeat="ing in detail.ingredients" class="ng-scope">
                             <td class="ng-binding" style="text-align : left;">
-                                {{ing.ingredient}}
+                                {{ing.ingredient.name}}
                             </td>
                             <td class="ng-binding">
-                                {{ ing.last_ingredient }}
+                                {{ ing.last_ingredient.name }}
                             </td>
                             <td class="ng-binding">
                                 {{ ing.place_number }}

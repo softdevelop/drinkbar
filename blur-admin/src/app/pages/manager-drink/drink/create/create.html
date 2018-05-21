@@ -53,6 +53,17 @@
             </div>
 
             <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Prep</label>
+
+                <select class="form-control" name="prep" ng-model="data_create.prep" ng-change="changeInfo('prep', data_create.prep)">
+                    <option ng-selected="data_create.prep === 0" value="0">Shake</option>
+                    <option ng-selected="data_create.prep === 10" value="10">Filter</option>
+                    <option ng-selected="data_create.prep === 20" value="20">Stir</option>
+                    <option ng-selected="data_create.prep === 30" value="30">Muddle</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Glass</label>
 
                 <select class="form-control" name="glass" ng-model="data_create.glass" ng-change="changeInfo('glass', data_create.glass)">
@@ -71,7 +82,7 @@
                 <input class="form-control" type="number" min="0" name="estimate_time" placeholder="Estimate time" ng-model="data_create.estimate_time"
                     ng-change="changeInfo('estimate_time', data_create.estimate_time)" required>
             </div> -->
-            
+
             <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Estimate time</label>
                 <div class="_est">

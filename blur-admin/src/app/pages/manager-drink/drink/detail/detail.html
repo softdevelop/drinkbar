@@ -89,6 +89,17 @@
             </div>
 
             <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Prep</label>
+
+                <select class="form-control" name="prep" ng-model="detail.prep" ng-change="changeInfo('prep', detail.prep)">
+                    <option ng-selected="detail.prep === 0" value="0">Shake</option>
+                    <option ng-selected="detail.prep === 10" value="10">Filter</option>
+                    <option ng-selected="detail.prep === 20" value="20">Stir</option>
+                    <option ng-selected="detail.prep === 30" value="30">Muddle</option>
+                </select>
+            </div>
+
+            <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Glass</label>
 
                 <select class="form-control" name="glass" ng-model="detail.glass" ng-change="changeInfo('glass', detail.glass)">
@@ -138,7 +149,7 @@
                 <div class="add-row-editable-table">
                     <button class="btn btn-primary" data-toggle="modal" ng-click="openCreateIngredient('md')">
                         <i class="ion-plus-round"></i> Add Ingredient</button>
-                </div>
+                </div>  
 
                 <table ng-if="ingredients.length > 0" class="table table-striped" st-table="smartTableData">
                     <thead>
