@@ -26,6 +26,7 @@
 				res.status = res.status === 0 ? true : false;
 				$scope.detail = res;
 				$rootScope.robotId = res.id;
+				$rootScope.ingredients = res.ingredients ? res.ingredients : [];
 			}).error(function (err, status, res) {
 				toastr.error(err.detail);
 			})
@@ -43,12 +44,12 @@
 
 		// =========== open modal create ingredient ============
 		$scope.openCreateIngredient = function (size) {
-			var page = 'app/pages/manager-drink/drink/create/ingredient/add.html';
+			var page = 'app/pages/robot/detail/ingredient/add.html';
 			$uibModal.open({
 				animation: true,
 				templateUrl: page,
 				size: size,
-				controller: 'DrinkCreateIngredientCtrl',
+				controller: 'RobotDetailIngredientCtrl',
 			});
 		}
 
@@ -70,6 +71,7 @@
 
 		// =========== function create =================
 		$scope.save = function () {
+			console.log($rootScope.ingredients)
 			$scope.data_detail.ingredients = $rootScope.ingredients;
 			RobotService.updated($scope.data_detail, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Updated success!');

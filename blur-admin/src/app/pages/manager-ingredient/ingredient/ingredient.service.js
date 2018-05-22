@@ -12,7 +12,7 @@
                     });
                 },
                 searchData: function (token, keywork, offset) {
-                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/?search=' + keywork + '&limit=100&offset=' + offset, {
+                    return $http.get(AppSetting.BASE_URL + '/api/ingredient/?admin=true&search=' + keywork + '&limit=100&offset=' + offset, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token

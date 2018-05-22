@@ -55,6 +55,7 @@
 
 		// ============== search data ==============
 		$scope.searchData = function(){
+			$rootScope.offset = 0;
 			IngredientService.searchData($rootScope.userLogin.token, $scope.keywork, $rootScope.offset).success(function(res){
 				res.results.forEach(function(el){
 					el.status = el.status === 0 ? true : false;
