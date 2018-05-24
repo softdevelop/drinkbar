@@ -22,11 +22,11 @@
 		$scope.arr_sort = [];
 		// $scope.arr_sort = ['name', 'status', 'numbers_bought', 'price', 'glass'];
 		$scope.static_sort = {
-			name : '',
-			status : '',
-			numbers_bought : '',
-			price : '',
-			glass : ''
+			name: '',
+			status: '',
+			numbers_bought: '',
+			price: '',
+			glass: ''
 		}
 
 		// ================ pagination ====================
@@ -38,105 +38,131 @@
 		// ============ change Switch ==============
 		$scope.countSwitch = 0;
 		$scope.changeSwitch = function (data) {
-			$scope.countSwitch ++;
-			if($scope.countSwitch == 2){
+			$scope.countSwitch++;
+			if ($scope.countSwitch == 2) {
 				$scope.countSwitch = 0;
 				console.log(data)
-				var _obj = {
-					id : data.id,
-					status : data.status == 0 ? '10' : '0',
-					ingredients : data.ingredients,
-					garnishes : data.garnishes
-				};
 
-				console.log(_obj)
+
+				var _data_row = {
+					id: data.id,
+					status: data.status == 0 ? '10' : '0',
+					ingredients: [],
+					garnishes: []
+				};
+				
+				data.ingredients.forEach(function (el) {
+					var _obj = {
+						ingredient: el.ingredient.id,
+						ratio: el.ratio,
+						unit: el.unit
+					}
+					_data_row.ingredients.push(_obj);
+				});
+
+				data.garnishes.forEach(function (el) {
+					var _obj = {
+						garnish: el.garnish.id,
+						ratio: el.ratio
+						// unit : el.unit
+					}
+					_data_row.garnishes.push(_obj);
+				});
+
+				// _data_row.garnishes = data.garnishes;
+
+				// $scope.data_detail.estimate_time = $scope.est.min * 60 + $scope.est.sec;
+				var _data = _data_row;
+
+
+				console.log(_data)
 
 				// // data.status = data.status == 10 ? 0 : 10;
 
-				DrinkService.updated(_obj, $rootScope.userLogin.token).success(function(res){
+				DrinkService.updated(_data, $rootScope.userLogin.token).success(function (res) {
 					toastr.success('Change status success!');
 					getList();
-				}).error(function(err, status, res){
+				}).error(function (err, status, res) {
 					toastr.error(err.detail);
 				})
 			}
 		}
 
 		// ============== sort data =================
-		$scope.sortData = function(name, data){
+		$scope.sortData = function (name, data) {
 			console.log('===> sort data')
 			console.log(data)
-			if(name === 'name'){
-				var _sort = $scope.static_sort.name = data === '' ? 'name' : (data === 'name' ? '-name' : 'name') ;
-				
-				var _check_index =0;
+			if (name === 'name') {
+				var _sort = $scope.static_sort.name = data === '' ? 'name' : (data === 'name' ? '-name' : 'name');
+
+				var _check_index = 0;
 				for (var key in $scope.arr_sort) {
 					var _data = $scope.arr_sort[key];
-					if(_data !== name){
-						_check_index ++;
-					} 
+					if (_data !== name) {
+						_check_index++;
+					}
 				}
-				if(_check_index === $scope.arr_sort.length){
+				if (_check_index === $scope.arr_sort.length) {
 					$scope.arr_sort.push(name);
 				}
 			}
-			if(name === 'status'){
-				var _sort = $scope.static_sort.status = data === '' ? 'status' : (data === 'status' ? '-status' : 'status') ;
+			if (name === 'status') {
+				var _sort = $scope.static_sort.status = data === '' ? 'status' : (data === 'status' ? '-status' : 'status');
 				// $scope.arr_sort[1] = $scope.static_sort.status;
 
-				var _check_index =0;
+				var _check_index = 0;
 				for (var key in $scope.arr_sort) {
 					var _data = $scope.arr_sort[key];
-					if(_data !== name){
-						_check_index ++;
-					} 
+					if (_data !== name) {
+						_check_index++;
+					}
 				}
-				if(_check_index === $scope.arr_sort.length){
+				if (_check_index === $scope.arr_sort.length) {
 					$scope.arr_sort.push(name);
 				}
 			}
-			if(name === 'numbers_bought'){
-				var _sort = $scope.static_sort.numbers_bought = data === '' ? 'numbers_bought' : (data === 'numbers_bought' ? '-numbers_bought' : 'numbers_bought') ;
+			if (name === 'numbers_bought') {
+				var _sort = $scope.static_sort.numbers_bought = data === '' ? 'numbers_bought' : (data === 'numbers_bought' ? '-numbers_bought' : 'numbers_bought');
 				// $scope.arr_sort[2] = $scope.static_sort.numbers_bought;
 
-				var _check_index =0;
+				var _check_index = 0;
 				for (var key in $scope.arr_sort) {
 					var _data = $scope.arr_sort[key];
-					if(_data !== name){
-						_check_index ++;
-					} 
+					if (_data !== name) {
+						_check_index++;
+					}
 				}
-				if(_check_index === $scope.arr_sort.length){
+				if (_check_index === $scope.arr_sort.length) {
 					$scope.arr_sort.push(name);
 				}
 			}
-			if(name === 'price'){
-				var _sort = $scope.static_sort.price = data === '' ? 'price' : (data === 'price' ? '-price' : 'price') ;
+			if (name === 'price') {
+				var _sort = $scope.static_sort.price = data === '' ? 'price' : (data === 'price' ? '-price' : 'price');
 				// $scope.arr_sort[3] = $scope.static_sort.price;
 
-				var _check_index =0;
+				var _check_index = 0;
 				for (var key in $scope.arr_sort) {
 					var _data = $scope.arr_sort[key];
-					if(_data !== name){
-						_check_index ++;
-					} 
+					if (_data !== name) {
+						_check_index++;
+					}
 				}
-				if(_check_index === $scope.arr_sort.length){
+				if (_check_index === $scope.arr_sort.length) {
 					$scope.arr_sort.push(name);
 				}
 			}
-			if(name === 'glass'){
-				var _sort = $scope.static_sort.glass = data === '' ? 'glass' : (data === 'glass' ? '-glass' : 'glass') ;
+			if (name === 'glass') {
+				var _sort = $scope.static_sort.glass = data === '' ? 'glass' : (data === 'glass' ? '-glass' : 'glass');
 				// $scope.arr_sort[4] = $scope.static_sort.glass;
 
-				var _check_index =0;
+				var _check_index = 0;
 				for (var key in $scope.arr_sort) {
 					var _data = $scope.arr_sort[key];
-					if(_data !== name){
-						_check_index ++;
-					} 
+					if (_data !== name) {
+						_check_index++;
+					}
 				}
-				if(_check_index === $scope.arr_sort.length){
+				if (_check_index === $scope.arr_sort.length) {
 					$scope.arr_sort.push(name);
 				}
 			}
@@ -147,98 +173,98 @@
 
 			for (var i in $scope.arr_sort) {
 				var _data = $scope.arr_sort[i];
-				if(str_sort === ''){
+				if (str_sort === '') {
 					str_sort += $scope.static_sort[_data];
-				} else{
-					str_sort = str_sort + ','+$scope.static_sort[_data]
+				} else {
+					str_sort = str_sort + ',' + $scope.static_sort[_data]
 				}
 			}
 
 			console.log(str_sort)
 
-			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, str_sort).success(function(res){
+			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, str_sort).success(function (res) {
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
-			}).error(function(err, status, res){
+			}).error(function (err, status, res) {
 				toastr.error(err.detail);
 			});
 		}
 
 		// ============= change keywork ============
-		$scope.changeKeywork = function(keywork){
+		$scope.changeKeywork = function (keywork) {
 			$scope.keywork = keywork;
 		}
 
 		// ============== search data ==============
-		$scope.searchData = function(){
-			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, $scope.sort).success(function(res){
+		$scope.searchData = function () {
+			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, $scope.sort).success(function (res) {
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
-			}).error(function(err, status, res){
-				toastr.error(err.detail);
-			});
-		}
-		
-		// ================= get list ===============
-		function getList(){
-			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, $scope.sort).success(function(res){
-				$rootScope.listData = res.results;
-				$scope.bigTotalItems = res.count;
-			}).error(function(err, status, res){
+			}).error(function (err, status, res) {
 				toastr.error(err.detail);
 			});
 		}
 
-        getList();
-        
-        // =========== change active ==================
-        $scope.changeActive = function(data){
-            DrinkService.updated(data, $rootScope.userLogin.token).success(function(res){
-                toastr.success('Updated active success!');
-                getList();
-            }).error(function(err, stt, res){
-                toastr.error(err.detail);
-            })
-        }
+		// ================= get list ===============
+		function getList() {
+			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, $scope.sort).success(function (res) {
+				$rootScope.listData = res.results;
+				$scope.bigTotalItems = res.count;
+			}).error(function (err, status, res) {
+				toastr.error(err.detail);
+			});
+		}
+
+		getList();
+
+		// =========== change active ==================
+		$scope.changeActive = function (data) {
+			DrinkService.updated(data, $rootScope.userLogin.token).success(function (res) {
+				toastr.success('Updated active success!');
+				getList();
+			}).error(function (err, stt, res) {
+				toastr.error(err.detail);
+			})
+		}
 
 		// =========== open modal confirm delete Glass ===========
-		$scope.confirmDelete = function(data){
+		$scope.confirmDelete = function (data) {
 			var page = 'app/pages/manager-drink/drink/list/confirm/confirm.html';
-            $uibModal.open({
-                animation: true,
-                templateUrl: page,
+			$uibModal.open({
+				animation: true,
+				templateUrl: page,
 				size: 'sm',
 				resolve: {
-                    items: function () {
-                        return data;
-                    }
-                },
-                controller: 'DrinkDeleteCtrl',
-            });
+					items: function () {
+						return data;
+					}
+				},
+				controller: 'DrinkDeleteCtrl',
+			});
 		}
 
 	};
 
 	// controler drinkListDeleteCtrl
-	function DrinkDeleteCtrl($scope, toastr, DrinkService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance){
+	function DrinkDeleteCtrl($scope, toastr, DrinkService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance) {
 		$scope.item_del = items;
 
 		// ================= get list glass ===============
-		function getList(){
-			DrinkService.getList($rootScope.userLogin.token).success(function(res){
+		function getList() {
+			DrinkService.getList($rootScope.userLogin.token).success(function (res) {
 				$rootScope.listData = res;
-			}).error(function(err, status, res){
+			}).error(function (err, status, res) {
 				toastr.error(err.detail);
 			});
 		}
 
 		// =========== function delete glass =============
-		$scope.remove = function(data){
-			DrinkService.removed(data.id, $rootScope.userLogin.token).success(function(res){
+		$scope.remove = function (data) {
+			DrinkService.removed(data.id, $rootScope.userLogin.token).success(function (res) {
 				toastr.success('Deleted success!');
 				$uibModalInstance.close();
 				getList();
-			}).error(function(err, status, res){
+			}).error(function (err, status, res) {
 				toastr.error(err.detail);
 			})
 		}

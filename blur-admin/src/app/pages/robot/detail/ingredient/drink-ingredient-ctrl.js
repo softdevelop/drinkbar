@@ -6,7 +6,8 @@
     'use strict';
 
     angular.module('BlurAdmin.pages.detail-robot')
-        .controller('RobotDetailIngredientCtrl', RobotDetailIngredientCtrl);
+        .controller('RobotDetailIngredientCtrl', RobotDetailIngredientCtrl)
+        .controller('RobotDeleteIngredientCtrl', RobotDeleteIngredientCtrl);
 
     /** @ngInject */
     function RobotDetailIngredientCtrl($scope, DrinkService, IngredientService, RobotService, toastr, $rootScope, $location, $window, $uibModalInstance) {
@@ -22,9 +23,9 @@
         $scope.list_robot = [];
         $scope.ingredients = [];
         $scope.data_create = {
-            place_number : 0,
-            status : 10,
-            machine : 1
+            place_number: 0,
+            status: 10,
+            machine: 1
         }
         $scope.isDisableBrand = true;
         $scope.isDisableIngredient = true;
@@ -93,8 +94,8 @@
         // =========== get list ingredient ==============
         function getListIngredient(type, brand) {
             var _data = {
-                filter_type : type,
-                filter_brand : brand
+                filter_type: type,
+                filter_brand: brand
             };
             IngredientService.filterData(_data, $rootScope.userLogin.token).success(function (res) {
                 $scope.list_ingredient = res.results;
@@ -128,12 +129,12 @@
             });
         }
 
-        
+
         // ============ get list robot ===========
-        function getListRobot(){
-            RobotService.getList($rootScope.userLogin.token).success(function(res){
+        function getListRobot() {
+            RobotService.getList($rootScope.userLogin.token).success(function (res) {
                 $scope.list_robot = res.results;
-            }).error(function(err, stt, res){
+            }).error(function (err, stt, res) {
                 toastr.error(err.detail);
             })
         }
@@ -142,42 +143,42 @@
 
 
         // // ========== function change from ===============
-		// $scope.changeInfo = function(field, value){
+        // $scope.changeInfo = function(field, value){
         //     $scope.data_create[field] = value;
         // }
-        
+
         // ========== function change from ===============
-		$scope.changeInfo = function(field, value){
-            if(field === 'type'){
+        $scope.changeInfo = function (field, value) {
+            if (field === 'type') {
                 $scope.isDisableBrand = false;
                 getListBrand(value);
-            } 
-            if(field === 'brand'){
+            }
+            if (field === 'brand') {
                 $scope.isDisableIngredient = false;
                 getListIngredient($scope.data_create.type, value);
             }
             $scope.data_create[field] = value;
-		}
+        }
 
         // ========== import ==========
-        $scope.add = function(){
-            RobotService.importHistoryRobo($scope.data_create, $rootScope.userLogin.token).success(function(res){
+        $scope.add = function () {
+            RobotService.importHistoryRobo($scope.data_create, $rootScope.userLogin.token).success(function (res) {
                 // toastr.success('Import robot success!');
                 // $rootScope.robotId = $scope.data_create.machine;
-                    console.log(res)
-                    var _obj = {
-                        machine : res.machine,
-                        creation_date : res.creation_date,
-                        id : res.id,
-                        place_number : res.place_number,
-                        quantity : res.quantity,
-                        status : res.status,
-                        ingredient : res.ingredient_view
-                    }
-                    $rootScope.ingredients.push(_obj);
-                    $uibModalInstance.close();
-                    // $window.location.href = '#/robot/history/list';
-            }).error(function(err, stt, res){
+                console.log(res)
+                var _obj = {
+                    machine: res.machine,
+                    creation_date: res.creation_date,
+                    id: res.id,
+                    place_number: res.place_number,
+                    quantity: res.quantity,
+                    status: res.status,
+                    ingredient: res.ingredient_view
+                }
+                $rootScope.ingredients.push(_obj);
+                $uibModalInstance.close();
+                // $window.location.href = '#/robot/history/list';
+            }).error(function (err, stt, res) {
                 toastr.error(err.detail);
             })
         }
@@ -190,6 +191,34 @@
         //     $rootScope.ingredients.push(_obj);
         //     $uibModalInstance.close();
         // }
+    };
+
+    function RobotDeleteIngredientCtrl(items, $scope, DrinkService, IngredientService, RobotService, toastr, $rootScope, $location, $window, $uibModalInstance) {
+        $scope.item_del = items;
+
+        // =========== function delete glass =============
+        $scope.remove = function (data) {
+            console.log('==> remove')
+
+            RobotService.removedIngredient(items.id, $rootScope.userLogin.token).success(function(res){
+                console.log(res)
+            }).error(function(err, stt, res){
+                console.log(res)
+                toastr.error(err.detail)
+            });
+
+            // var _arr = $rootScope.garnishs;
+
+            // for (var i = _arr.length; i--;) {
+            //     if (_arr[i].garnish.id === items.garnish.id) {
+            //         _arr.splice(i, 1);
+            //     }
+            // }
+            // $rootScope.garnishs = _arr;
+            // toastr.success('Remove success!');
+            // $uibModalInstance.close();
+
+        }
     }
 
 })();

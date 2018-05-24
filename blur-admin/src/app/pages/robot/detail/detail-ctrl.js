@@ -65,7 +65,7 @@
 						return data;
 					}
 				},
-				controller: 'DrinkDeleteIngredientCtrl',
+				controller: 'RobotDeleteIngredientCtrl',
 			});
 		}
 

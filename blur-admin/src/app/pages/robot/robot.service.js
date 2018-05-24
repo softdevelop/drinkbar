@@ -31,6 +31,14 @@
                         }
                     })
                 },
+                removedIngredient: function (id, token) {
+                    return $http.delete(AppSetting.BASE_URL + '/api/ingredient/history/' + id + '/', {
+                        headers: {
+                            'Content-Type': undefined,
+                            'Authorization': 'Token ' + token
+                        }
+                    })
+                },
                 updated: function (data, token) {
                     var fd = new FormData();
 
