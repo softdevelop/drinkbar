@@ -169,8 +169,7 @@
                                 {{ item.ratio }}
                             </td>
                             <td class="ng-binding">
-                                <span ng-if="item.unit === '0' || item.unit === 'part' ">Part</span>
-                                <span ng-if="item.unit === '10' || item.unit === 'mL' ">mL</span>
+                                {{ item.unit_view }}
                             </td>
                             <td class="ng-binding" style="width: 30px; text-align : center;">
                                 <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">

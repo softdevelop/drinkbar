@@ -90,8 +90,6 @@
 
 		// ============== sort data =================
 		$scope.sortData = function (name, data) {
-			console.log('===> sort data')
-			console.log(data)
 			if (name === 'name') {
 				var _sort = $scope.static_sort.name = data === '' ? 'name' : (data === 'name' ? '-name' : 'name');
 
@@ -167,8 +165,6 @@
 				}
 			}
 
-			console.log($scope.arr_sort)
-
 			var str_sort = '';
 
 			for (var i in $scope.arr_sort) {
@@ -208,8 +204,13 @@
 		// ================= get list ===============
 		function getList() {
 			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, $scope.sort).success(function (res) {
+				res.results.forEach(function(el){
+					el.status = el.status === 0 ? true : false;
+				});
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
+				console.log($rootScope.listData)
+				
 			}).error(function (err, status, res) {
 				toastr.error(err.detail);
 			});
