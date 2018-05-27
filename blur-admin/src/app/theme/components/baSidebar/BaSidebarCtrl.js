@@ -183,6 +183,7 @@
         			animation: true,
         			templateUrl: page,
         			size: 'sm',
+					backdrop: 'static',
         			resolve: {
         				items: function () {
         					return data;

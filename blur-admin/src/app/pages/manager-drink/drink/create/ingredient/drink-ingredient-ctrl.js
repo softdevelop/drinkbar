@@ -74,6 +74,11 @@
                 $scope.isDisableIngredient = false;
                 $scope.list_ingredient = [];
                 getListIngredient($scope.type, $scope.brand);
+            } else if(field === 'unit'){
+                $scope.data_create[field] = value;
+                $scope.data_create['unit_view'] = value === '0' ? '%' : (value === '1' ? 'part' : (value === '10' ? 'mL' : (value === '20' ? 'dash' 
+                    : (value === '30' ? 'splash' : (value === '40' ? 'teaspoon' : (value === '50' ? 'tablespoon' : (value === '60' ? 'pony' 
+                    : (value === '70' ? 'jigger' : (value === '80' ? 'shot' : (value === '90' ? 'snit' : (value === '100' ? 'split' : 'oz'))))))))))) ;
             }
             else {
                 $scope.data_create[field] = value;
@@ -85,6 +90,7 @@
             toastr.success('Add Ingredient success!');
             var _obj = $scope.data_create;
             $rootScope.ingredients.push(_obj);
+            console.log($rootScope.ingredients)
             $uibModalInstance.close();
         }
     }

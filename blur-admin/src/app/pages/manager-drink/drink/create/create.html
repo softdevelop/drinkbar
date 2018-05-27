@@ -130,8 +130,7 @@
                                 {{ ing.ratio }}
                             </td>
                             <td class="ng-binding">
-                                <span ng-if="ing.unit === '0'">Part</span>
-                                <span ng-if="ing.unit === '10'">mL</span>
+                                {{ ing.unit_view }}
                             </td>
                             <td class="ng-binding" style="width: 30px; text-align : center;">
                                 <a href="" data-toggle="modal" ng-click="confirmDelete(ing)" style="color : #e85555;">
