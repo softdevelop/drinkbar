@@ -11,7 +11,7 @@
 
 	/** @ngInject */
 	function CategoriesListCtrl($scope, toastr, CategoriesService, $rootScope, $location, $window, $uibModal) {
-		$rootScope.listData = [];
+		$rootScope.listDataCategory = [];
 
 		$scope.maxSize = 10;
 		$scope.bigTotalItems = 0;
@@ -49,7 +49,7 @@
 		// ================= get list ===============
 		function getList() {
 			CategoriesService.getList($rootScope.userLogin.token).success(function (res) {
-				$rootScope.listData = res;
+				$rootScope.listDataCategory = res;
 			}).error(function (err, status, res) {
 				toastr.error(err.detail);
 			});
@@ -82,7 +82,7 @@
 		// ================= get list glass ===============
 		function getList() {
 			CategoriesService.getList($rootScope.userLogin.token).success(function (res) {
-				$rootScope.listData = res;
+				$rootScope.listDataCategory = res;
 			}).error(function (err, status, res) {
 				toastr.error(err.detail);
 			});

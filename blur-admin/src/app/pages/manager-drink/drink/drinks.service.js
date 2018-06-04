@@ -89,7 +89,7 @@
                             }
                         }
                     }
-                    return $http.patch(AppSetting.BASE_URL + '/api/drink/' + data.id + '/', fd, {
+                    return $http.patch(AppSetting.BASE_URL + '/api/drink/' + data.id + '/?admin', fd, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token

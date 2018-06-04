@@ -10,7 +10,7 @@
 
 	/** @ngInject */
 	function RobotDetailCtrl($stateParams, $scope, RobotService, toastr, $rootScope, $location, $window, $uibModal) {
-		$scope.detail = {};
+		$rootScope.detail = {};
 		$scope.paramt_id = $stateParams.id;
 		$scope.data_detail = {
 			id: $scope.paramt_id
@@ -24,7 +24,7 @@
 			RobotService.getElement($scope.paramt_id, $rootScope.userLogin.token).success(function (res) {
 				// res.status = String(res.status);
 				res.status = res.status === 0 ? true : false;
-				$scope.detail = res;
+				$rootScope.detail = res;
 				$rootScope.robotId = res.id;
 				$rootScope.ingredients = res.ingredients ? res.ingredients : [];
 			}).error(function (err, status, res) {

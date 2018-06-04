@@ -32,7 +32,7 @@
                     })
                 },
                 removedIngredient: function (id, token) {
-                    return $http.delete(AppSetting.BASE_URL + '/api/ingredient/history/' + id + '/', {
+                    return $http.delete(AppSetting.BASE_URL + '/api/robot/ingredient/' + id + '/', {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token

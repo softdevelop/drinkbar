@@ -58,6 +58,7 @@
         function getElement() {
             IngredientService.getElement($scope.paramt_id, $rootScope.userLogin.token).success(function (res) {
                 res.status = String(res.status);
+                res.type_search = String(res.type_search);
                 res.brand = String(res.brand.id);
                 $scope.detail = res;
                 $scope.detail.type = res.type.id;

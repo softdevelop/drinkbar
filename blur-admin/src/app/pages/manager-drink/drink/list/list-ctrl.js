@@ -11,7 +11,7 @@
 
 	/** @ngInject */
 	function DrinkListCtrl($scope, toastr, DrinkService, $rootScope, $location, $window, $uibModal) {
-		$rootScope.listData = [];
+		$rootScope.listDataDrink = [];
 
 		$scope.maxSize = 10;
 		$scope.bigTotalItems = 0;
@@ -179,7 +179,7 @@
 			console.log(str_sort)
 
 			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, str_sort).success(function (res) {
-				$rootScope.listData = res.results;
+				$rootScope.listDataDrink = res.results;
 				$scope.bigTotalItems = res.count;
 			}).error(function (err, status, res) {
 				toastr.error(err.detail);
@@ -194,7 +194,7 @@
 		// ============== search data ==============
 		$scope.searchData = function () {
 			DrinkService.getList($rootScope.userLogin.token, $rootScope.offset, $scope.keywork, $scope.sort).success(function (res) {
-				$rootScope.listData = res.results;
+				$rootScope.listDataDrink = res.results;
 				$scope.bigTotalItems = res.count;
 			}).error(function (err, status, res) {
 				toastr.error(err.detail);
@@ -207,9 +207,9 @@
 				res.results.forEach(function(el){
 					el.status = el.status === 0 ? true : false;
 				});
-				$rootScope.listData = res.results;
+				$rootScope.listDataDrink = res.results;
 				$scope.bigTotalItems = res.count;
-				console.log($rootScope.listData)
+				console.log($rootScope.listDataDrink)
 				
 			}).error(function (err, status, res) {
 				toastr.error(err.detail);
@@ -253,7 +253,7 @@
 		// ================= get list glass ===============
 		function getList() {
 			DrinkService.getList($rootScope.userLogin.token).success(function (res) {
-				$rootScope.listData = res;
+				$rootScope.listDataDrink = res;
 			}).error(function (err, status, res) {
 				toastr.error(err.detail);
 			});

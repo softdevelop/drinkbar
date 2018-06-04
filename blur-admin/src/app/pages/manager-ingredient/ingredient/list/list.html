@@ -52,6 +52,7 @@
                     <th class="" style="text-align : left;">Name</th>
                     <th style="text-align: center;">Image</th>
                     <th>Type</th>
+                    <th>Type By</th>
                     <th>Brand</th>
                     <th>Bottel in storage</th>
                     <th>Status</th>
@@ -70,8 +71,12 @@
                     </td>
                     <td class="ng-binding">
                         <span>
-                            <!-- <div ng-class="{ 'glyphicon spinning ion-load-a load_page' : obj.id !== item.type }"></div> -->
                             <span>{{ item.type.name }}</span>
+                        </span>
+                    </td>
+                    <td class="ng-binding">
+                        <span>
+                            <span>{{ item.type_search_view }}</span>
                         </span>
                     </td>
                     <td class="ng-binding">

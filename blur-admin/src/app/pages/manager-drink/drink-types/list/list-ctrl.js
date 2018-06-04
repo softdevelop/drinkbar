@@ -11,7 +11,7 @@
 
 	/** @ngInject */
 	function DrinkTypesListCtrl($scope, toastr, DrinkTypesService, $rootScope, $location, $window, $uibModal) {
-        $rootScope.listData = [];
+        $rootScope.listDataDrinkType = [];
 
         $scope.maxSize = 10;
         $scope.bigTotalItems = 0;
@@ -30,7 +30,7 @@
 		// ================= get list ===============
 		function getList(){
 			DrinkTypesService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
-				$rootScope.listData = res.results;
+				$rootScope.listDataDrinkType = res.results;
 			}).error(function(err, status, res){
 				toastr.error(err.detail);
 			});
@@ -73,7 +73,7 @@
 		// ================= get list glass ===============
 		function getList(){
 			DrinkTypesService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
-				$rootScope.listData = res.results;
+				$rootScope.listDataDrinkType = res.results;
 			}).error(function(err, status, res){
 				toastr.error(err.detail);
 			});

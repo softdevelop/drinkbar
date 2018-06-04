@@ -193,15 +193,41 @@
         // }
     };
 
-    function RobotDeleteIngredientCtrl(items, $scope, DrinkService, IngredientService, RobotService, toastr, $rootScope, $location, $window, $uibModalInstance) {
+    function RobotDeleteIngredientCtrl($stateParams, items, $scope, DrinkService, IngredientService, RobotService, toastr, $rootScope, $location, $window, $uibModalInstance) {
         $scope.item_del = items;
+        $rootScope.detail = {};
+		$scope.paramt_id = $stateParams.id;
+		$scope.data_detail = {
+			id: $scope.paramt_id
+		};
+		$scope.isDisable = true;
+		$rootScope.ingredients = [];
+		$rootScope.robotId = 0;
+
+		// ========= function get data glass by id ===========
+		function getElement() {
+			RobotService.getElement($scope.paramt_id, $rootScope.userLogin.token).success(function (res) {
+				// res.status = String(res.status);
+				res.status = res.status === 0 ? true : false;
+				$rootScope.detail = res;
+				$rootScope.robotId = res.id;
+				$rootScope.ingredients = res.ingredients ? res.ingredients : [];
+			}).error(function (err, status, res) {
+				toastr.error(err.detail);
+			})
+		}
+
+		
 
         // =========== function delete glass =============
         $scope.remove = function (data) {
             console.log('==> remove')
 
             RobotService.removedIngredient(items.id, $rootScope.userLogin.token).success(function(res){
-                console.log(res)
+                $uibModalInstance.close();
+                setTimeout(function() {
+                    getElement();
+                }, 300)
             }).error(function(err, stt, res){
                 console.log(res)
                 toastr.error(err.detail)

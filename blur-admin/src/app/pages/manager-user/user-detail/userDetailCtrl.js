@@ -40,6 +40,26 @@
             });
         }
 
+        // ============ open modal photo ==========
+        $scope.openPhoto = function(data){
+            var page = 'app/pages/manager-user/user-detail/photo/index.html';
+
+            $uibModal.open({
+                animation: true,
+                templateUrl: page,
+                size: 'lg',
+                resolve: {
+                    token: function () {
+                        return $scope.currentUser.token;
+                    },
+                    items : function(){
+                        return data;
+                    }
+                },
+                controller: 'UserPhotoCtrl',
+            });
+        }
+
         // ============= get user detail =================
         function getUser(){
             ManagerUserService.getUser($scope.user_id, $rootScope.userLogin.token).success(function(res){
