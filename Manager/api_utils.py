@@ -21,3 +21,7 @@ class BadRequest(APIException):
 class InternalServerError(APIException):
     status_code = 500
     default_detail = 'Internal Server Error'
+
+class Authentificate(APIException):
+    status_code = 401
+    default_detail = 'Authentificate Error'

@@ -1,8 +1,20 @@
-$(document).ready(function(){
+$(document).ready(function () {
+    $(".carousel").swipe({
+
+        swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+
+            if (direction == 'left') $(this).carousel('next');
+            if (direction == 'right') $(this).carousel('prev');
+
+        },
+        allowPageScroll: "vertical"
+
+    });
+    $("#myCarousel").carousel({ interval: 3000 });
     "use strict";
-    $(".bar .bar_item .bar_main a").click(function(){
+    $(".bar .bar_item .bar_main a").click(function () {
         let baritem = $(this).parents('.bar');
-        if(baritem.hasClass('active')) {
+        if (baritem.hasClass('active')) {
             baritem.removeClass('col-md-9 col-lg-9 active').addClass('col-md-3 col-lg-3');
             $(".bar").removeClass('col-md-1 col-lg-1').addClass('col-md-3 col-lg-3');
             $(".bar_main").removeClass('col-md-4 col-lg-4');
@@ -24,5 +36,53 @@ $(document).ready(function(){
             $(".disable .bar_main a").removeClass('bar_item_icon_close').addClass("bar_item_icon");
         }
     });
+
+    $("#contact .modal-body_content form").submit(function () {
+        $.ajax({
+            type: "POST",
+            url: '/api/contactus/',
+            data: {
+                name: $("#contact .modal-body_content form #Name").val(),
+                email: $("#contact .modal-body_content form #email").val(),
+                message: $("#contact .modal-body_content form #Message").val()
+            },
+          success: function (data) {
+                console.log(data);
+                alert(data.detail);
+
+                var div = document.createElement('div');
+                div.className = 'row';
+                div.innerHTML =
+                    '<div class="modal fade" id="myModal" role="dialog">\
+                    <div class="modal-dialog">\
+                    < div class= "modal-content" >\
+                    < div class= "modal-header" >\
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>\
+                    <h4 class="modal-title">Modal Header</h4>\
+                    </div >\
+                    <div class="modal-body">\
+                    <p>Some text in the modal.</p>\
+                    </div>\
+                    <div class="modal-footer">\
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>\
+                    </div>\
+                    </div>\
+                    </div>\
+                    </div>';
+
+                document.getElementById('contact').appendChild(div);
+
+                //$('#modal').append("<p>Ninh</p>");
+                //alert( $("#contact .modal-body_content form #Name").val()="");
+                // $("#contact .modal-body_content form #Name").val()='';
+                // $("#contact .modal-body_content form #email").val()='';
+                // $("#contact .modal-body_content form #Message").val()='';
+            },
+            error: function (data) {
+
+                alert(data.responseJSON.detail);
+            }
+        });
+});
     
 });

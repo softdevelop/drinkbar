@@ -53,7 +53,7 @@ class UserBase(AbstractUser):
     def get_or_create_user_from_facebook(self, fb_token, should_create=True):
         new_user = UserBase()
         try:
-            graph = facebook.GraphAPI(access_token=fb_token,version=2.11)
+            graph = facebook.GraphAPI(access_token=fb_token,version=3.0)
             user = graph.get_object(id="me",fields="email, first_name, last_name, birthday")
 
             fb_uid = user.get('id')
@@ -63,7 +63,9 @@ class UserBase(AbstractUser):
             birthday = user.get('birthday', '')
             birthday = datetime.strptime(birthday, '%m/%d/%Y')
             avatar_url = "http://graph.facebook.com/%s/picture?width=500&height=500&type=square" % fb_uid
-            new_user = self.objects.filter(username=email,fb_uid=fb_uid).first()
+            new_user = self.objects.filter(fb_uid=fb_uid).first()
+            if not new_user:
+                new_user = self.objects.filter(username=email).first()
             if not new_user:
                 new_user = UserBase(username=email, email=email, fb_uid=fb_uid,
                             first_name=first_name, last_name=last_name, is_email_verified=True,
@@ -72,9 +74,15 @@ class UserBase(AbstractUser):
                 new_user.save()
             else:
                 # Update user information if it was changed.
-                self.objects.filter(username=email,fb_uid=fb_uid).update(first_name=first_name,
-                            last_name=last_name, birthday=birthday.date(),
-                            fb_access_token=unicode(fb_token).encode('utf-8'))
+                new_user.first_name=first_name
+                new_user.fb_uid=fb_uid
+                new_user.last_name=last_name
+                new_user.birthday=birthday.date()
+                new_user.is_email_verified==True
+                new_user.fb_access_token=unicode(fb_token).encode('utf-8')
+                new_user.avatar_url=avatar_url
+                new_user.save()
+
         except Exception as e:
             print (">>> get_or_create_user_from_facebook ::", e)
             pass
@@ -138,22 +146,28 @@ class Ingredient(models.Model):
     price_per_ml = models.FloatField(blank=True, null= True, default=1)
     def __unicode__(self):
         return self.name
+
 @receiver(pre_save, sender=Ingredient)
 def update_ingredient_price(sender, instance, raw, using, update_fields, **kwargs):
     new_price = instance.price/float(instance.quanlity_of_bottle)
-    new_price = float(fpformat.fix(new_price, 2))
-    
-    if not new_price==instance.price_per_ml:
-        try:
-            for drink in instance.drinks.all():
-                drink.drink.price += (new_price-instance.price_per_ml)*\
-                            drink.change_to_ml(drink.drink.total_part,\
-                            drink.drink.glass.change_to_ml)
-                drink.drink.save()
-        except Exception as e:
-            pass
-    
+    new_price = float(fpformat.fix(new_price, 2))   
     instance.price_per_ml = new_price
+
+@receiver(post_save, sender=Ingredient)
+def update_ingredient_drink_price(sender, instance, created, raw, 
+                    using, update_fields, **kwargs):
+    print update_fields
+    for drink in instance.drinks.all():
+        price = 0
+        try:
+            for ingredient in drink.drink.ingredients.all():
+                price += ingredient.ratio_ml*ingredient.ingredient.price_per_ml
+        except Exception as e:
+            drink.drink.status = Drink.CONST_STATUS_BLOCKED
+            pass
+        drink.drink.price = price
+        drink.drink.save()
+    
 
 class DrinkCategory(CategoryBase):
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),null=True, blank=True, upload_to='categories')
@@ -199,7 +213,7 @@ class SeparateGlass(models.Model):
     status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
                                               default=CONST_STATUS_ENABLED)
     name = models.CharField(max_length=200)
-    image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='glass')
+    image = models.FileField(help_text=_('Picture shall be squared, max 640*640, 500k'), upload_to='glass')
     size = models.PositiveIntegerField()
     unit = models.SmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_ML)  
 
@@ -283,12 +297,28 @@ class Drink(models.Model):
         except Exception as e:
             return 0
 
+    @property
+    def total_ml(self): 
+        temp = self.ingredients.exclude(unit__in=[DrinkIngredient.CONST_UNIT_PART, DrinkIngredient.CONST_UNIT_PERCENT]).aggregate(sum_ratio=Sum('ratio_ml'))
+        if temp['sum_ratio'] == None:
+            return 0
+        return float(temp['sum_ratio'])
+
+    @property
+    def total_ml_for_part(self):
+        temp = self.ingredients.exclude(unit__in=[DrinkIngredient.CONST_UNIT_PART]).aggregate(sum_ratio=Sum('ratio_ml'))
+        if temp['sum_ratio'] == None:
+            return 0
+        return int(temp['sum_ratio'])
+
+
     def is_enough_ingredient(self,robot=1,quantity=1):
         temp=0
         for drink in self.ingredients.all():
+            # drink is DrinkIngredient
             try:
                 robot_ingredient = robot.ingredients.get(ingredient=drink.ingredient)
-                if robot_ingredient.remain_of_bottle>=drink.change_to_ml(self.total_part,self.glass.change_to_ml)*quantity:
+                if robot_ingredient.remain_of_bottle>=drink.ratio_ml*quantity:
                     temp+=1
                     continue
                 subject = 'Hi-Effeciency - Robot {} out of {} for {} {}'.format(robot.id,drink.ingredient,quantity,self.name)
@@ -304,7 +334,7 @@ class Drink(models.Model):
         for drink in self.ingredients.all():
             try:
                 robot_ingredient = robot.ingredients.get(ingredient=drink.ingredient)
-                robot_ingredient.remain_of_bottle-=drink.change_to_ml(self.total_part,self.glass.change_to_ml)*quantity
+                robot_ingredient.remain_of_bottle-=drink.ratio_ml*quantity
                 robot_ingredient.save()
             except Exception as e:
                 print e
@@ -322,46 +352,82 @@ class Drink(models.Model):
 def update_drink_price(sender, instance, created, raw, 
                     using, update_fields, **kwargs):
     if created:
-        drink = Drink.objects.get(id=instance.id)
-        if not drink.price:
-            price = 0
-            for drink in drink.ingredients.all():
-                price += drink.change_to_ml(drink.drink.total_part,\
-                    drink.drink.glass.change_to_ml)*drink.ingredient.price_per_ml
+        if not instance.background_color:
+            instance.set_background_color()
+    price = 0
+    try:
+        for drink in instance.ingredients.all():
+            price += drink.ratio_ml*drink.ingredient.price_per_ml
+    except Exception as e:
+        instance.status = Drink.CONST_STATUS_BLOCKED
+        pass
+    
+    instance.price = price
 
-            drink.price = price
-            drink.save()
-        if not drink.background_color:
-            drink.set_background_color()
 
 class DrinkIngredient(models.Model):
-    CONST_UNIT_PART = 0
+    CONST_UNIT_PERCENT = 0
+    CONST_UNIT_PART = 1
     CONST_UNIT_ML = 10
+    CONST_UNIT_DASH = 20
+    CONST_UNIT_SPLASH = 30
+    CONST_UNIT_TEASPOON = 40
+    CONST_UNIT_TABLESPOON = 50
+    CONST_UNIT_PONY = 60
+    CONST_UNIT_JIGGER = 70
+    CONST_UNIT_SHOT = 80
+    CONST_UNIT_SNIT = 90
+    CONST_UNIT_SPLIT = 100
+    CONST_UNIT_OZ = 110
 
     CONST_UNIT = (
-        (CONST_UNIT_PART, _('Part')),
+        (CONST_UNIT_PERCENT, _('%')),
+        (CONST_UNIT_PART, _('part')),                         
         (CONST_UNIT_ML, _('mL')),
+        (CONST_UNIT_DASH, _('dash')),
+        (CONST_UNIT_SPLASH, _('splash')),
+        (CONST_UNIT_TEASPOON, _('teaspoon')),
+        (CONST_UNIT_TABLESPOON, _('tablespoon')),
+        (CONST_UNIT_PONY, _('pony')),
+        (CONST_UNIT_JIGGER, _('jigger')),
+        (CONST_UNIT_SHOT, _('shot')),
+        (CONST_UNIT_SNIT, _('snit')),
+        (CONST_UNIT_SPLIT, _('split')),
+        (CONST_UNIT_OZ, _('oz')),
     )
+
+    EXCHANGE = {
+        CONST_UNIT_ML:29.57,
+        CONST_UNIT_DASH: 32,
+        CONST_UNIT_SPLASH: 12,
+        CONST_UNIT_TEASPOON: 6,
+        CONST_UNIT_TABLESPOON:2,
+        CONST_UNIT_PONY: 1,
+        CONST_UNIT_JIGGER: 0.67,
+        CONST_UNIT_SHOT: 0.67,
+        CONST_UNIT_SNIT: 0.33,
+        CONST_UNIT_SPLIT:0.17,
+        CONST_UNIT_OZ:1,
+    }
 
     drink = models.ForeignKey(Drink, related_name='ingredients', on_delete=models.SET_NULL, null=True, blank=True)
     ingredient = models.ForeignKey(Ingredient, on_delete=models.SET_NULL, null=True, blank=True, related_name='drinks')
     ratio = models.FloatField(help_text=_('part'))
     unit = models.PositiveSmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_PART)
-
+    ratio_ml = models.FloatField(null=True, blank=True)
 
     # def __unicode__(self):
     #     return str(self.ingredient.id)
 
     # @staticmethod
     def change_to_ml(self, total_part=0, glass=0):
-        if self.unit == DrinkIngredient.CONST_UNIT_ML:
-            return self.ratio
-        try:
-            ret = float(self.ratio/total_part*glass)
-            ret = fpformat.fix(ret, 2) 
-        except Exception as e:
-            ret = 0
-        return float(ret)
+        if self.unit>1:
+            return float(self.ratio*DrinkIngredient.EXCHANGE[DrinkIngredient.CONST_UNIT_ML]/DrinkIngredient.EXCHANGE[self.unit])
+        if self.unit<1:
+            return float(glass*self.ratio/100)
+        if self.unit==1:
+            return float(glass*self.ratio/total_part)
+
 
 class DrinkGarnish(models.Model):
     drink = models.ForeignKey(Drink, related_name='garnishes')
@@ -398,11 +464,11 @@ class Order(models.Model):
     STATUS_NOT_TAKE = 40
     STATUS_NOT_DO = 50
     STATUSES = (
-        (STATUS_NEW, _("New")),
+        (STATUS_NEW, _("Pending")),
         (STATUS_PROCESSING, _("Processing")),
-        (STATUS_FINISHED, _("Finished")),
-        (STATUS_TOOK, _("Took")),
-        (STATUS_NOT_TAKE, _("Not take")),
+        (STATUS_FINISHED, _("Completed")),
+        (STATUS_TOOK, _("Picked up")),
+        (STATUS_NOT_TAKE, _("Not picked up")),
         (STATUS_NOT_DO, _("Not do due to ingredient")),
     )
 
@@ -504,6 +570,8 @@ class Tab(models.Model):
     quantity_done = models.PositiveIntegerField(blank=True, null= True, default=0)
     order = models.ForeignKey(Order, related_name='products',blank=True, null= True,)
     amount = models.FloatField(blank=True, null=True)
+    modified_date = models.DateTimeField(auto_now=True)
+    creation_date = models.DateTimeField(auto_now_add=True)
 
 class RobotIngredient(models.Model):
 
@@ -551,6 +619,7 @@ def create_ingredient_history(sender, instance=None, **kwargs):
         """
             Replace A bottel
         """
+             
         if not instance.machine.ingredients.filter(place_number=instance.place_number)\
             .update(last_ingredient=F('ingredient'), ingredient=instance.ingredient,\
                     last_bottle=F('remain_of_bottle'),\

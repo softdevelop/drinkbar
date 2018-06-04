@@ -39,3 +39,5 @@ if settings.DEBUG:
 urlpatterns += [
     url(r'^bluradmin/', TemplateView.as_view(template_name="index.html")),
 ]
+
+urlpatterns += static('/', document_root=settings.BASE_DIR+'/SEO')

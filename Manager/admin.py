@@ -25,10 +25,13 @@ class TabInline(admin.TabularInline):
     extra = 0
 
 class TabAdmin(admin.ModelAdmin):
-    list_display = ('user','drink', 'ice', 'quantity', 'order')
+    list_display = ('user','drink', 'ice', 'quantity',
+             'order','modified_date','creation_date')
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id','amount')
+    list_display = ('id','status','user','amount',
+            'channel','transaction_code','transaction_id',
+            'tray_number','robot','creation_date')
     readonly_fields = ('amount',)
     inlines = (TabInline,)
 

@@ -31,8 +31,10 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserBase
-        fields = ('id','username','password','email','avatar','birthday','avatar_url', 'first_name','last_name', 'fb_uid', 'opt', 
-            'is_email_verified', 'avatar_url', 'is_active', 'is_staff', 
+        fields = ('id','username','password','email','avatar',
+            'birthday','avatar_url', 'first_name','last_name', 
+            'fb_uid', 'opt', 
+            'is_email_verified', 'is_active', 'is_staff', 
             'is_superuser', 'last_login', 'date_joined','qr_code')
         extra_kwargs = {'password': {'write_only': True},
                         'username': {'write_only': True},}
@@ -64,6 +66,7 @@ class UserWithTokenSerializer(UserSerializer):
 class DrinkCategorySerializer(serializers.ModelSerializer):
     link = serializers.SerializerMethodField('_name')
     main_level = serializers.SerializerMethodField('_main')
+    slug = serializers.CharField(required=False)
     class Meta:
         model = DrinkCategory
         fields = '__all__' 
@@ -123,7 +126,7 @@ class DrinkIngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DrinkIngredient
-        fields = ('ingredient','unit','unit_view','ratio')
+        fields = ('ingredient','unit','unit_view','ratio','ratio_ml')
 
     def get_unit_view(self,obj):
         return obj.get_unit_display()
@@ -146,13 +149,13 @@ class DrinkOrdersSerializer(DrinkUserOrdersSerializer):
     class Meta(DrinkUserOrdersSerializer.Meta):
         model = Drink
         fields = DrinkUserOrdersSerializer.Meta.fields+('ingredients',\
-            'total_part','glass_ml','ml_per_part','prep','prep_view',\
+            'glass_ml','prep','prep_view',\
             'estimate_time','glass')
 
     def get_prep_view(self,obj):
         return obj.get_prep_display()
 
-def drink_add_on(self, ret=None, is_update=False):
+def drink_add_on(self, ret=None):
     categories = self.initial_data.get('category',None)
     if categories:
         categories = categories.split(",")
@@ -160,19 +163,25 @@ def drink_add_on(self, ret=None, is_update=False):
             try:
                 ret.category.add(DrinkCategory.objects.get(id=category))
             except Exception as e:
-                if not is_update:
-                    ret.delete()
-                    raise e
-                else:
-                    return str(e)
-    if (self._context['request'].user.is_superuser and self.initial_data.has_key('image_background')) or is_update==True:
+                ret.delete()
+                raise e
+    if (self._context['request'].user.is_superuser and self.initial_data.has_key('image_background')):
         # data is array
         ingredients = self.initial_data.getlist('ingredients',None)
     else:
         # data is string array
         ingredients = ast.literal_eval(self.initial_data['ingredients'])
     tempdict=dict()
+
     if ingredients:
+        total_percent = 0
+        for ingredient in ingredients:
+            ingredient = ast.literal_eval(ingredient)
+            if ingredient['unit']<1:
+                total_percent += ingredient['ratio']
+        if total_percent>100:
+            ret.delete()
+            raise api_utils.BadRequest("OVER 100%")
         for ingredient in ingredients:
             if not type(ingredient)==type(tempdict):
                 ingredient = ast.literal_eval(ingredient)
@@ -181,18 +190,41 @@ def drink_add_on(self, ret=None, is_update=False):
                                 ratio=ingredient['ratio'],
                                 unit=ingredient['unit'])
                 ingre.save()
-            except Exception as e:
-                if not is_update:    
-                    DrinkIngredient.objects.filter(drink=ret).delete()
-                    ret.delete()
-                    raise e
-                else:
-                    return str(e)
+            except Exception as e: 
+                DrinkIngredient.objects.filter(drink=ret).delete()
+                ret.delete()
+                raise e
+
+        # Direct unit
+            ingredients = ret.ingredients.exclude(unit__in=[DrinkIngredient.CONST_UNIT_PART, DrinkIngredient.CONST_UNIT_PERCENT])
+            total_ml = 0
+            for ingredient in ingredients:
+                ingredient.ratio_ml = ingredient.change_to_ml()
+                ingredient.save()
+                total_ml += ingredient.ratio_ml
+            glass = ret.glass.change_to_ml - total_ml
+            # Percent unit
+            ingredients = ret.ingredients.filter(unit=DrinkIngredient.CONST_UNIT_PERCENT)
+            if glass>0:
+                for ingredient in ingredients:
+                    ingredient.ratio_ml = ingredient.change_to_ml(glass=glass)
+                    ingredient.save()
+            else:
+                ingredients = ret.ingredients.filter(unit=DrinkIngredient.CONST_UNIT_PERCENT).update(ratio_ml=0)
+            # Part unit
+            glass = glass*(100-total_percent)/100
+            ingredients = ret.ingredients.filter(unit=DrinkIngredient.CONST_UNIT_PART)
+            total_part = ret.total_part
+
+            if glass>0 and total_part>0:
+                for ingredient in ingredients:
+                    ingredient.ratio_ml = ingredient.change_to_ml(total_part=total_part, glass=glass)
+                    ingredient.save()
+            else: 
+                ingredients = ret.ingredients.filter(unit=DrinkIngredient.CONST_UNIT_PART).update(ratio_ml=0)
     else:
-        if not is_update:
-            ret.delete()
-            raise api_utils.BadRequest("NOT INCLUDE ANY INGREDIENT, ADD ONE!")
-        return "NOT INCLUDE ANY INGREDIENT, ADD ONE!"
+        ret.delete()
+        raise api_utils.BadRequest("NOT INCLUDE ANY INGREDIENT, ADD ONE!")
     garnishes = self.initial_data.getlist('garnishes',None)
     if garnishes:
         for garnish in garnishes:
@@ -202,13 +234,10 @@ def drink_add_on(self, ret=None, is_update=False):
                                 ratio=garnish['ratio'],)
                 garn.save()
             except Exception as e:
-                if not is_update: 
-                    DrinkIngredient.objects.filter(drink=ret).delete()
-                    DrinkGarnish.objects.filter(drink=ret).delete()
-                    ret.delete()
-                    raise e
-                else:
-                    return str(e)
+                DrinkIngredient.objects.filter(drink=ret).delete()
+                DrinkGarnish.objects.filter(drink=ret).delete()
+                ret.delete()
+                raise e
     return ret
 
 
@@ -234,7 +263,7 @@ class DrinkSerializer(serializers.ModelSerializer):
         return False
 
     def _garnishes(self, obj):
-        # hide garnish with is not active
+        # hide garnish with is not active for user
         qs = DrinkGarnish.objects.filter(drink=obj, garnish__active=True)
         serializer = DrinkGarnishSerializer(instance=qs, many=True)
         return serializer.data
@@ -250,15 +279,81 @@ class DrinkUpdateSerializer(DrinkSerializer):
 
     def update(self, instance, validated_data):
         ret = super(DrinkSerializer,self).update(instance, validated_data)
-        backup = ret
-        ret.category.clear()
-        ret.ingredients.all().delete()
-        ret.garnishes.all().delete()
-        print backup.category.all()
-        temp = drink_add_on(self, ret, is_update=True)
-        if type(ret)==type(temp):
-            return temp
-        raise api_utils.BadRequest(temp)
+        if self.initial_data.has_key('category'):
+            ret.category.clear()
+
+            categories = self.initial_data.get('category')
+            categories = categories.split(",")
+            for category in categories:
+                try:
+                    ret.category.add(DrinkCategory.objects.get(id=category))
+                except Exception as e:
+                    raise api_utils.BadRequest(e[0])
+
+        if self.initial_data.has_key('ingredients'):
+            
+            ingredients = self.initial_data.getlist('ingredients')
+            total_percent = 0
+            for ingredient in ingredients:
+                ingredient = ast.literal_eval(ingredient)
+                if ingredient['unit']<1:
+                    total_percent += ingredient['ratio']
+
+            if total_percent>100:
+                raise api_utils.BadRequest("OVER 100%")
+            # Save new data
+            ret.ingredients.all().delete()
+            for ingredient in ingredients:
+                ingredient = ast.literal_eval(ingredient)
+                ingre = DrinkIngredient(drink=ret, ingredient=Ingredient.objects.get(id=ingredient['ingredient']),
+                                ratio=ingredient['ratio'],
+                                unit=ingredient['unit'])
+                ingre.save()
+            
+            # Direct unit
+            ingredients = ret.ingredients.exclude(unit__in=[DrinkIngredient.CONST_UNIT_PART, DrinkIngredient.CONST_UNIT_PERCENT])
+            total_ml = 0
+            for ingredient in ingredients:
+                ingredient.ratio_ml = ingredient.change_to_ml()
+                ingredient.save()
+                total_ml += ingredient.ratio_ml
+            glass = ret.glass.change_to_ml - total_ml
+            # Percent unit
+            ingredients = ret.ingredients.filter(unit=DrinkIngredient.CONST_UNIT_PERCENT)
+            if glass>0:
+                for ingredient in ingredients:
+                    ingredient.ratio_ml = ingredient.change_to_ml(glass=glass)
+                    ingredient.save()
+            else:
+                ingredients = ret.ingredients.filter(unit=DrinkIngredient.CONST_UNIT_PERCENT).update(ratio_ml=0)
+            # Part unit
+            glass = glass*(100-total_percent)/100
+            ingredients = ret.ingredients.filter(unit=DrinkIngredient.CONST_UNIT_PART)
+            total_part = ret.total_part
+
+            if glass>0 and total_part>0:
+                for ingredient in ingredients:
+                    ingredient.ratio_ml = ingredient.change_to_ml(total_part=total_part, glass=glass)
+                    ingredient.save()
+            else: 
+                ingredients = ret.ingredients.filter(unit=DrinkIngredient.CONST_UNIT_PART).update(ratio_ml=0)
+        
+        # Garnish
+        if self.initial_data.has_key('garnishes'):
+            ret.garnishes.all().delete()
+
+            garnishes = self.initial_data.getlist('garnishes')
+            if garnishes:
+                for garnish in garnishes:
+                    garnish = ast.literal_eval(garnish)
+                    try:
+                        garn = DrinkGarnish(drink=ret, garnish=Garnish.objects.get(id=garnish['garnish']),
+                                        ratio=garnish['ratio'],)
+                        garn.save()
+                    except Exception as e:
+                        raise api_utils.BadRequest(e[0])
+        ret.save()
+        return ret
 
 class DrinkCreateSerializer(serializers.ModelSerializer):
     ingredients = DrinkIngredientSerializer(many=True, required=False, read_only=True)
@@ -297,6 +392,10 @@ class IngredientCreateSerializer(serializers.ModelSerializer):
 class IngredientListSerializer(IngredientCreateSerializer):
     type = IngredientTypeSerializer(read_only=True)
     brand = IngredientBrandSerializer(read_only=True)
+    type_search_view = serializers.SerializerMethodField(read_only=True)
+
+    def get_type_search_view(self,obj):
+        return obj.get_type_search_display()
 
 class IngredientBrandWithIngredientSerializer(IngredientBrandSerializer):
     ingredient_brands = IngredientCreateSerializer(read_only=True,many=True)
@@ -320,6 +419,11 @@ class RobotSerializer(serializers.ModelSerializer):
         model = Robot
         fields = ('id','status','creation_date','ingredients')
         depth = 2
+
+class RobotIngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RobotIngredient
+        fields = '__all__'
 '''
     Tab
 '''
@@ -331,6 +435,8 @@ class AddToTabSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
+        if validated_data['drink'].price<=0:
+            raise api_utils.BadRequest("CANT NOT ORDER DRINK UNDER $0!")
         ret = Tab(**validated_data)
         ret.save()
         garnishes = self.initial_data.get('garnishes')
@@ -339,21 +445,27 @@ class AddToTabSerializer(serializers.ModelSerializer):
         ret.garnishes.add(*garnishes)
         return ret
 
-
-class UserOrderTabSerializer(serializers.ModelSerializer):
+class TabSerializer(serializers.ModelSerializer):
+    user = UserSerializer(required=False, read_only=True)
     drink = DrinkUserOrdersSerializer(required=False, read_only=True)
     garnishes = DrinkGarnishSerializer(many=True, read_only=True)
-    ice = serializers.SerializerMethodField()
+    ice_view = serializers.SerializerMethodField(read_only=True)
     status_view = serializers.SerializerMethodField(read_only=True)
+    
     class Meta:
         model = Tab
-        fields = ('id','drink','status','status_view','ice','garnishes','quantity','amount')
+        fields = '__all__'
 
-    def get_ice(self,obj):
+    def get_ice_view(self,obj):
         return obj.get_ice_display()
 
     def get_status_view(self,obj):
         return obj.get_status_display()
+
+class UserOrderTabSerializer(TabSerializer):
+    class Meta:
+        model = Tab
+        fields = ('id','drink','status','status_view','ice','ice_view','garnishes','quantity','amount')
 
 class OrderTabSerializer(UserOrderTabSerializer):
     drink = DrinkOrdersSerializer(required=False, read_only=True)

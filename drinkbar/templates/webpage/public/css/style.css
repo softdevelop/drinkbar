@@ -119,7 +119,7 @@ background: url("../images/modal_bg.png"); }
 .header #contact .modal-dialog .modal-content .modal-header {
 border: none; }
 .header #contact .modal-dialog .modal-content .modal-header .modal_logo {
-padding-left: 89px;
+padding-left: 50px;
 float: left;
 display: block; }
 .header #contact .modal-dialog .modal-content .modal-header .modal_logo img {
@@ -133,7 +133,7 @@ float: right; }
 opacity: 1; }
 .header #contact .modal-dialog .modal-content .modal-body {
 text-align: center;
-max-width: 70%;
+max-width: 80%;
 margin: 0 auto;
 color: #ffffff;
 padding: 70px 0 140px 0;
@@ -155,16 +155,25 @@ background: #3496AD;
 float: left;
 border-radius: 20px;
 padding: 5px 35px; }
+.header #contact .modal-dialog .modal-content .modal-body_content form button:hover{
+    background: #D9BA00;
+}
 .header #contact .modal-dialog .modal-content .modal-body_content .aboutUs h3 {
 font-size: 25px;
 font-weight: bold;
 margin-bottom: 10px; }
-.header #contact .modal-dialog .modal-content .modal-body_content .aboutUs p {
-font-size: 14px;
+.header #contact .modal-dialog .modal-content .modal-body_content .aboutUs a {
+font-size: 23px;
+font-weight: 500;
+display: inline-block;
+width: 100%;
+line-height: 32px;
 color: #3496AD;
-line-height: 23px; }
+ }
 .header #contact .modal-dialog .modal-content .modal-body_content .aboutUs p.phone {
-margin-top: 25px; }
+margin-top: 25px;
+color: #3496AD;
+font-weight: 500; }
 .header_banner {
 overflow: hidden; }
 .header_banner_info {
@@ -353,7 +362,7 @@ font-size: 60px;
 color: #000000;
 line-height: 73px;
 margin: 10px 0 20px 0; }
-.main_slider #myCarousel .carousel-indicators {
+.main_slider #carousel-example-generic .carousel-indicators {
 position: static;
 z-index: 15;
 width: 100%;
@@ -362,7 +371,7 @@ padding-left: 0;
 list-style: none;
 text-align: center;
 margin-top: 15px; }
-.main_slider #myCarousel .carousel-indicators li {
+.main_slider #carousel-example-generic .carousel-indicators li {
 display: inline-block;
 width: 15px;
 height: 15px;
@@ -371,27 +380,27 @@ text-indent: -999px;
 background-color: #c6c5c9;
 border-radius: 10px;
 cursor: pointer; }
-.main_slider #myCarousel .carousel-indicators li.active {
+.main_slider #carousel-example-generic .carousel-indicators li.active {
 margin: 0;
 width: 15px;
 height: 15px;
 background-color: #000000; }
-.main_slider #myCarousel .carousel-inner .item img {
+.main_slider #carousel-example-generic .carousel-inner .item img {
 margin-left: auto;
 margin-right: auto;
 width: auto; }
-.main_slider #myCarousel .carousel-inner .item_avatar {
+.main_slider #carousel-example-generic .carousel-inner .item_avatar {
 height: 596.85px; }
-.main_slider #myCarousel .carousel-inner .item_icon {
+.main_slider #carousel-example-generic .carousel-inner .item_icon {
 padding: 10px 0;
 width: 82.74px;
 height: 81.11px; }
-.main_slider #myCarousel .carousel-inner .item_title {
+.main_slider #carousel-example-generic .carousel-inner .item_title {
 padding: 10px 0;
 font-size: 82.74px;
 font-weight: normal;
 line-height: 73px; }
-.main_slider #myCarousel .carousel-inner .item_content {
+.main_slider #carousel-example-generic .carousel-inner .item_content {
 padding: 10px 0;
 font-size: 23px;
 line-height: 30px; }
@@ -461,6 +470,31 @@ margin: 50px 0 20px 0;
 font-size: 18px;
 color: #7B7B7B;
 font-weight: 400; }
+.modal-form-left{
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.header #contact .modal-dialog .modal-content .modal-body_header h3{
+    font-size: 105px;
+    font-weight: 900;
+}
+.header #contact .modal-dialog .modal-content .modal-body_header p{
+    font-size: 27px;
+    line-height: 40px;
+}
+.header #contact .modal-dialog .modal-content .modal-body_content .aboutUs h3{
+    font-size: 27px;
+    font-weight: 700;
+}
+.header #contact .modal-dialog .modal-content .modal-body_content form button{
+    font-weight: 900;
+    text-transform: uppercase;
+}
+.aboutUs{
+    padding-left: 60px;
+    text-align: left;
+}
+
 /*close footer*/
 /*# sourceMappingURL=style.css.map */
 

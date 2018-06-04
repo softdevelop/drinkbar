@@ -8,19 +8,19 @@
     .header_banner_info {
       margin-top: 100px;
       margin-bottom: 130px; }
-      .header_banner_info h3 {
+     /* .header_banner_info h3 {
         font-size: 105px;
         margin: 0 0 16px 0;
         line-height: 100px;
         color: #D9BA00;
-        font-weight: 900; }
-      .header_banner_info p {
+        font-weight: 900; }*/
+     /* .header_banner_info p {
         font-size: 27px;
         color: #fff;
         margin: 0;
         padding-bottom: 25px;
         line-height: 36px;
-        font-weight: 400; }
+        font-weight: 400; }*/
       .header_banner_info hr {
         width: 20%;
         margin: 20px auto;
@@ -47,7 +47,7 @@
     padding-bottom: 120px; }
     .main_automation_title {
       margin: 30px auto;
-      max-width: 75%;
+      /*max-width: 75%;*/
       font-size: 60px;
       line-height: 73px;
       font-weight: 300; }

@@ -38,14 +38,18 @@ urlpatterns = [
     url(r'^ingredient/brand/type/$', api_views.IngredientBrandTypeList.as_view(), name="ingredient-brand-type-list"),
     url(r'^ingredient/brand/(?P<pk>[0-9]+)/$', api_views.IngredientBrandDetail.as_view(), name="ingredient-brand-detail"),
     url(r'^ingredient/history/$', api_views.IngredientHistoryList.as_view(), name="ingredient-history"),
+    url(r'^ingredient/history/(?P<pk>[0-9]+)/$', api_views.IngredientHistoryDetail.as_view(), name="ingredient-history"),
 
     url(r'^robot/$', api_views.RobotList.as_view(), name="robot"),
     url(r'^robot/(?P<pk>[0-9]+)/$', api_views.RobotDetail.as_view(), name="robot-detail"),
+    url(r'^robot/ingredient/(?P<pk>[0-9]+)/$', api_views.RobotIngredientDetail.as_view(), name="robot-ingredient-detail"),
     url(r'^robot/change/$', api_views.RobotChange.as_view(), name="robot-change"),
 
     url(r'^settings/$', api_views.Settings.as_view(), name="robot-detail"),
     url(r'^settings/(?P<pk>[0-9]+)/$', api_views.SettingsAdmin.as_view(), name="robot-detail"),
     url(r'^twitter/$', api_views.Twitter.as_view(), name="twitter"),
+
+    url(r'^contactus/$', api_views.ContactUsSendEmail.as_view(), name="twitter"),
 
     url(r'^do/$', api_views.DoOneTime.as_view(), name="do-one-time"),
     

@@ -40,6 +40,13 @@ class IsSuperAdmin(IsAdminUser):
     def has_permission(self, request, view):
         return request.user and request.user.is_staff and request.user.is_superuser
 
+class IsOpenTheBar(IsAdminUser):
+    message = 'BAR IS CLOSED AT THIS TIME'
+
+    def has_permission(self, request, view):
+        settingbar = SettingBar.objects.get(id=1)
+        return settingbar.bar_status or request.user.is_superuser
+
 class UserSignUp(generics.CreateAPIView):
     serializer_class = UserSignupSerializer
 
@@ -151,7 +158,7 @@ class UserChangePassword(APIView):
                     raise api_utils.BadRequest(e)
             else:
                 raise api_utils.BadRequest("INVALID_CURRENT_PASSWORD")
-        return Response(status=status.HTTP_202_ACCEPTED)
+        return Response({'detail':'Password has been changed!'},status=status.HTTP_200_OK)
 
 
 class UserForgetPassword(APIView):
@@ -262,6 +269,12 @@ class MyTab(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = OrderTabSerializer
 
+    def get_serializer_class(self):
+        pending = self.request.GET.get('pending', False)
+        if pending:
+            return TabSerializer
+        return OrderTabSerializer
+
     def get_queryset(self):
         pending = self.request.GET.get('pending', False)
         if pending:
@@ -279,7 +292,7 @@ class UpdateTab(generics.RetrieveUpdateDestroyAPIView):
 
 class UserOrder(generics.ListCreateAPIView):
     queryset = Order.objects.order_by('-creation_date')
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOpenTheBar]
     # serializer_class = OrderSerializer
 
     def get_serializer_class(self):
@@ -492,6 +505,19 @@ class DrinkCategoryList(generics.ListCreateAPIView):
 
         return ret
 
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        temp = serializer.initial_data['slug']
+        b = "~!@#$^&*()+=[];:?/,. " 
+        for char in b:
+            temp = temp.replace(char,"")
+        serializer.validated_data['slug'] = temp
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 class DrinkCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = DrinkCategory
     serializer_class = DrinkCategorySerializer
@@ -500,10 +526,11 @@ class DrinkCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 class DrinkList(generics.ListCreateAPIView):
     queryset = Drink.objects.all().order_by('id')
     serializer_class = DrinkSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOpenTheBar]
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
+        is_admin = self.request.GET.get('admin', False)
+        if self.request.method == 'GET' and is_admin == False:
             return DrinkSerializer
         return DrinkCreateSerializer
 
@@ -561,10 +588,11 @@ class DrinkList(generics.ListCreateAPIView):
 class DrinkDetial(generics.RetrieveUpdateDestroyAPIView):
     queryset = Drink
     serializer_class = DrinkUpdateSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOpenTheBar]
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
+        is_admin = self.request.GET.get('admin', False)
+        if self.request.method == 'GET' and is_admin == False:
             return DrinkSerializer
         return DrinkUpdateSerializer
      
@@ -614,7 +642,10 @@ class IngredientList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         is_admin = self.request.GET.get('admin', False)
-        ret = self.queryset.exclude(status=Ingredient.CONST_STATUS_BLOCKED)
+        ret = self.queryset.exclude(Q(status=Ingredient.CONST_STATUS_BLOCKED)|Q(price=0)|Q(price_per_ml=0))
+
+        if is_admin:
+            ret = self.queryset.all()
 
         search_query = self.request.GET.get('search', None)
         if search_query:
@@ -631,9 +662,7 @@ class IngredientList(generics.ListCreateAPIView):
         ingredient_by = self.request.GET.get('ingredient_by', None)
         if ingredient_by:
             ret = ret.filter(type_search=ingredient_by)
-
-        if is_admin:
-            ret = self.queryset.all()
+        
         return ret.order_by('brand')
 
 class IngredientDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -681,7 +710,6 @@ class IngredientBrandList(generics.ListCreateAPIView):
         try:
             brand = IngredientBrand.objects.get(name=request.data['name'])
         except Exception as e:
-            pprint(vars(e))
             brand = IngredientBrand(name=request.data['name'])
             brand.save()
         return Response(IngredientTypeSerializer(brand).data,status=status.HTTP_200_OK)
@@ -719,6 +747,11 @@ class RobotDetail(generics.RetrieveUpdateDestroyAPIView):
     '''
         update robot and ingredient robot contain
     '''
+
+class RobotIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = RobotIngredient
+    serializer_class = RobotIngredientSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class IngredientHistoryList(generics.ListCreateAPIView):
@@ -847,6 +880,16 @@ class DoOneTime(APIView):
         for drink in drinks:
             drink.set_background_color()
         return Response(status=status.HTTP_200_OK)
-        
 
-        
+class ContactUsSendEmail(APIView):
+    
+    def post(self,request,format=None):
+        name = request.data.get('name',None)
+        email = request.data.get('email',None)
+        message = request.data.get('message',None)
+        if not email or not name or not message:
+            raise api_utils.BadRequest("MISSING INFORMATION")
+        subject = 'Hi-Effeciency - Customer contact'
+        html_content = render_to_string('email/contact_us.html',{'name':name,'email':email,'message':message})
+        tasks.send_email(subject, html_content, ['inquary@hiefficiencybar.com',])
+        return Response({"detail":"THE EMAIL HAS BEEN SENT"},status=status.HTTP_200_OK)
