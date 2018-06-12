@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'categories',
     "categories.editor",
     'corsheaders',
+    'mathfilters',
     'import_export',
     'django_cleanup',
     'channels',
@@ -179,6 +180,10 @@ USE_L10N = True
 
 USE_TZ = True
 
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
 
 # send mail
 EMAIL_HOST = 'a2plcpnl0236.prod.iad2.secureserver.net'
@@ -206,7 +211,10 @@ stripe.api_key = STRIPE_KEYS['SECRET_KEY']
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 SITE_URL = "http://hiefficiencybar.com"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'blur-admin/release'), os.path.join(BASE_DIR, 'drinkbar/templates/webpage'),]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'blur-admin/release'), 
+                    os.path.join(BASE_DIR, 'drinkbar/templates/webpage'),
+                    os.path.join(BASE_DIR, 'drinkbar/templates/email/static')]
+                    
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = SITE_URL+"/static/" 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

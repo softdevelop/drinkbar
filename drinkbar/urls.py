@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import handler404, handler500
 
 from Manager import urls as api_urls
 from Manager import views
@@ -40,4 +41,6 @@ urlpatterns += [
     url(r'^bluradmin/', TemplateView.as_view(template_name="index.html")),
 ]
 
-urlpatterns += static('/', document_root=settings.BASE_DIR+'/SEO')
+urlpatterns += [ url(r'^robots.txt$', views.RobotsPage.as_view(), name='robots.txt'), ]
+
+urlpatterns +=[ url(r'/', views.ErrorPage.as_view(), name='error'), ]

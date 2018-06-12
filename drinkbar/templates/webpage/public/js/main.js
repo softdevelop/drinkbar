@@ -46,43 +46,19 @@ $(document).ready(function () {
                 email: $("#contact .modal-body_content form #email").val(),
                 message: $("#contact .modal-body_content form #Message").val()
             },
-          success: function (data) {
-                console.log(data);
-                alert(data.detail);
-
-                var div = document.createElement('div');
-                div.className = 'row';
-                div.innerHTML =
-                    '<div class="modal fade" id="myModal" role="dialog">\
-                    <div class="modal-dialog">\
-                    < div class= "modal-content" >\
-                    < div class= "modal-header" >\
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>\
-                    <h4 class="modal-title">Modal Header</h4>\
-                    </div >\
-                    <div class="modal-body">\
-                    <p>Some text in the modal.</p>\
-                    </div>\
-                    <div class="modal-footer">\
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>\
-                    </div>\
-                    </div>\
-                    </div>\
-                    </div>';
-
-                document.getElementById('contact').appendChild(div);
-
-                //$('#modal').append("<p>Ninh</p>");
-                //alert( $("#contact .modal-body_content form #Name").val()="");
-                // $("#contact .modal-body_content form #Name").val()='';
-                // $("#contact .modal-body_content form #email").val()='';
-                // $("#contact .modal-body_content form #Message").val()='';
+            success: function (data) {
+                $("#myModal .modal-content #information").append(data.detail);               
+                $("#contact .modal-body_content form #Name").val('');
+                $("#contact .modal-body_content form #email").val('');
+                $("#contact .modal-body_content form #Message").val('');
             },
             error: function (data) {
-
-                alert(data.responseJSON.detail);
-            }
+                $("#myModal .modal-content #information-err").append(data.responseJSON.detail);
+            } 
         });
-});
-    
+            $("#myModal .modal-content #information").text('');
+            $("#myModal .modal-content #information-err").text('');
+    });
+       
+
 });

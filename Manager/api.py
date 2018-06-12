@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, status, exceptions, permissions, viewsets, mixins
 from rest_framework.exceptions import PermissionDenied, ValidationError
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import BasePermission, IsAdminUser
 from .serializer import *
 from .models import *
 from . import tasks
@@ -24,16 +24,29 @@ from pprint import pprint
 from django.forms.models import model_to_dict
 import requests
 import pprint
+import fpformat
 from requests_futures.sessions import FuturesSession
 '''
 User API:
 '''
 # Create by user
+
 try:
     settingbar = SettingBar.objects.get(id=1)
 except Exception as e:
     print e
     pass
+
+
+class IsAuthenticated(BasePermission):
+
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated and request.user.is_robot==False
+
+class IsRobot(BasePermission):
+
+    def has_permission(self, request, view):
+        return request.user.is_superuser or request.user.is_robot==True
 
 class IsSuperAdmin(IsAdminUser):
 
@@ -45,7 +58,7 @@ class IsOpenTheBar(IsAdminUser):
 
     def has_permission(self, request, view):
         settingbar = SettingBar.objects.get(id=1)
-        return settingbar.bar_status or request.user.is_superuser
+        return settingbar.bar_status or request.user.is_superuser or request.user.is_robot==True
 
 class UserSignUp(generics.CreateAPIView):
     serializer_class = UserSignupSerializer
@@ -253,7 +266,7 @@ class UserFavoriteDrink(APIView):
 
 
 class AddToTab(generics.CreateAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOpenTheBar]
     serializer_class = AddToTabSerializer
 
     def create(self, request, *args, **kwargs):
@@ -266,7 +279,7 @@ class AddToTab(generics.CreateAPIView):
 
 class MyTab(generics.ListAPIView):
     queryset = Tab
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOpenTheBar]
     serializer_class = OrderTabSerializer
 
     def get_serializer_class(self):
@@ -297,7 +310,7 @@ class UserOrder(generics.ListCreateAPIView):
 
     def get_serializer_class(self):
         is_robot = self.request.GET.get('robot', False)
-        if is_robot:
+        if is_robot or self.request.user.is_robot==True:
             return OrderMachineSerializer
         current = self.request.GET.get('current', None)
         if current:
@@ -306,7 +319,7 @@ class UserOrder(generics.ListCreateAPIView):
 
     def get_queryset(self):
         is_robot = self.request.GET.get('robot', False)
-        if is_robot:
+        if is_robot or self.request.user.is_robot==True:
             return self.queryset.exclude(status=Order.STATUS_TOOK).order_by('creation_date')
 
         is_admin = self.request.GET.get('admin', False)
@@ -427,13 +440,21 @@ class UserOrder(generics.ListCreateAPIView):
             raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR DRINK, PLEASE BACK LATER")
         serializer.validated_data['robot']=robot_will_do
 
+        total_bill = fpformat.fix(total_bill, 2)
+        total_bill = float(total_bill)
+
+        serializer.validated_data['amount_without_fee'] = float(total_bill)
         # Add fee and tax
         if total_bill>0:
             if settingbar.fee_unit==SettingBar.CONST_FEE_DOLLAR:
-                total_bill+=settingbar.fee
+                total_fee=settingbar.fee
             else:
-                total_bill+=float(total_bill*settingbar.fee/SettingBar.CONST_FEE_PERCENT)
+                total_fee=float(total_bill*settingbar.fee/SettingBar.CONST_FEE_PERCENT)
             total_bill += float(total_bill*settingbar.tax/100)
+            total_bill += total_fee
+        
+        total_bill = fpformat.fix(total_bill, 2)
+        total_bill = float(total_bill)
 
         # Payment with stripe
         try:
@@ -481,7 +502,7 @@ Drink API:
 class DrinkCategoryList(generics.ListCreateAPIView):
     queryset = DrinkCategory.objects.all()
     serializer_class = DrinkCategorySerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOpenTheBar]
     paginator = None
 
     def get_queryset(self):
@@ -599,7 +620,7 @@ class DrinkDetial(generics.RetrieveUpdateDestroyAPIView):
 class SeparateGlassList(generics.ListCreateAPIView):
     queryset = SeparateGlass.objects.all()
     serializer_class = SeparateGlassSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOpenTheBar]
     paginator = None
 
     def get_queryset(self):
@@ -631,20 +652,20 @@ Ingredient API
 
 class IngredientList(generics.ListCreateAPIView):
     queryset = Ingredient.objects.all().order_by('name')
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOpenTheBar]
 
     def get_serializer_class(self):
-        # print pprint(vars(self.request.method))
-        # print self.request.method
         if self.request.method == 'GET':
             return IngredientListSerializer
         return IngredientCreateSerializer
 
     def get_queryset(self):
         is_admin = self.request.GET.get('admin', False)
-        ret = self.queryset.exclude(Q(status=Ingredient.CONST_STATUS_BLOCKED)|Q(price=0)|Q(price_per_ml=0))
+        # ret = self.queryset.exclude(Q(status=Ingredient.CONST_STATUS_BLOCKED)|Q(price=0)|Q(price_per_ml=0))
+        ingredientInRobot = RobotIngredient.objects.filter(remain_of_bottle__gt=0).values_list('ingredient_id',flat=True)
+        ret = self.queryset.filter(id__in=ingredientInRobot)
 
-        if is_admin:
+        if is_admin or self.request.user.is_superuser:
             ret = self.queryset.all()
 
         search_query = self.request.GET.get('search', None)
@@ -673,8 +694,15 @@ class IngredientDetail(generics.RetrieveUpdateDestroyAPIView):
 class IngredientTypeList(generics.ListCreateAPIView):
     queryset = IngredientType.objects.all().order_by('name')
     serializer_class = IngredientTypeSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOpenTheBar]
     paginator = None
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return self.queryset.all()
+        ingredientInRobot = RobotIngredient.objects.filter(remain_of_bottle__gt=0).values_list('ingredient__type',flat=True)
+        # type_id = Ingredient.objects.filter(id__in=ingredientInRobot).values_list('type',flat=True)
+        return self.queryset.filter(id__in=ingredientInRobot)
 
 class IngredientTypeDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = IngredientType
@@ -682,9 +710,12 @@ class IngredientTypeDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
 class IngredientBrandTypeList(generics.ListAPIView):
+    '''
+        Brand with ingredients denpend on it
+    '''
     queryset = IngredientBrand.objects.all().order_by('name')
     serializer_class = IngredientBrandSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOpenTheBar]
     paginator = None
 
     def get_serializer_class(self):
@@ -694,9 +725,13 @@ class IngredientBrandTypeList(generics.ListAPIView):
         return IngredientBrandSerializer
 
     def get_queryset(self):
+
         try:
+            ingredientInRobot = RobotIngredient.objects.filter(remain_of_bottle__gt=0).values_list('ingredient__brand',flat=True)
             type = self.request.GET.get('type', None)
-            ret = self.queryset.filter(ingredient_brands__type=type).distinct()
+            if self.request.user.is_superuser:
+                return self.queryset.filter(ingredient_brands__type=type).distinct()
+            ret = self.queryset.filter(id__in=ingredientInRobot,ingredient_brands__type=type).distinct()
         except Exception as e:
             raise api_utils.BadRequest("INVALID_TYPE")
         return ret
@@ -774,7 +809,7 @@ class IngredientHistoryDetail(generics.RetrieveDestroyAPIView):
     permission_classes = [IsSuperAdmin]
 
 class RobotChange(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsRobot]
     '''
         update robot status
     '''
@@ -847,6 +882,7 @@ class RobotChange(APIView):
         if tab:
             ret['drink'] = OrderTabSerializer(instance=tab).data
         ret['order_status'] = order.status
+        ret['order'] = OrderMachineSerializer(instance=order).data
         return Response(ret, status=status.HTTP_200_OK)
 
 class Settings(generics.ListAPIView):
@@ -859,6 +895,11 @@ class SettingsAdmin(generics.RetrieveUpdateAPIView):
     queryset = SettingBar
     serializer_class = SettingsForAdminSeirializer
     permission_classes = [IsSuperAdmin]
+
+    def update(self, request, *args, **kwargs):
+
+        return super(SettingsAdmin,self).update(request, *args, **kwargs)
+
 
 class Twitter(APIView):
     
@@ -880,6 +921,14 @@ class DoOneTime(APIView):
         for drink in drinks:
             drink.set_background_color()
         return Response(status=status.HTTP_200_OK)
+
+class DoTestSendEmail(APIView):
+    
+    def get(self,request,format=None):
+        subject = 'Hi-Effeciency - Testing send email'
+        html_content = render_to_string('email/new_order_receipt.html')
+        tasks.send_email(subject, html_content, ['ngochoang09121996@gmail.com','vietndpd01144@gmail.com'])
+        return Response({"detail":"THE EMAIL HAS BEEN SENT"},status=status.HTTP_200_OK)
 
 class ContactUsSendEmail(APIView):
     

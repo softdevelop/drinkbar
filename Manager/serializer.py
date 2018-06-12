@@ -176,7 +176,8 @@ def drink_add_on(self, ret=None):
     if ingredients:
         total_percent = 0
         for ingredient in ingredients:
-            ingredient = ast.literal_eval(ingredient)
+            if not type(ingredient)==type(tempdict):
+                ingredient = ast.literal_eval(ingredient)
             if ingredient['unit']<1:
                 total_percent += ingredient['ratio']
         if total_percent>100:
@@ -254,7 +255,7 @@ class DrinkSerializer(serializers.ModelSerializer):
         model = Drink
         fields = ('id','status','prep','prep_view','numbers_bought','category','glass','ingredients',
             'garnishes','name','image','image_background','background_color','price','creator','creation_date',
-            'key_word','estimate_time','is_have_ice','is_favorite')
+            'key_word','estimate_time','is_have_ice','is_favorite','is_fit_price')
         # depth = 1
 
     def get_is_favorite(self, obj):
@@ -398,10 +399,17 @@ class IngredientListSerializer(IngredientCreateSerializer):
         return obj.get_type_search_display()
 
 class IngredientBrandWithIngredientSerializer(IngredientBrandSerializer):
-    ingredient_brands = IngredientCreateSerializer(read_only=True,many=True)
+    ingredient_brands = serializers.SerializerMethodField() 
+    
     class Meta:
         model = IngredientBrand
         fields = '__all__'
+
+    def get_ingredient_brands(self,obj):
+        ingredientInRobot = RobotIngredient.objects.filter(remain_of_bottle__gt=0).values_list('ingredient_id',flat=True)
+        query = obj.ingredient_brands.filter(id__in=ingredientInRobot)
+        return IngredientCreateSerializer(instance=query, many=True).data
+
 
 class IngredientHistorySerializer(serializers.ModelSerializer):
     ingredient_view = IngredientCreateSerializer(source='ingredient' ,read_only=True)
@@ -435,14 +443,22 @@ class AddToTabSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
+        validated_data['drink'].save()
         if validated_data['drink'].price<=0:
             raise api_utils.BadRequest("CANT NOT ORDER DRINK UNDER $0!")
         ret = Tab(**validated_data)
-        ret.save()
-        garnishes = self.initial_data.get('garnishes')
-        garnishes = DrinkGarnish.objects.filter(drink=ret.drink,garnish__in=ast.literal_eval(garnishes))
-        garnishes = list(garnishes)
-        ret.garnishes.add(*garnishes)
+        tab = Tab.objects.filter(drink=ret.drink, user=ret.user, order__isnull=True)
+        if not tab:
+            ret.save()
+            garnishes = self.initial_data.get('garnishes')
+            garnishes = DrinkGarnish.objects.filter(drink=ret.drink,garnish__in=ast.literal_eval(garnishes))
+            garnishes = list(garnishes)
+            ret.garnishes.add(*garnishes)
+        else:
+            temp = ret
+            ret = tab.first()
+            ret.quantity +=temp.quantity
+            ret.save()
         return ret
 
 class TabSerializer(serializers.ModelSerializer):

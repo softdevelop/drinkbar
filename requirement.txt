@@ -17,3 +17,4 @@ mysqlclient
 Pillow
 stripe
 requests-futures
+django-mathfilters

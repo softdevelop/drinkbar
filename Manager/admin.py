@@ -56,7 +56,7 @@ class UserBaseAdmin(UserAdmin):
         (None, {'fields': ('username','email', 'password')}),
         (_('Personal info'),
             {'fields': ('first_name', 'last_name', 'birthday','avatar',
-            'avatar_url','is_email_verified','fb_uid','opt')}),
+            'avatar_url','is_email_verified','is_robot','fb_uid','opt')}),
         (_('Permissions'), 
             {'fields': ('is_active', 'is_staff', 'is_superuser',
                                        'groups', 'user_permissions')}),

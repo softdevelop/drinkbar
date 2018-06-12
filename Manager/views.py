@@ -36,6 +36,18 @@ class VerificationEmail(TemplateView):
             ret['message'] ='INVALID EMAIL VERIFICATION CODE.'
         return ret
 
+class ErrorPage(TemplateView):
+    template_name = "inform.html"
+    status_code = 404
+
+    def get_context_data(self, **kwargs):
+        context = super(ErrorPage,self).get_context_data(**kwargs)
+        context['message'] = "404...Page not found!"
+        return context
+
+class RobotsPage(TemplateView):
+    template_name = "robots.html"
+
 class HomePage(TemplateView):
     template_name = "webpage/index.html"
 

@@ -30,6 +30,7 @@ class UserBase(AbstractUser):
     avatar_url = models.CharField(max_length=200, null=True, blank=True, default=settings.MEDIA_URL+'avatar_defautl.png')
     opt = models.CharField(max_length=255, null=True, blank=True)
     is_email_verified = models.BooleanField(default=False)
+    is_robot = models.BooleanField(default=False)
     fb_uid = models.CharField(max_length=200, null=True, blank=True)
     fb_access_token = models.CharField(max_length=1000, null=True, blank=True)
     favorite_drink = models.ManyToManyField("Drink",related_name="favorite_by")
@@ -158,6 +159,8 @@ def update_ingredient_drink_price(sender, instance, created, raw,
                     using, update_fields, **kwargs):
     print update_fields
     for drink in instance.drinks.all():
+        if drink.drink.is_fit_price:
+            continue
         price = 0
         try:
             for ingredient in drink.drink.ingredients.all():
@@ -165,6 +168,7 @@ def update_ingredient_drink_price(sender, instance, created, raw,
         except Exception as e:
             drink.drink.status = Drink.CONST_STATUS_BLOCKED
             pass
+        price = float(fpformat.fix(price, 2))
         drink.drink.price = price
         drink.drink.save()
     
@@ -276,6 +280,7 @@ class Drink(models.Model):
     background_color = models.CharField(max_length=200, blank=True, null=True)
     numbers_bought = models.PositiveIntegerField(blank=True, null= True, default=0)
     price = models.FloatField(default=0)
+    is_fit_price = models.BooleanField(default=False)
     glass = models.ForeignKey(SeparateGlass,blank=True, null=True, related_name='drinks')
     key_word = models.CharField(max_length=200, blank=True, null=True)
     estimate_time = models.PositiveIntegerField(help_text=_('seconds'), default=0)
@@ -354,15 +359,18 @@ def update_drink_price(sender, instance, created, raw,
     if created:
         if not instance.background_color:
             instance.set_background_color()
-    price = 0
-    try:
-        for drink in instance.ingredients.all():
-            price += drink.ratio_ml*drink.ingredient.price_per_ml
-    except Exception as e:
-        instance.status = Drink.CONST_STATUS_BLOCKED
-        pass
     
-    instance.price = price
+    if not instance.is_fit_price:
+        price = 0
+        try:
+            for drink in instance.ingredients.all():
+                price += drink.ratio_ml*drink.ingredient.price_per_ml
+        except Exception as e:
+            instance.status = Drink.CONST_STATUS_BLOCKED
+            # raise e
+            pass
+        price = float(fpformat.fix(price, 2))
+        instance.price = price
 
 
 class DrinkIngredient(models.Model):
@@ -476,6 +484,7 @@ class Order(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(UserBase, related_name='orders')
     amount = models.FloatField(blank=True, null=True)
+    amount_without_fee = models.FloatField(blank=True, null=True)
     channel = models.SmallIntegerField(choices=CHANNELS, null=True, blank=True)
     transaction_code = models.CharField(max_length=300, null=True, blank=True)
     transaction_id = models.CharField(max_length=50, null=True, blank=True)

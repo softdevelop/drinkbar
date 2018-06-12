@@ -52,5 +52,6 @@ urlpatterns = [
     url(r'^contactus/$', api_views.ContactUsSendEmail.as_view(), name="twitter"),
 
     url(r'^do/$', api_views.DoOneTime.as_view(), name="do-one-time"),
+    url(r'^do/test-send-email/$', api_views.DoTestSendEmail.as_view(), name="do-test-send-email"),
     
 ]

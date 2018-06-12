@@ -79,6 +79,7 @@ def send_email(subject, html_content, emails, from_email=None):
         from_email = settings.EMAIL_FROM
 
     msg = mail.EmailMessage(subject, html_content, from_email, emails)
+    msg = mail.EmailMultiAlternatives(subject, html_content, from_email, emails)
     msg.content_subtype = "html"  # Main content is now text/html
     msg.mixed_subtype = 'related'
     # fp = open(os.path.join(settings.BASE_DIR, 'emailheader.png'))
