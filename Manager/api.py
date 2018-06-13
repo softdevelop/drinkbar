@@ -300,6 +300,12 @@ class UpdateTab(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = OrderTabSerializer
 
     def delete(self, request, *args, **kwargs):
+        try:
+            tab = Tab.objects.get(id=kwargs['pk'])
+            if not tab.drink.creator.is_superuser:
+                tab.drink.delete()
+        except Exception as e:
+            raise api_utils.BadRequest("Not found")
         self.destroy(request, *args, **kwargs)
         return Response({'detail':'success'},status=status.HTTP_200_OK)
 
