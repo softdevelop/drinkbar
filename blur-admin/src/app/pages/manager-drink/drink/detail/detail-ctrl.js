@@ -27,7 +27,8 @@
 		$scope.est = {
 			min : 0,
 			sec: 0
-		}
+		};
+		$scope.isDisablePrice = false;
 
 		$rootScope.list_categories = $scope.list_glass = $rootScope.ingredients = $rootScope.garnishs = [];
 
@@ -158,6 +159,9 @@
 
 		// ========== function change from ===============
 		$scope.changeInfo = function (field, value) {
+			if(field == 'is_fit_price'){
+				$scope.isDisablePrice = !value;
+			}
 			$scope.data_detail[field] = value;
 			$scope.isChange = true;
 		}

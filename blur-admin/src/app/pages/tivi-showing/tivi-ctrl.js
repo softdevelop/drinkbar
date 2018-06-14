@@ -120,6 +120,37 @@
         }
 
         // ================================================
+        // =================== get list order ===============
+        $scope.data_order = [];
+        $scope.data_pending = [];
+        $scope.data_processing = [];
+        $scope.data_complete = [];
+
+        getDataOrder();
+
+        function getDataOrder(){
+            TiviService.getListOrder($rootScope.userLogin.token, 1).success(function(res){
+                $scope.data_order = res.results;
+                $scope.data_order.forEach(function(item){
+                    if(item.status === 0){
+                        $scope.data_pending.push(item)
+                    } else if(item.status === 10){
+                        $scope.data_processing.push(item)
+                        $scope.data_processing[0].products.forEach(function(el){
+                            if (el.status > 30) {
+                                $scope.drink_finish = el;
+                                var _index = el.status - 31;
+                                console.log(_index)
+                                showIngredient(el.drink, el.drink.ingredients[_index]);
+                            }
+                        })
+                    }
+                })
+            }).error(function(err, stt, res){
+                console.log(err)
+                toastr.error(err.detail);
+            })
+        }
 
         // ================= socket ==============
 
@@ -234,6 +265,9 @@
         var _level = 1;
 
         function showIngredient(data, ingredient) {
+            console.log('*************************************')
+            console.log(data)
+            console.log(ingredient)
             var _ingredients = data.ingredients;
             var _total_part = data.total_part;
 

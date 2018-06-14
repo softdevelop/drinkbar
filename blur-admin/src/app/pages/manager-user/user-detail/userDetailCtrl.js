@@ -27,7 +27,7 @@
             $uibModal.open({
                 animation: true,
                 templateUrl: page,
-                size: 'lg',
+                size: 'md',
                 resolve: {
                     token: function () {
                         return $scope.currentUser.token;

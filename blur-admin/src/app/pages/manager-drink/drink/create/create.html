@@ -47,8 +47,15 @@
             </div>
 
             <div class="form-group">
+                <label class="checkbox-inline custom-checkbox nowrap">
+                    <input type="checkbox" id="inlineCheckbox01" name="is_fit_price" ng-change="changeInfo('is_fit_price', data_create.is_fit_price)" ng-model="data_create.is_fit_price"> 
+                    <span>Is fit price</span>
+                </label>
+            </div>
+
+            <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Price</label>
-                <input class="form-control" type="number" min="0" name="price" placeholder="Price" ng-model="data_create.price" ng-change="changeInfo('price', data_create.price)"
+                <input ng-disabled="isDisablePrice" class="form-control" type="number" min="0" name="price" placeholder="Price" ng-model="data_create.price" ng-change="changeInfo('price', data_create.price)"
                     required>
             </div>
 

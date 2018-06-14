@@ -5,6 +5,14 @@
             var _token = $rootScope.userLogin.token;
 
             return {
+                getListOrder: function (token, offset) {
+                    return $http.get(AppSetting.BASE_URL + '/api/user/order/?robot=true&limit=25&offset='+offset, {
+                        headers: {
+                            'Content-Type': undefined,
+                            'Authorization': 'Token ' + token
+                        }
+                    });
+                },
                 getList: function (token) {
                     return $http.get(AppSetting.BASE_URL + '/api/robot/', {
                         headers: {

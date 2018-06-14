@@ -5,12 +5,12 @@
                 <h3>Upcoming orders</h3>
             </div>
             <div class="_order_user">
-                <div ng-if="users_orders.length > 0" class="_user animated bounceInLeft" ng-repeat="user in users_orders | orderBy: 'key'">
-                    <div ng-if="user.avatar" class="_avt _img">
-                        <img ng-if="user.avatar" src="{{ user.avatar }}" alt="" class="img-circle">
-                        <img ng-if="!user.avatar" src="{{ user.avatar_url }}" alt="" class="img-circle">
+                <div ng-if="data_pending.length > 0" class="_user animated bounceInLeft" ng-repeat="item in data_pending | orderBy: 'key' | limitTo:5 ">
+                    <div ng-if="item.user.avatar" class="_avt _img">
+                        <img ng-if="item.user.avatar" src="{{ item.user.avatar }}" alt="" class="img-circle">
+                        <img ng-if="!item.user.avatar" src="{{ item.user.avatar_url }}" alt="" class="img-circle">
                     </div>
-                    <p class="_user_name">{{ user.first_name }} {{ user.last_name }}</p>
+                    <p class="_user_name">{{ item.user.first_name }} {{ item.user.last_name }}</p>
                 </div>
             </div>
             <div class="_order_robot animated zoomIn">
@@ -26,11 +26,11 @@
                         </div>
                         <div class="_icon_bottom"></div>
                         <div class="_title_name">
-                            <div ng-show="user_updated.avatar" class="_avt animated zoomIn">
-                                <img ng-show="user_updated.avatar" src="{{user_updated.avatar}}" alt="" class="img-circle">
-                                <img ng-show="!user_updated.avatar" src="{{user_updated.avatar_url}}" alt="" class="img-circle">
+                            <div ng-show="data_processing[0].user.avatar" class="_avt animated zoomIn">
+                                <img ng-show="data_processing[0].user.avatar" src="{{data_processing[0].user.avatar}}" alt="" class="img-circle">
+                                <img ng-show="!data_processing[0].user.avatar" src="{{data_processing[0].user.avatar_url}}" alt="" class="img-circle">
                             </div>
-                            <h3 ng-if="user_updated.first_name" class="animated flash">{{ user_updated.first_name }} {{ user_updated.last_name }}</h3>
+                            <h3 ng-if="data_processing[0].user.first_name" class="animated flash">{{ data_processing[0].user.first_name }} {{ data_processing[0].user.last_name }}</h3>
                         </div>
                     </div>
                     <div class="_ctn">
@@ -41,7 +41,7 @@
                                 <span>2</span> {{ product.drink.name }}
                                 <i></i>
                             </a> -->
-                            <a ng-class="{'isActive' : product.status > 30}" class="" href="{{product.status}}" ng-repeat="product in products">
+                            <a ng-class="{'isActive' : product.status > 30}" class="" href="{{product.status}}" ng-repeat="product in data_processing[0].products">
                                 <span>2</span> {{ product.drink.name }}
                                 <i></i>
                             </a>

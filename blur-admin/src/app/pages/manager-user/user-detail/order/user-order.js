@@ -13,6 +13,8 @@
         $scope.products = items.products;
         $scope.data_order = items;
 
+        console.log($scope.data_order)
+
         $scope.openDrinkDetail = function(id){
             var url_redirect = '#/manager-drink/drink/detail/' + id ;
             $uibModalInstance.close();

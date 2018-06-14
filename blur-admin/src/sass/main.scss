@@ -4101,6 +4101,9 @@
             box-shadow: none;
         }
     }
+    .modal.in .modal-dialog{
+        margin-top: 30px !important;
+    }
 
     // ========== response ============
     @media (min-width: 1199px) {
