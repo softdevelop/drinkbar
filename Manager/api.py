@@ -581,7 +581,7 @@ class DrinkList(generics.ListCreateAPIView):
 
         search_query = self.request.GET.get('search', None)
         if search_query:
-            ret = ret.filter(name__icontains=search_query)
+            ret = ret.filter(Q(name__icontains=search_query)|Q(ingredients__ingredient__name__icontains=search_query))
 
         category = self.request.GET.get('category', None)
         if category:

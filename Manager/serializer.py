@@ -150,7 +150,7 @@ class DrinkOrdersSerializer(DrinkUserOrdersSerializer):
         model = Drink
         fields = DrinkUserOrdersSerializer.Meta.fields+('glass_ml',\
             'prep','prep_view',\
-            'estimate_time','glass')
+            'estimate_time','glass','total_part')
 
     def get_prep_view(self,obj):
         return obj.get_prep_display()

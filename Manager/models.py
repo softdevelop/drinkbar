@@ -372,6 +372,9 @@ def update_drink_price(sender, instance, created, raw,
         price = float(fpformat.fix(price, 2))
         instance.price = price
 
+    if instance.status is Drink.CONST_STATUS_BLOCKED:
+        Tab.objects.filter(drink=instance).delete()
+
 
 class DrinkIngredient(models.Model):
     CONST_UNIT_PERCENT = 0

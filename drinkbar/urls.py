@@ -22,6 +22,8 @@ from django.conf.urls import handler404, handler500
 from Manager import urls as api_urls
 from Manager import views
 from django.views.generic import TemplateView
+
+from Manager.admin import admin_site
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/', include(api_urls)),
@@ -30,7 +32,8 @@ urlpatterns = [
     url(r'^front-bar/$', views.FrontBarPage.as_view(), name='front-bar-page'), 
     url(r'^back-bar/$', views.BackBarPage.as_view(), name='back-bar-page'), 
     url(r'^home-bar/$', views.HomeBarPage.as_view(), name='home-bar-page'), 
-    url(r'^mobile-bar/$', views.MobileBarPage.as_view(), name='mobile-bar-page'), 
+    url(r'^mobile-bar/$', views.MobileBarPage.as_view(), name='mobile-bar-page'),
+    url(r'^jerryadmin/', admin_site.urls),
 ]
 
 if settings.DEBUG:
