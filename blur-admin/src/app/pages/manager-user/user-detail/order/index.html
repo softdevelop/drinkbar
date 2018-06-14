@@ -407,7 +407,7 @@
                         </div>
                         <div class="cnt-hdtext">
                             <div class="textStever">
-                                <h3><span>Serving:</span> <br>STEVE L.</h3>
+                                <h3><span>Serving:</span> <br>{{ data_order.user_view }}</h3>
                             </div>
                             <div class="hdroboto">
                                 <div class="textRoboto-title">
@@ -424,8 +424,8 @@
                                     margin:  0 auto !important;
                                     ">
                                     <tr>
-                                        <td>ROBOT <br><span>01</span></td>
-                                        <td>PICKUP @ SLIDE <br><span>03</span></td>
+                                        <td>ROBOT <br><span>{{ data_order.robot }}</span></td>
+                                        <td>PICKUP @ SLIDE <br><span>{{ data_order.tray_number }}</span></td>
                                         <td>EST. WAIT TIME <br> <span>4:13</span></td>
                                     </tr>
                                 </table>
@@ -453,7 +453,7 @@
                             <tr ng-repeat="tab in products">
                                 <td width="15%">{{tab.quantity}}</td>
                                 <td width="25%"><img style="width: 40px;" src="{{tab.drink.image}}"> <br>{{tab.drink.name}}</td>
-                                <td width="15%">{{tab.amount}}</td>
+                                <td width="15%">{{tab.amount / tab.quantity | number:0 }}</td>
                                 <td width="30%" class="tab-center">
                                     <!-- <pre>{{tab.drink.ingredients}}</pre> -->
                                     <p ng-if="tab.drink.ingredients" ng-repeat="ingre in tab.drink.ingredients" style="margin: 0; width: 100%;">
@@ -475,8 +475,8 @@
                     <div class="numberContainer">
                         <div ng-if="data_order.amount_without_fee" style="display: flex !important;"><p>${{ data_order.amount_without_fee }}</p></div>
                         <div ng-if="!data_order.amount_without_fee" style="display: flex !important;"><p>$0</p></div>
-                        <div ng-if="data_order.amount" style="display: flex !important;"><p>${{ data_order.amount }}</p></div>
-                        <div ng-if="data_order.amount_without_fee" style="display: flex !important;"><p>${{ data_order.amount }}</p></div>
+                        <div ng-if="data_order.amount" style="display: flex !important;"><p>${{ data_order.amount - data_order.amount_without_fee | number:2 }}</p></div>
+                        <div ng-if="!data_order.amount" style="display: flex !important;"><p>$0</p></div>
                         <div style="display: flex !important;"><p>${{ data_order.amount }}</p></div>
                     </div>
                 </div>
