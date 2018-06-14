@@ -300,6 +300,12 @@ class UpdateTab(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = OrderTabSerializer
 
     def delete(self, request, *args, **kwargs):
+        try:
+            tab = Tab.objects.get(id=kwargs['pk'])
+            if not tab.drink.creator.is_superuser:
+                tab.drink.delete()
+        except Exception as e:
+            raise api_utils.BadRequest("Not found")
         self.destroy(request, *args, **kwargs)
         return Response({'detail':'success'},status=status.HTTP_200_OK)
 
@@ -575,7 +581,7 @@ class DrinkList(generics.ListCreateAPIView):
 
         search_query = self.request.GET.get('search', None)
         if search_query:
-            ret = ret.filter(name__icontains=search_query)
+            ret = ret.filter(Q(name__icontains=search_query)|Q(ingredients__ingredient__name__icontains=search_query))
 
         category = self.request.GET.get('category', None)
         if category:

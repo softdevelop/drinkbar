@@ -11,15 +11,23 @@ from categories.models import Category as DefaultCategory
 from import_export import resources, fields
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
-
+from django.contrib.admin import AdminSite
 # # Register your models here.
 admin.site.unregister(auth.models.Group)
 admin.site.unregister(DefaultCategory)
 
+class MyAdminSite(AdminSite):
+    site_header = 'Jerry change'
+    site_title = "Drink bar admin site"
+    
+admin_site = MyAdminSite(name='myadmin')
+# admin_site.register()
 
 '''
 Order
 '''
+
+
 class TabInline(admin.TabularInline):
     model = Tab
     extra = 0

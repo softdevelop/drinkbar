@@ -47,10 +47,10 @@
                     <div class="">
                         <div class="userpic">
                             <div ng-show="isChangeImage" class="userpic-wrapper">
-                                <img style="width: 100% !important;" src="{{ detail.image }}" ng-click="uploadPicture()">
+                                <img style="max-height: 100% !important;" src="{{ detail.image }}" ng-click="uploadPicture()">
                             </div>
                             <div ng-show="!isChangeImage" class="userpic-wrapper">
-                                <img style="width: 100% !important;" src="{{ image }}" ng-click="uploadPicture('image')">
+                                <img style="max-height: 100% !important;" src="{{ image }}" ng-click="uploadPicture('image')">
                             </div>
                             <i ng-show="!isChangeImage" class="ion-ios-close-outline" ng-click="removePicture('image')" ng-if="!noPicture"></i>
                             <a href class="change-userpic" ng-click="uploadPicture('image')">Change Image</a>

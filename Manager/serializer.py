@@ -134,23 +134,23 @@ class DrinkIngredientSerializer(serializers.ModelSerializer):
 
 
 class DrinkUserOrdersSerializer(serializers.ModelSerializer):
+    ingredients = DrinkIngredientSerializer(many=True, read_only=True)
     class Meta:
         model = Drink
-        fields = ('id','name','image','price')
+        fields = ('id','name','image','price','ingredients')
 
     def get_glass_ml(self,obj):
         return obj.glass.change_to_ml
 
 class DrinkOrdersSerializer(DrinkUserOrdersSerializer):
-    ingredients = DrinkIngredientSerializer(many=True, read_only=True)
     glass_ml = serializers.SerializerMethodField()
     prep_view = serializers.SerializerMethodField()
     glass = SeparateGlassSerializer(read_only=True)
     class Meta(DrinkUserOrdersSerializer.Meta):
         model = Drink
-        fields = DrinkUserOrdersSerializer.Meta.fields+('ingredients',\
-            'glass_ml','prep','prep_view',\
-            'estimate_time','glass')
+        fields = DrinkUserOrdersSerializer.Meta.fields+('glass_ml',\
+            'prep','prep_view',\
+            'estimate_time','glass','total_part')
 
     def get_prep_view(self,obj):
         return obj.get_prep_display()
@@ -370,7 +370,13 @@ class DrinkCreateSerializer(serializers.ModelSerializer):
         ret = Drink(**validated_data)
         ret.save()
         ret = drink_add_on(self, ret)
-        return ret
+        ret.save()
+        save_drink =  Drink.objects.get(id=ret.id)
+        save_drink.price = ret.price
+        if not ret.creator.is_superuser:
+            save_drink.image = ret.glass.image
+        save_drink.save()
+        return save_drink
 
 '''
     Ingredient
@@ -499,7 +505,7 @@ class OrderSmallSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ('id','status','status_view','creation_date','amount',
-            'channel','transaction_code','transaction_id',
+            'channel','transaction_code','transaction_id','amount_without_fee',
             'payer_firstname','payer_lastname','payer_email',
             'tray_number','products','qr_code','photo','robot','user_view')
 
