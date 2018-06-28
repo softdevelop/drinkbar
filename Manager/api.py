@@ -26,6 +26,8 @@ import requests
 import pprint
 import fpformat
 from requests_futures.sessions import FuturesSession
+from PIL import Image, ImageOps
+import os
 '''
 User API:
 '''
@@ -363,7 +365,14 @@ class UserOrder(generics.ListCreateAPIView):
             except Exception as e:
                 raise api_utils.BadRequest("INVALID_ORDER_ID")
             tabs = reorder.products.all()
+            ret = {}
+            ret['block_count'] =0
+            ret['block_drinks'] = []
             for tab in tabs:
+                if tab.drink.status==Ingredient.CONST_STATUS_BLOCKED:
+                    ret['block_count'] += 1
+                    ret['block_drinks'].append(tab.drink.name)
+                    continue
                 garnishes = tab.garnishes.all()
                 tab_current = Tab.objects.filter(drink=tab.drink, user=request.user, order__isnull=True)
                 if not tab_current:
@@ -378,11 +387,19 @@ class UserOrder(generics.ListCreateAPIView):
                     tab_current = tab_current.first()
                     tab_current.quantity +=1
                     tab_current.save()
-            return Response(status=status.HTTP_200_OK)
+            # ret['block_drinks'] = DrinkSerializer(Drink.objects.filter(id__in=ret['block_drinks'])).data
+            return Response(ret, status=status.HTTP_200_OK)
 
         if tab_id:
+            ret = {}
+            ret['block_count'] =0
+            ret['block_drinks'] = []
             try:
                 tab = Tab.objects.get(id=tab_id, user=request.user)
+                if tab.drink.status==Ingredient.CONST_STATUS_BLOCKED:
+                    ret['block_count'] = 1
+                    ret['block_drinks'].append(tab.drink.name)
+                    return Response(ret, status=status.HTTP_200_OK)
                 garnishes = tab.garnishes.all()
                 tab_current = Tab.objects.filter(drink=tab.drink, user=request.user, order__isnull=True)
                 if not tab_current:
@@ -400,9 +417,9 @@ class UserOrder(generics.ListCreateAPIView):
             except Exception as e:
                 print e
                 raise api_utils.BadRequest("INVALID_DRINK_ID")
-            return Response(status=status.HTTP_200_OK)
+            return Response(ret, status=status.HTTP_200_OK)
             
-        tabs = request.user.tab.filter(order__isnull=True, quantity__gt=0)
+        tabs = request.user.tab.filter(order__isnull=True, quantity__gt=0, drink__status=Drink.CONST_STATUS_ENABLED)
         stripe_token = self.request.data.get('stripe_token', None)
         if not stripe_token:
             raise api_utils.BadRequest("INVALID_STRIPE_TOKEN")
@@ -432,11 +449,16 @@ class UserOrder(generics.ListCreateAPIView):
                 else:
                     if tab.quantity==1:
                         tab.drink.status = Drink.CONST_STATUS_BLOCKED
+                        tab.drink.save()
+                        raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR {}, WE WILL REMOVE THEM".format(tab.drink.name.upper()))
                     else:
                         # Check if still enough for 1 cup
                         if not tab.drink.is_enough_ingredient(robot,1):
                             tab.drink.status = Drink.CONST_STATUS_BLOCKED
-                    tab.drink.save()
+                            tab.drink.save()
+                            raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR {}, WE WILL REMOVE THEM".format(tab.drink.name.upper()))
+                        else:
+                            raise api_utils.BadRequest("JUST ENOUGH INGREDIENT FOR 1 CUP {}".format(tab.drink.name.upper()))
                     break
             if temp == len(tabs):
                 robot_will_do = robot
@@ -480,16 +502,38 @@ class UserOrder(generics.ListCreateAPIView):
         # Create new order
         serializer.validated_data['amount'] = float(total_bill)
         serializer.validated_data['status'] = Order.STATUS_NEW
+
+        
         order = serializer.create(serializer.validated_data)
 
+        # Photo
+        locate_image = os.path.join(settings.MEDIA_ROOT, order.photo.name)
+        try:
+            im = Image.open(order.photo)
+            im = im.rotate(270, expand=1)
+            # pprint.pprint(vars(im))
+            # im.show()
+            canvas = Image.new('RGB', im.size, (255,255,255,255))
+            canvas.paste(im)
+            canvas.save(locate_image)
+        except Exception as e:
+            subject = "Hi-Effeciency - System error [Image order]"
+            html_content = render_to_string('email/error.html',
+                                {'error':e})
+            tasks.send_email(subject, html_content, ["ngochoang09121996@gmail.com"])
+            pass
+
         tabs.update(order=order)
+        
         
         for tab in Tab.objects.filter(order=order):
             tab.drink.make_drink(robot_will_do,tab.quantity)
 
         # Send receipt 
         subject = "Hi-Effeciency - New order"
-        html_content = render_to_string('email/new_order_receipt.html',{'user':request.user.full_name,'order':order})
+        html_content = render_to_string('email/new_order_receipt.html',
+                            {'user':request.user,
+                            'order':order})
         tasks.send_email(subject, html_content, [request.user.email])
         # pprint(vars(serializer.data))
         headers = self.get_success_headers(serializer.data)
@@ -932,7 +976,9 @@ class DoTestSendEmail(APIView):
     
     def get(self,request,format=None):
         subject = 'Hi-Effeciency - Testing send email'
-        html_content = render_to_string('email/new_order_receipt.html')
+        order = Order.objects.all().last()
+        html_content = render_to_string('email/new_order_receipt.html',{'user':request.user,
+                            'order':order})
         tasks.send_email(subject, html_content, ['ngochoang09121996@gmail.com','vietndpd01144@gmail.com'])
         return Response({"detail":"THE EMAIL HAS BEEN SENT"},status=status.HTTP_200_OK)
 

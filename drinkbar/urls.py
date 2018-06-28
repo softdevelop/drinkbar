@@ -23,27 +23,36 @@ from Manager import urls as api_urls
 from Manager import views
 from django.views.generic import TemplateView
 
-from Manager.admin import admin_site
-urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^api/', include(api_urls)),
-    url(r'^verify/email/$', views.VerificationEmail.as_view(), name='user-verify-email'), 
-    url(r'^$', views.HomePage.as_view(), name='index'), 
-    url(r'^front-bar/$', views.FrontBarPage.as_view(), name='front-bar-page'), 
-    url(r'^back-bar/$', views.BackBarPage.as_view(), name='back-bar-page'), 
-    url(r'^home-bar/$', views.HomeBarPage.as_view(), name='home-bar-page'), 
-    url(r'^mobile-bar/$', views.MobileBarPage.as_view(), name='mobile-bar-page'),
-    url(r'^jerryadmin/', admin_site.urls),
-]
+from rest_framework import routers
+    
+if settings.DEVELOPING_MODE:
+    urlpatterns =[ url(r'', views.ErrorPage.as_view(), name='error'), ]
+    urlpatterns +=[ url(r'/', views.ErrorPage.as_view(), name='error'), ]
+else:
+    urlpatterns = [
+        url(r'^admin/', admin.site.urls),
+        url(r'^api/', include(api_urls)),
+        url(r'^verify/email/$', views.VerificationEmail.as_view(), name='user-verify-email'), 
+        url(r'^$', views.HomePage.as_view(), name='index'), 
+        url(r'^front-bar/$', views.FrontBarPage.as_view(), name='front-bar-page'), 
+        url(r'^back-bar/$', views.BackBarPage.as_view(), name='back-bar-page'), 
+        url(r'^home-bar/$', views.HomeBarPage.as_view(), name='home-bar-page'), 
+        url(r'^mobile-bar/$', views.MobileBarPage.as_view(), name='mobile-bar-page'),
+    ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL.replace(settings.SITE_URL, ''), document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL.replace(settings.SITE_URL, ''), document_root=settings.MEDIA_ROOT)
+    router = routers.DefaultRouter()
+    router.register("drink/search", views.DrinkSearchView, base_name="drink-search")
+    urlpatterns += router.urls
 
-urlpatterns += [
-    url(r'^bluradmin/', TemplateView.as_view(template_name="index.html")),
-]
+    if settings.DEBUG:
+        urlpatterns += static(settings.STATIC_URL.replace(settings.SITE_URL, ''), document_root=settings.STATIC_ROOT)
+        urlpatterns += static(settings.MEDIA_URL.replace(settings.SITE_URL, ''), document_root=settings.MEDIA_ROOT)
+        urlpatterns += static(r'bluradmin/assets', document_root='./static/assets')
 
-urlpatterns += [ url(r'^robots.txt$', views.RobotsPage.as_view(), name='robots.txt'), ]
+    urlpatterns += [
+        url(r'^bluradmin/', TemplateView.as_view(template_name="index.html")),
+    ]
 
-urlpatterns +=[ url(r'/', views.ErrorPage.as_view(), name='error'), ]
+    urlpatterns += [ url(r'^robots.txt$', views.RobotsPage.as_view(), name='robots.txt'), ]
+
+    urlpatterns +=[ url(r'/', views.ErrorPage.as_view(), name='error'), ]

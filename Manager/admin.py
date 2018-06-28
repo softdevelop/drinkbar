@@ -39,7 +39,7 @@ class TabAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = ('id','status','user','amount',
             'channel','transaction_code','transaction_id',
-            'tray_number','robot','creation_date')
+            'tray_number','robot','creation_date','total_time')
     readonly_fields = ('amount',)
     inlines = (TabInline,)
 

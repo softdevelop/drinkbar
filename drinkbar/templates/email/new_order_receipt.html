@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load mathfilters %}
+{% load templatetag_edition %}
 {% load i18n %}
 <!DOCTYPE html>
 <html>
@@ -51,7 +52,7 @@
 			font-size: 12px !important;
 			margin: 0 !important;
 			color: #000000 !important;
-			line-height: 14px !important;
+			line-height: 6px !important;
 			margin-bottom: -5px !important;
 		}
 		.textLogo a{
@@ -68,27 +69,45 @@
 			padding: 20px 25px 0 !important;
 		}
 		.textStever{
-			width: 40% !important;
+			width: 50% !important;
 			float: left !important;
-			background: url({% static 'email/receipt/images/bg-sever.png' %}) no-repeat center top !important;
+			/*background: url({% static 'email/receipt/images/bg-sever.png' %}) no-repeat center top !important;*/
+			background-color: #d1d2d3 !important;
 			background-size: 100% !important;
-			padding: 1% 0 1% !important;
+			/*padding: 1% 0 1% !important;*/
+			height: 60px !important;
+			border-radius: 60px;
 		}
+		.textStever .avatar{
+			width: 60px;
+		    height: 60px;
+		    display: inline-block;
+		    margin: 0;
+		    background-color:  rebeccapurple;
+		    border-radius: 50%;
+		    overflow: hidden;
+		}
+		.textStever .fullName{
+		    display:  inline-block !important;
+		    vertical-align: top !important;
+		    width: calc(100% - 64px) !important;
+		}
+
 		.textStever h3{
-			font-size: 22px !important;
+			font-size: 20px !important;
 			display:  inline-block !important;
 			font-family: 'HelveticaNeueBold' !important;
 			color: #000000 !important;
-			margin: 0 !important;
-			padding-left: 35% !important;
+			margin: 0 !important; 
 			line-height: 18px !important;
+			vertical-align: top;
 		}
 		.textStever h3 span{
 			font-size: 12px !important;
 			font-family: 'HelveticaNeueMedium' !important;
 		}
 		.hdroboto{
-			width: 60% !important;
+			width: 50% !important;
 			float: right !important;
 		}
 		.textRoboto-title{
@@ -110,7 +129,6 @@
 			right: 27px !important;
 		}
 		.textRoboto table tr td{
-			width: 3% !important;
 			text-align: center !important;
 			font-size: 10px !important;
 			text-transform: uppercase !important;
@@ -176,9 +194,17 @@
 		}
 		.footerContainer .numberContainer{
 			line-height: 1.85 !important;
-		    width: 23.33% !important;
+		    width: 27.33% !important;
 		    margin: 0 auto !important; 
-		    margin-right: 10% !important;
+		    margin-right: 5.5% !important;
+		    vertical-align: top;
+		    display: inline-block;
+		    margin-left: 12.83% !important;
+		}
+		.footerContainer .numberContainer .number{
+			display: flex!important;
+		    background-color: #dbc26c;
+		    margin-bottom: 2px;
 		}
 		.textSub {
 			width: 100% !important;
@@ -238,7 +264,7 @@
 			}
 			.textStever h3 {
 			    font-size: 19px !important;
-			    line-height: 15px !important;
+			    line-height: 20px !important;
 			}
 			.textStever h3 span {
 			    font-size: 10px !important;
@@ -246,6 +272,9 @@
 			.textRoboto {
 			    margin-top: 1px !important;
 			    padding: 0 !important;
+			}
+			.textRoboto table tr td{
+				font-size: 8px !important;
 			}
 			.textRoboto table tr td span {
 			    font-size: 16px !important;
@@ -279,9 +308,21 @@
 			.headerContainer{
 				min-height: 206px !important;
 			}
+			.textStever{
+				width: 50% !important;
+			}
 			.textStever h3{
 			    line-height: 13px !important;
-			    padding-left: 28% !important;
+			  	font-size: 15px !important;
+			}
+			.hdroboto{
+				width: 50% !important;
+			}
+			.textRoboto-title table tr td{
+				font-size: 8px !important;
+			}
+			.textRoboto table tr td span {
+			    font-size: 13px !important;
 			}
 			.textSub p {
 			    padding: 0px 20px 0 0 !important;
@@ -302,7 +343,7 @@
 			}
 			.textStever h3{
 				font-size: 13px !important;
-				line-height: 11px !important;
+				line-height: 15px !important;
 			}
 			.textStever h3 span {
 			    font-size: 9px !important;
@@ -318,9 +359,7 @@
 			.textRoboto table tr td {
 			    font-size: 8px !important;
 			}
-			.textRoboto table tr td span {
-			    font-size: 13px !important;
-			}
+			
 			
 		}
 		@media (max-width: 330px){
@@ -408,14 +447,17 @@
 		</div>
 		<div class="cnt-hdtext">
 			<div class="textStever">
-				<h3><span>Serving:</span> <br>STEVE L.</h3>
+				<div class="avatar"><img src="http://hiefficiencybar.com/media/{{ user.avatar }}" alt="" width="60px"></div>
+				<div class="fullName">
+					<h3><span>Serving:</span> <br>{{user.full_name}}</h3>
+				</div>
 			</div>
 			<div class="hdroboto">
 				<div class="textRoboto-title">
 					<table>
 						<tr>
-							<td>DATE:</td>
-							<td>TIME:</td>
+							<td>DATE:{{order.creation_date|date:"M d Y"}}</td>
+							<td>TIME:{{order.creation_date|date:"f"}}</td>
 						</tr>
 					</table>
 				</div>
@@ -425,9 +467,14 @@
 					    margin:  0 auto !important;
 					">
 						<tr>
-							<td>ROBOT <br><span>01</span></td>
-							<td>PICKUP @ SLIDE <br><span>03</span></td>
-							<td>EST. WAIT TIME <br> <span>4:13</span></td>
+							<td>ROBOT</td>
+							<td>PICKUP @ SLIDE</td>
+							<td>EST. WAIT TIME</td>
+						</tr>
+						<tr>
+							<td><span>{{order.robot.id}}</span></td>
+							<td><span>{{order.tray_number}}</span></td>
+							<td><span>{{order.total_time|parseToTime}}</span></td>
 						</tr>
 					</table>
 				</div>
@@ -467,10 +514,22 @@
 	</div>
 	<!-- footer -->
 	<div class="footerContainer">
+		<div style="
+		    margin-top: 73px;
+		    width: 97px;
+		    height: 97px;
+		    margin-left: 225px;
+		    background:  rebeccapurple;
+		    display: inline-block;
+		    overflow: hidden;
+		">
+			<img src="{{order.qr_code}}" alt="qr_code" style="width: 97px;
+">
+		</div>
 		<div class="numberContainer">
-			<div style="display: flex !important;"><p>${{ order.amount_without_fee }}</p></div>
-			<div style="display: flex !important;"><p>${{ order.amount | sub:order.amount_without_fee }}</p></div>
-			<div style="display: flex !important;"><p>${{ order.amount }}</p></div>
+			<div class="number"><p>${{ order.amount_without_fee }}</p></div>
+			<div class="number"><p>${{ order.amount | sub:order.amount_without_fee }}</p></div>
+			<div class="number"><p>${{ order.amount }}</p></div>
 		</div>
 	</div>
 	<div class="footerCopyContainer">

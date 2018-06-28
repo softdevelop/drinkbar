@@ -452,14 +452,19 @@ class AddToTabSerializer(serializers.ModelSerializer):
         validated_data['drink'].save()
         if validated_data['drink'].price<=0:
             raise api_utils.BadRequest("CANT NOT ORDER DRINK UNDER $0!")
+
+        if validated_data['drink'].status==Drink.CONST_STATUS_BLOCKED:
+            raise api_utils.BadRequest("THIS DRINK HAS BEEN BLOCKED, PLEASE RELOAD")
+
         ret = Tab(**validated_data)
         tab = Tab.objects.filter(drink=ret.drink, user=ret.user, order__isnull=True)
         if not tab:
             ret.save()
             garnishes = self.initial_data.get('garnishes')
-            garnishes = DrinkGarnish.objects.filter(drink=ret.drink,garnish__in=ast.literal_eval(garnishes))
-            garnishes = list(garnishes)
-            ret.garnishes.add(*garnishes)
+            if garnishes:
+                garnishes = DrinkGarnish.objects.filter(drink=ret.drink,garnish__in=ast.literal_eval(garnishes))
+                garnishes = list(garnishes)
+                ret.garnishes.add(*garnishes)
         else:
             temp = ret
             ret = tab.first()
@@ -507,7 +512,7 @@ class OrderSmallSerializer(serializers.ModelSerializer):
         fields = ('id','status','status_view','creation_date','amount',
             'channel','transaction_code','transaction_id','amount_without_fee',
             'payer_firstname','payer_lastname','payer_email',
-            'tray_number','products','qr_code','photo','robot','user_view')
+            'tray_number','products','qr_code','total_time','photo','robot','user_view')
 
     def get_status_view(self,obj):
         try:

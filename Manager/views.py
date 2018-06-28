@@ -88,3 +88,33 @@ class MobileBarPage(TemplateView):
         context = super(MobileBarPage,self).get_context_data(**kwargs)
         context['title'] = "Mobile Bar"
         return context
+
+from drf_haystack.filters import HaystackAutocompleteFilter
+from drf_haystack.filters import HaystackHighlightFilter
+from drf_haystack.mixins import MoreLikeThisMixin
+from drf_haystack.serializers import HaystackSerializer
+from drf_haystack.viewsets import HaystackViewSet
+
+from rest_framework import serializers
+from .search_indexes import DrinkIndex
+
+class DrinkSerializer(HaystackSerializer):
+
+    more_like_this = serializers.HyperlinkedIdentityField(view_name="drink-search-more-like-this", read_only=True)
+
+    class Meta:
+        index_classes = [DrinkIndex]
+        fields = ['name', 'text', 'key_word', "autocomplete"]
+        # ignore_fields = ["autocomplete"]
+        field_aliases = {
+            "q": "autocomplete"
+        }
+
+class DrinkSearchView(MoreLikeThisMixin, HaystackViewSet):
+    # queryset = Drink.objects.all()
+    index_models = [Drink]
+    serializer_class = DrinkSerializer
+    filter_backends = [HaystackAutocompleteFilter, HaystackHighlightFilter]
+
+    # def get_queryset(self, index_models=[]):
+    #   return super(DrinkSearchView, self).get_queryset(index_models).filter(status=0)

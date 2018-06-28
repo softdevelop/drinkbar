@@ -21,6 +21,7 @@ from django.utils import timezone
 from django.conf import settings
 from collections import Counter
 from pprint import pprint
+from django_elasticsearch.models import EsIndexable
 
 class UserBase(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
@@ -244,7 +245,7 @@ def get_admin():
     except Exception as e:
         return 1
 
-class Drink(models.Model):
+class Drink(EsIndexable, models.Model):
     CONST_STATUS_ENABLED = 0
     CONST_STATUS_BLOCKED = 10
 
@@ -271,7 +272,7 @@ class Drink(models.Model):
     prep = models.PositiveSmallIntegerField(_('prep'), choices=CONST_PREP,
                                               default=CONST_PREP_SHAKE)
 
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=200)
     category = models.ManyToManyField(DrinkCategory)
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),
                         blank=True, null=True, upload_to='drink')
@@ -373,7 +374,7 @@ def update_drink_price(sender, instance, created, raw,
         instance.price = price
 
     if instance.status is Drink.CONST_STATUS_BLOCKED:
-        Tab.objects.filter(drink=instance).delete()
+        Tab.objects.filter(drink=instance, order__isnull=True).delete()
 
 
 class DrinkIngredient(models.Model):
@@ -506,6 +507,13 @@ class Order(models.Model):
         data = urllib.quote_plus(data)
         return u'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={}'.format(data)
 
+    @property
+    def total_time(self):
+        ret = self.products.all().aggregate(sum_estimate_time=Sum('drink__estimate_time'))
+        if ret['sum_estimate_time']==None:
+            ret['sum_estimate_time']=0
+        return ret['sum_estimate_time']
+        
 @receiver(post_save, sender=Order)
 def set_robot_and_line(sender, instance=None,created=False, **kwargs):
     '''

@@ -25,6 +25,8 @@ SECRET_KEY = '3xt@1z(omo)$2a#-33$-&g_(*oenruasc+u2555ny)lg03qppn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+DEVELOPING_MODE = False
+
 ALLOWED_HOSTS = ['*',]
 
 
@@ -49,9 +51,21 @@ INSTALLED_APPS = [
     'channels',
     'channels_api',
     'twitter',
+    'haystack',
 
     'Manager',
 ]
+
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.BaseSignalProcessor'
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://127.0.0.1:9200/',
+        'INDEX_NAME': 'elasticsearch',
+        'INCLUDE_SPELLING': True,
+    },
+}
 
 ASGI_APPLICATION = "drinkbar.routing.application"
 
