@@ -27,7 +27,13 @@
                 $rootScope.load_page();
                 $uibModalInstance.close();
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 

@@ -83,7 +83,13 @@
 					toastr.success('Change status success!');
 					getList();
 				}).error(function (err, status, res) {
-					toastr.error(err.detail);
+					if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 				})
 			}
 		}
@@ -182,7 +188,13 @@
 				$rootScope.listDataDrink = res.results;
 				$scope.bigTotalItems = res.count;
 			}).error(function (err, status, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -197,7 +209,13 @@
 				$rootScope.listDataDrink = res.results;
 				$scope.bigTotalItems = res.count;
 			}).error(function (err, status, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -212,7 +230,13 @@
 				console.log($rootScope.listDataDrink)
 				
 			}).error(function (err, status, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -224,7 +248,13 @@
 				toastr.success('Updated active success!');
 				getList();
 			}).error(function (err, stt, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 
@@ -255,7 +285,13 @@
 			DrinkService.getList($rootScope.userLogin.token).success(function (res) {
 				$rootScope.listDataDrink = res;
 			}).error(function (err, status, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -266,7 +302,13 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function (err, status, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 	}

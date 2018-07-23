@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.db.models import F, Sum
-from django.db.models.signals import post_save, post_delete, pre_save
+from django.db.models.signals import post_save, post_delete, pre_save, pre_delete
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
 from django.utils.encoding import force_text
@@ -21,7 +21,6 @@ from django.utils import timezone
 from django.conf import settings
 from collections import Counter
 from pprint import pprint
-from django_elasticsearch.models import EsIndexable
 
 class UserBase(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
@@ -139,6 +138,7 @@ class Ingredient(models.Model):
     type = models.ForeignKey(IngredientType, on_delete=models.SET_NULL, blank=True,
                             null=True, related_name='ingredient_types')
     name = models.CharField(max_length=200)
+    background_color = models.CharField(max_length=200, blank=True, null= True)
     price = models.FloatField(blank=True, null= True, default=1)
     bottles = models.PositiveIntegerField(_('Bottles in Storage'), blank=True, null=True, default=0)
     quanlity_of_bottle = models.PositiveIntegerField(help_text=_('mL'), default=0)
@@ -228,6 +228,12 @@ class SeparateGlass(models.Model):
             return float(self.size*29.57)
         return float(self.size)
 
+    @property
+    def change_to_oz(self):
+        if self.unit is self.CONST_UNIT_ML:
+            return float(fpformat.fix(self.size/29.57, 2))
+        return float(self.size)
+
     def __unicode__(self):
         return '-'.join([self.name, str(self.size)])
 
@@ -245,7 +251,7 @@ def get_admin():
     except Exception as e:
         return 1
 
-class Drink(EsIndexable, models.Model):
+class Drink(models.Model):
     CONST_STATUS_ENABLED = 0
     CONST_STATUS_BLOCKED = 10
 
@@ -354,6 +360,7 @@ class Drink(EsIndexable, models.Model):
 
     def __unicode__(self):
         return self.name
+
 @receiver(post_save, sender=Drink)
 def update_drink_price(sender, instance, created, raw, 
                     using, update_fields, **kwargs):
@@ -371,6 +378,7 @@ def update_drink_price(sender, instance, created, raw,
             # raise e
             pass
         price = float(fpformat.fix(price, 2))
+        print price
         instance.price = price
 
     if instance.status is Drink.CONST_STATUS_BLOCKED:
@@ -422,8 +430,8 @@ class DrinkIngredient(models.Model):
         CONST_UNIT_OZ:1,
     }
 
-    drink = models.ForeignKey(Drink, related_name='ingredients', on_delete=models.SET_NULL, null=True, blank=True)
-    ingredient = models.ForeignKey(Ingredient, on_delete=models.SET_NULL, null=True, blank=True, related_name='drinks')
+    drink = models.ForeignKey(Drink, related_name='ingredients', null=True, blank=True)
+    ingredient = models.ForeignKey(Ingredient, null=True, blank=True, related_name='drinks')
     ratio = models.FloatField(help_text=_('part'))
     unit = models.PositiveSmallIntegerField(choices=CONST_UNIT, default=CONST_UNIT_PART)
     ratio_ml = models.FloatField(null=True, blank=True)

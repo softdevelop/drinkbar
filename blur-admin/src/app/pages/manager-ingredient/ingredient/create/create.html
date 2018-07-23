@@ -56,6 +56,11 @@
             </div>
 
             <div class="form-group">
+                <label style="color : #fff; font-weight : bold;" for="">Background Color</label>
+                <input colorpicker="rgba" type="text" ng-model="data_create.background_color" class="form-control" name="background_color" placeholder="Background color" style="background-color: {{data_create.background_color}};"/>
+            </div>
+
+            <div class="form-group">
                 <label style="color : #fff; font-weight : bold;" for="">Bottles</label>
                 <input class="form-control" type="number" name="bottles" placeholder="Bottles" ng-model="data_create.bottles" ng-change="changeInfo('bottles', data_create.bottles)">
             </div>

@@ -81,7 +81,13 @@
             TiviService.getUserOrderStatus().success(function(res){
                 console.log(res)
             }).error(function(err, stt, res){
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             });
         }
 
@@ -148,7 +154,13 @@
                 })
             }).error(function(err, stt, res){
                 console.log(err)
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             })
         }
 

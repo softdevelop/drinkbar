@@ -65,7 +65,13 @@
                 getListType();
                 getListBrand($scope.detail.type);
             }).error(function (err, status, res) {
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             })
         }
 
@@ -80,7 +86,13 @@
             IngredientService.getListType($rootScope.userLogin.token).success(function (res) {
                 $scope.types = res;
             }).error(function (err, stt, res) {
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             });
         }
 
@@ -89,7 +101,13 @@
             IngredientService.getListBrand($rootScope.userLogin.token, type).success(function (res) {
                 $scope.brands = res;
             }).error(function (err, stt, res) {
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             });
         }
 
@@ -113,7 +131,13 @@
                     res.id > 0 && ($window.location.href = '#/manager-ingredient/ingredient/list');
                 }, 300);
             }).error(function (err, status, res) {
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             })
         }
 

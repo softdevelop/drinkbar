@@ -3,7 +3,7 @@
     angular.module('BlurAdmin')
         .factory('DrinkService', function ($http, AppSetting) {
             return {
-                getList: function (token, offset, keywork, sort) {
+                getList: function (token, offset, keywork=null, sort=null) {
                     return $http.get(AppSetting.BASE_URL + '/api/drink/?admin=true&limit=100&offset=' + offset + '&search=' + keywork + '&sort='+sort, {
                         headers: {
                             'Content-Type': undefined,

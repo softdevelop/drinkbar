@@ -39,7 +39,13 @@
                 $scope.types = res;
                 $scope.types.length === 0 && ($scope.isAddElement.type = true);
             }).error(function (err, stt, res) {
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             });
         }
 
@@ -53,7 +59,13 @@
                 $rootScope.brands = res;
                 $rootScope.brands.length === 0 && ($scope.isAddElement.brand = true);
             }).error(function (err, stt, res) {
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             });
         }
 
@@ -63,7 +75,13 @@
             RobotService.getList($rootScope.userLogin.token).success(function(res){
                 $scope.list_robot = res.results;
             }).error(function(err, stt, res){
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             })
         }
 
@@ -95,7 +113,13 @@
                 $rootScope.robotId = $scope.data_create.machine;
                 $window.location.href = '#/robot/history/list';
             }).error(function(err, stt, res){
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             })
         }
 

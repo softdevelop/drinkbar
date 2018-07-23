@@ -24,7 +24,13 @@
                 $scope.detail = res;
                 $scope.detail.parent = String(res.parent);
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 
@@ -35,7 +41,13 @@
 			OrderService.getList($rootScope.userLogin.token).success(function(res){
 				$scope.list_order = res;
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -61,7 +73,13 @@
 					res.id > 0 && ($window.location.href = '#/manager-drink/order/list');
 				}, 300);
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 

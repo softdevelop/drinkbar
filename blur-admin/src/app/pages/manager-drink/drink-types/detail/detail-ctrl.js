@@ -22,7 +22,13 @@
 			DrinkTypesService.getElement($scope.paramt_id, $rootScope.userLogin.token).success(function(res){
 				$scope.detail = res;
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 
@@ -48,7 +54,13 @@
 					res.id > 0 && ($window.location.href = '#/manager-drink/drink-types/list');
 				}, 300);
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 

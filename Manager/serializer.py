@@ -86,6 +86,7 @@ class DrinkCategorySmallSerializer(DrinkCategorySerializer):
 class SeparateGlassSerializer(serializers.ModelSerializer):
     unit_view = serializers.SerializerMethodField(read_only=True)
     change_to_ml = serializers.SerializerMethodField(read_only=True)
+    change_to_oz = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = SeparateGlass
         fields = '__all__' 
@@ -95,6 +96,9 @@ class SeparateGlassSerializer(serializers.ModelSerializer):
         
     def get_change_to_ml(self,obj):
         return obj.change_to_ml
+        
+    def get_change_to_oz(self,obj):
+        return obj.change_to_oz
 
 class GarnishSerializer(serializers.ModelSerializer):
     class Meta:
@@ -572,12 +576,14 @@ class OrderMachineSerializer(OrderSerializer):
         for key, value in ret.items():
             temp.append(Drink.objects.get(id=key))
         return DrinkUserOrdersSerializer(instance=temp, many=True).data
-        
+    
 class UserWithOrderSerializer(UserSerializer):
-    orders = OrderSmallSerializer(read_only=True, many=True, required=False,)
+    orders = serializers.SerializerMethodField(read_only=True)
     class Meta(UserSerializer.Meta):
         fields = UserSerializer.Meta.fields + ('orders',)
 
+    def get_orders(self,obj):
+        return OrderSmallSerializer(instance=obj.orders.order_by('-creation_date'), many=True).data
 
 class SettingsForUserSeirializer(serializers.ModelSerializer):
     fee_unit_view = serializers.SerializerMethodField(read_only=True)

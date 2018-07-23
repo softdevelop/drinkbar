@@ -43,7 +43,13 @@
 				getList();
 			}).error(function (err, status, res) {
 				console.log(err);
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 		
@@ -56,7 +62,13 @@
 				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
 				console.log(res)
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -78,7 +90,13 @@
 					getList();
 				}).error(function(err, status, res){
 					console.log(err);
-					toastr.error(err.detail);
+					if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 				})
 			}
 		}

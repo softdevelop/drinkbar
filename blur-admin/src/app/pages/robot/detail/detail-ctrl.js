@@ -28,7 +28,13 @@
 				$rootScope.robotId = res.id;
 				$rootScope.ingredients = res.ingredients ? res.ingredients : [];
 			}).error(function (err, status, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 
@@ -79,9 +85,33 @@
 					res.id > 0 && ($window.location.href = '#/robot/list');
 				}, 300);
 			}).error(function (err, status, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
+
+		// =========== Open modal graphic =================
+		$scope.openGraphic = function(){
+            var page = 'app/pages/robot/detail/graphic/index.html';
+
+            $uibModal.open({
+                animation: true,
+                templateUrl: page,
+                size: 'lg',
+                // resolve: {
+                //     token: function () {
+                //         return $scope.currentUser.token;
+                //     },
+            
+                // },
+                // controller: 'RobotGraphicCtrl',
+            });
+        }
 
 	}
 

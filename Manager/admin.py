@@ -173,7 +173,7 @@ class DrinkAdminResource(resources.ModelResource):
 
     class Meta:
         model = Drink
-        fields = ('id','name','image','category',
+        fields = ('id','name','image','image_background','category',
             'numbers_bought','price','glass','key_word',
             'estimate_time','is_have_ice')
 

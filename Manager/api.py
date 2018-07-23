@@ -150,9 +150,12 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
-        order = self.request.GET.get('order', False)
-        if order:
-            return UserWithOrderSerializer
+        try:
+            order = self.request.GET.get('order', False)
+            if order:
+                return UserWithOrderSerializer
+        except Exception as e:
+            pass
         return self.serializer_class
 
 class UserChangePassword(APIView):
@@ -317,12 +320,16 @@ class UserOrder(generics.ListCreateAPIView):
     # serializer_class = OrderSerializer
 
     def get_serializer_class(self):
-        is_robot = self.request.GET.get('robot', False)
-        if is_robot or self.request.user.is_robot==True:
-            return OrderMachineSerializer
-        current = self.request.GET.get('current', None)
-        if current:
-            return OrderMachineSerializer
+        try:
+            is_robot = self.request.GET.get('robot', False)
+            if is_robot or self.request.user.is_robot==True:
+                return OrderMachineSerializer
+            current = self.request.GET.get('current', None)
+            if current:
+                return OrderMachineSerializer
+        except Exception as e:
+            pass
+        
         return OrderSerializer
 
     def get_queryset(self):
@@ -600,9 +607,12 @@ class DrinkList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated, IsOpenTheBar]
 
     def get_serializer_class(self):
-        is_admin = self.request.GET.get('admin', False)
-        if self.request.method == 'GET' and is_admin == False:
-            return DrinkSerializer
+        try:
+            is_admin = self.request.GET.get('admin', False)
+            if self.request.method == 'GET' and is_admin == False:
+                return DrinkSerializer
+        except:
+            pass
         return DrinkCreateSerializer
 
     def create(self, request, *args, **kwargs):
@@ -662,15 +672,18 @@ class DrinkDetial(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsOpenTheBar]
 
     def get_serializer_class(self):
-        is_admin = self.request.GET.get('admin', False)
-        if self.request.method == 'GET' and is_admin == False:
-            return DrinkSerializer
+        try:
+            is_admin = self.request.GET.get('admin', False)
+            if self.request.method == 'GET' and is_admin == False:
+                return DrinkSerializer
+        except Exception as e:
+            pass
         return DrinkUpdateSerializer
      
 class SeparateGlassList(generics.ListCreateAPIView):
     queryset = SeparateGlass.objects.all()
     serializer_class = SeparateGlassSerializer
-    permission_classes = [IsAuthenticated, IsOpenTheBar]
+    permission_classes = [permissions.IsAuthenticated, IsOpenTheBar]
     paginator = None
 
     def get_queryset(self):
@@ -683,7 +696,7 @@ class SeparateGlassList(generics.ListCreateAPIView):
 class SeparateGlassDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = SeparateGlass
     serializer_class = SeparateGlassSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     
 class GarnishList(generics.ListCreateAPIView):
     queryset = Garnish.objects.all()
@@ -705,7 +718,10 @@ class IngredientList(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated, IsOpenTheBar]
 
     def get_serializer_class(self):
-        if self.request.method == 'GET':
+        try:
+            if self.request.method == 'GET':
+                return IngredientListSerializer
+        except Exception as e:
             return IngredientListSerializer
         return IngredientCreateSerializer
 
@@ -819,7 +835,9 @@ class DrinkIngredientDetail(generics.RetrieveUpdateDestroyAPIView):
 #Robot
 # class RobotList(generics.ListAPIView):
 class RobotList(generics.ListCreateAPIView):
-    #Support 1 for now, cannot create new robot
+    """
+    Support 1 for now, cannot create new robot
+    """
     queryset = Robot.objects.all()
     serializer_class = RobotSerializer
     permission_classes = [IsAuthenticated]

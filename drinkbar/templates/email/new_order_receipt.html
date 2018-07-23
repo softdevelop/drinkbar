@@ -69,18 +69,19 @@
 			padding: 20px 25px 0 !important;
 		}
 		.textStever{
-			width: 50% !important;
+			width: 48% !important;
 			float: left !important;
 			/*background: url({% static 'email/receipt/images/bg-sever.png' %}) no-repeat center top !important;*/
 			background-color: #d1d2d3 !important;
 			background-size: 100% !important;
 			/*padding: 1% 0 1% !important;*/
-			height: 60px !important;
-			border-radius: 60px;
+			height: 70px !important;
+			border-radius: 70px;
+		    overflow: hidden !important;
 		}
 		.textStever .avatar{
-			width: 60px;
-		    height: 60px;
+			width: 70px;
+		    height: 70px;
 		    display: inline-block;
 		    margin: 0;
 		    background-color:  rebeccapurple;
@@ -90,7 +91,7 @@
 		.textStever .fullName{
 		    display:  inline-block !important;
 		    vertical-align: top !important;
-		    width: calc(100% - 64px) !important;
+		    width: calc(100% - 100px) !important;
 		}
 
 		.textStever h3{
@@ -103,7 +104,7 @@
 			vertical-align: top;
 		}
 		.textStever h3 span{
-			font-size: 12px !important;
+			font-size: 13px !important;
 			font-family: 'HelveticaNeueMedium' !important;
 		}
 		.hdroboto{
@@ -118,7 +119,8 @@
 			background: #263e71 !important;
 		}
 		.textRoboto-title table tr td{
-			width: 88% !important;
+			width: 30% !important;
+			padding-right: 3.33% !important;
 			color: #fff !important;
 			font-size: 10px !important;
 			text-transform: uppercase !important;
@@ -186,20 +188,34 @@
 			position: relative !important;
 			min-height: 227px !important;
 		}
+		.footerContainer .qr_code{
+			margin-top: 73px !important;
+		    width: 97px !important;
+		    padding-bottom: 97px !important;
+		    height: 0 !important;
+		    margin-left: 225px !important;
+		    background:  rebeccapurple !important;
+		    display: inline-block !important;
+		    overflow: hidden !important;
+		}
 		.footerContainer p{
 			font-size: 15px !important;
 			margin: 0 auto !important;
 			display:  inline-block !important;
 			color: #000 !important;
 		}
+		.footerContainer p.share_with_friend{
+			color: white !important; 
+			font-size: 11px !important;
+		}
 		.footerContainer .numberContainer{
 			line-height: 1.85 !important;
-		    width: 27.33% !important;
+		    width: 26.33% !important;
 		    margin: 0 auto !important; 
-		    margin-right: 5.5% !important;
+		    /*margin-right: 5.5% !important;*/
 		    vertical-align: top;
 		    display: inline-block;
-		    margin-left: 12.83% !important;
+		    margin-left: 11.53%!important;
 		}
 		.footerContainer .numberContainer .number{
 			display: flex!important;
@@ -263,8 +279,8 @@
 			    font-size: 9px !important;
 			}
 			.textStever h3 {
-			    font-size: 19px !important;
-			    line-height: 20px !important;
+			    font-size: 15px !important;
+			    line-height: 16px !important;
 			}
 			.textStever h3 span {
 			    font-size: 10px !important;
@@ -282,10 +298,23 @@
 			.footerContainer {
 			    background: url({% static 'email/receipt/images/bg2.png' %}) no-repeat center top -6px !important;
 			    background-size: 88% !important;
-			    min-height: 193px !important;
+			    min-height: 173px !important;
+			}
+			.footerContainer .qr_code{
+				margin-top: 12.25% !important;
+			    width: 16.16% !important;
+			    padding-bottom: 16.16% !important;
+			    height: 0 !important;
+			    margin-left: 37.5% !important;
+			    background:  rebeccapurple !important;
+			    display: inline-block !important;
+			    overflow: hidden !important;
 			}
 			.footerContainer p{
 				font-size: 8px !important;
+			}
+			.footerContainer p.share_with_friend{
+				font-size: 6px !important;
 			}
 			.textSub p {
 			   	width: 69px !important;
@@ -342,8 +371,8 @@
 				width: 78% !important;
 			}
 			.textStever h3{
-				font-size: 13px !important;
-				line-height: 15px !important;
+				font-size: 11px !important;
+				line-height: 12px !important;
 			}
 			.textStever h3 span {
 			    font-size: 9px !important;
@@ -368,8 +397,8 @@
 			}
 			.footerContainer {
 			    background: url({% static 'email/receipt/images/bg2.png' %}) no-repeat center top -7px !important;
-			    min-height: 122px !important;
-			    background-size: 88% !important;
+			    min-height: 100px !important;
+			    background-size: 38.1% !important;
 			}
 			.textSub p{
 			    padding: 1px 10px 0 0 !important;
@@ -422,9 +451,7 @@
 			.textRoboto table tr td span {
 			    font-size: 12px !important;
 			}
-			.footerContainer {
-			    min-height: 107px !important;
-			}
+		
 			.textSub p {
 			    padding: 0px 10px 0 0 !important;
 			}
@@ -447,7 +474,7 @@
 		</div>
 		<div class="cnt-hdtext">
 			<div class="textStever">
-				<div class="avatar"><img src="http://hiefficiencybar.com/media/{{ user.avatar }}" alt="" width="60px"></div>
+				<div class="avatar"><img src="http://hiefficiencybar.com/media/{{ user.avatar }}" alt="" width="70px"></div>
 				<div class="fullName">
 					<h3><span>Serving:</span> <br>{{user.full_name}}</h3>
 				</div>
@@ -456,8 +483,9 @@
 				<div class="textRoboto-title">
 					<table>
 						<tr>
-							<td>DATE:{{order.creation_date|date:"M d Y"}}</td>
-							<td>TIME:{{order.creation_date|date:"f"}}</td>
+							<td colspan="2">DATE:{{order.creation_date|date:"M d Y"}}</td>
+							<td>
+							TIME:{{order.creation_date|date:"f"}}</td>
 						</tr>
 					</table>
 				</div>
@@ -508,28 +536,32 @@
 					</td>
 					<td width="15%">{{ tab.amount | div:tab.quantity }}</td>
 				</tr>
+				<tr>
+					<td colspan="5" style="border-bottom:  1px solid;"></td>
+				</tr>
 				{% endfor %}
 			</table>
 		</div>
 	</div>
 	<!-- footer -->
 	<div class="footerContainer">
-		<div style="
-		    margin-top: 73px;
-		    width: 97px;
-		    height: 97px;
-		    margin-left: 225px;
-		    background:  rebeccapurple;
-		    display: inline-block;
-		    overflow: hidden;
-		">
-			<img src="{{order.qr_code}}" alt="qr_code" style="width: 97px;
+		<div class="qr_code">
+			<img src="{{order.qr_code}}" alt="qr_code" style="width: 100%;
 ">
 		</div>
 		<div class="numberContainer">
 			<div class="number"><p>${{ order.amount_without_fee }}</p></div>
 			<div class="number"><p>${{ order.amount | sub:order.amount_without_fee }}</p></div>
 			<div class="number"><p>${{ order.amount }}</p></div>
+			<div class="number" style="
+					margin-top:13.35%; 
+					background-color: #3097ab;
+					line-height: 25px;
+					">
+				<p class="share_with_friend">
+					SHARE WITH FRIEND
+				</p>
+			</div>
 		</div>
 	</div>
 	<div class="footerCopyContainer">

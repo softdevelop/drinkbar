@@ -38,7 +38,13 @@
 				toastr.success('Change status success!');
 				getList();
 			}).error(function (err, status, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 		
@@ -51,7 +57,13 @@
 				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
                 $window.location.href = '#/robot/list';
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -85,7 +97,13 @@
 			HistoryService.getList($rootScope.userLogin.token).success(function(res){
 				$rootScope.listData = res.results;
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -96,7 +114,13 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 	}

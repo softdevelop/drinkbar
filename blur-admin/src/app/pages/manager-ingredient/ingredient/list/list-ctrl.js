@@ -76,7 +76,13 @@
 				$scope.bigTotalItems = res.count;
 				console.log($rootScope.listData)
 			}).error(function(err, stt, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -103,7 +109,13 @@
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
 			}).error(function (err, status, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -114,7 +126,13 @@
 			IngredientService.getListType($rootScope.userLogin.token).success(function (res) {
 				$scope.types = $scope.filter_types = res;
 			}).error(function (err, stt, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -135,7 +153,13 @@
 					toastr.success('Change status success!');
 					getList();
 				}).error(function(err, status, res){
-					toastr.error(err.detail);
+					if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 				})
 			}
 		}
@@ -149,7 +173,13 @@
 					$scope.brands = res;
 				}
 			}).error(function (err, stt, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -185,7 +215,13 @@
 				});
 				$rootScope.listData = res.results;
 			}).error(function (err, status, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -196,7 +232,13 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function (err, status, res) {
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 	}

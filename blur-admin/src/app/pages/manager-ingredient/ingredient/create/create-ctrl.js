@@ -18,7 +18,8 @@
             bottles : 0,
             quanlity_of_bottle : 1,
             brand : null,
-            image : null
+            image : null,
+            background_color:''
         };
         $scope.types = [];
         $rootScope.brands = [];
@@ -81,7 +82,13 @@
 
                 $scope.types.length === 0 && ($scope.isAddElement.type = true);
             }).error(function(err, stt, res){
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             });
         }
 
@@ -94,7 +101,13 @@
 
                 $rootScope.brands.length === 0 && ($scope.isAddElement.brand = true);
             }).error(function(err, stt, res){
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             });
         }
 
@@ -122,7 +135,13 @@
 					res.id > 0 && ($window.location.href = '#/manager-ingredient/ingredient/detail/'+res.id);
 				}, 300);
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 

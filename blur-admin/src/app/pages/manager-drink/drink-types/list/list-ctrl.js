@@ -32,7 +32,13 @@
 			DrinkTypesService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listDataDrinkType = res.results;
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -44,7 +50,13 @@
                 toastr.success('Updated active success!');
                 getList();
             }).error(function(err, stt, res){
-                toastr.error(err.detail);
+                if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
             })
         }
 
@@ -75,7 +87,13 @@
 			DrinkTypesService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
 				$rootScope.listDataDrinkType = res.results;
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			});
 		}
 
@@ -86,7 +104,13 @@
 				$uibModalInstance.close();
 				getList();
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 	}

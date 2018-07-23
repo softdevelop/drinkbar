@@ -29,7 +29,13 @@
 					res.id > 0 && ($window.location.href = '#/manager-drink/garnish/detail/'+res.id);
 				}, 300);
 			}).error(function(err, status, res){
-				toastr.error(err.detail);
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( let key in err){
+                    let x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
 			})
 		}
 

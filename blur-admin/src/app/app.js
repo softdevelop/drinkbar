@@ -12,10 +12,12 @@ angular.module('BlurAdmin', [
         'ui.slimscroll',
         'ngJsTree',
         'angular-progress-button-styles',
-
+        'colorpicker.module',
+        
         'BlurAdmin.theme',
         'BlurAdmin.pages',
         'BlurAdmin.pages.login',
+
     ], ['$httpProvider', function($httpProvider){
         $httpProvider.interceptors.push(['$window', '$location', '$q', function($window, $location, $q) {
             return {
@@ -30,5 +32,5 @@ angular.module('BlurAdmin', [
             };
         }]);
     }])
-// .constant('AppSetting', {'BASE_URL': 'http://localhost:8000'});
-.constant('AppSetting', {'BASE_URL': 'http://hiefficiencybar.com'}); 
+.constant('AppSetting', {'BASE_URL': 'http://localhost:8000'});
+// .constant('AppSetting', {'BASE_URL': 'http://hiefficiencybar.com'}); 

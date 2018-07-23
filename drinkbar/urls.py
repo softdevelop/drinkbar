@@ -24,7 +24,11 @@ from Manager import views
 from django.views.generic import TemplateView
 
 from rest_framework import routers
-    
+from rest_framework.documentation import include_docs_urls
+
+API_TITLE = 'Hi-efficiency'
+API_DESCRIPTION = 'API short description'
+
 if settings.DEVELOPING_MODE:
     urlpatterns =[ url(r'', views.ErrorPage.as_view(), name='error'), ]
     urlpatterns +=[ url(r'/', views.ErrorPage.as_view(), name='error'), ]
@@ -38,6 +42,8 @@ else:
         url(r'^back-bar/$', views.BackBarPage.as_view(), name='back-bar-page'), 
         url(r'^home-bar/$', views.HomeBarPage.as_view(), name='home-bar-page'), 
         url(r'^mobile-bar/$', views.MobileBarPage.as_view(), name='mobile-bar-page'),
+
+        url(r'^docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION))
     ]
 
     router = routers.DefaultRouter()
