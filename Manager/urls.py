@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 from . import models
 from . import api as api_views
+from . import statistic_api as statistic_api_views
 from Manager import views
 
 urlpatterns = [
@@ -52,5 +53,9 @@ urlpatterns = [
     url(r'^contactus/$', api_views.ContactUsSendEmail.as_view(), name="twitter"),
 
     url(r'^do/$', api_views.DoOneTime.as_view(), name="do-one-time"),
-    url(r'^do/test-send-email/$', api_views.DoTestSendEmail.as_view(), name="do-test-send-email"),    
+    url(r'^do/test-send-email/$', api_views.DoTestSendEmail.as_view(), name="do-test-send-email"),
+
+    url(r'^statistic/order/$', statistic_api_views.Order.as_view(), name="statistic"),    
+    url(r'^statistic/user/$', statistic_api_views.UserLog.as_view(), name="statistic"),    
+    url(r'^statistic/user/(?P<pk>[0-9]+)/$', statistic_api_views.UserPurchase.as_view(), name="statistic"),    
 ]

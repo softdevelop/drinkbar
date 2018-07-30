@@ -52,7 +52,7 @@
 			font-size: 12px !important;
 			margin: 0 !important;
 			color: #000000 !important;
-			line-height: 6px !important;
+			line-height: 8px !important;
 			margin-bottom: -5px !important;
 		}
 		.textLogo a{
@@ -101,7 +101,7 @@
 			color: #000000 !important;
 			margin: 0 !important; 
 			line-height: 18px !important;
-			vertical-align: top;
+			vertical-align: middle !important;
 		}
 		.textStever h3 span{
 			font-size: 13px !important;
@@ -124,6 +124,7 @@
 			color: #fff !important;
 			font-size: 10px !important;
 			text-transform: uppercase !important;
+			letter-spacing: 1px !important;
 		}
 		.textRoboto{
 			width: 96% !important;
@@ -273,7 +274,7 @@
 			}
 			.textLogo h3 {
 		    	font-size: 10px !important;
-		    	margin-bottom: -8px !important;
+		    	margin-bottom: -2px !important;
 			}
 			.textLogo a {
 			    font-size: 9px !important;
@@ -437,7 +438,7 @@
 
 			.textLogo h3 {
 			    font-size: 9px !important;
-			    margin-bottom: -10px !important;
+			    margin-bottom: -4px !important;
 			}
 			.textLogo a {
 			    font-size: 8px !important;
@@ -483,9 +484,9 @@
 				<div class="textRoboto-title">
 					<table>
 						<tr>
-							<td colspan="2">DATE:{{order.creation_date|date:"M d Y"}}</td>
+							<td colspan="2">DATE: {{order.creation_date|date:"M d, Y"}}</td>
 							<td>
-							TIME:{{order.creation_date|date:"f"}}</td>
+							TIME: {{order.creation_date|date:"f"}}</td>
 						</tr>
 					</table>
 				</div>
@@ -554,7 +555,7 @@
 			<div class="number"><p>${{ order.amount | sub:order.amount_without_fee }}</p></div>
 			<div class="number"><p>${{ order.amount }}</p></div>
 			<div class="number" style="
-					margin-top:13.35%; 
+					margin-top:28.35%; 
 					background-color: #3097ab;
 					line-height: 25px;
 					">

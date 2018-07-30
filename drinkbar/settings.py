@@ -242,6 +242,9 @@ ACCESS_TOKEN_SECRET = '4lWN4BbD120Zz7foBaSUfglkXBs0XME08cRPLzJSUKIQG'
 TWITTER_EMAIL = 'HiEfficiencyBar@gmail.com'
 TWITTER_PASSWORD = 'RyanHoover1!!'
 
+
+USE_TZ = False
+
 try:
     from .settings_local import *
 except ImportError as e:

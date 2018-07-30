@@ -563,11 +563,13 @@ class DrinkCategoryList(generics.ListCreateAPIView):
     paginator = None
 
     def get_queryset(self):
+        ret = self.queryset.filter(active=True)
+        if self.request.user.is_superuser:
+            ret = self.queryset.all()
+
         is_main = self.request.GET.get('main', False)
         if is_main:
-            return self.queryset.filter(parent__name="Type")
-
-        ret = self.queryset.all()
+            return ret.filter(parent__name="Type")
 
         search_query = self.request.GET.get('search', None)
         if search_query:
@@ -749,13 +751,20 @@ class IngredientList(generics.ListCreateAPIView):
         ingredient_by = self.request.GET.get('ingredient_by', None)
         if ingredient_by:
             ret = ret.filter(type_search=ingredient_by)
-        
         return ret.order_by('brand')
 
 class IngredientDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Ingredient
-    serializer_class = IngredientListSerializer
+    serializer_class = IngredientCreateSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        try:
+            if self.request.method == 'GET':
+                return IngredientListSerializer
+        except Exception as e:
+            return IngredientListSerializer
+        return IngredientCreateSerializer
 
 class IngredientTypeList(generics.ListCreateAPIView):
     queryset = IngredientType.objects.all().order_by('name')
@@ -958,6 +967,10 @@ class Settings(generics.ListAPIView):
     serializer_class = SettingsForUserSeirializer
     permission_classes = [IsAuthenticated]
     paginator = None
+
+    def get(self, request, format=None):
+        UserLog.objects.create(user=request.user)
+        return super(Settings,self).get(request, format)
 
 class SettingsAdmin(generics.RetrieveUpdateAPIView):
     queryset = SettingBar

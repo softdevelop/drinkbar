@@ -42,7 +42,7 @@ class OrderAdmin(admin.ModelAdmin):
             'tray_number','robot','creation_date','total_time')
     readonly_fields = ('amount',)
     inlines = (TabInline,)
-
+    date_hierarchy = 'creation_date'
 # class OrderInline(admin.TabularInline):
 #     model = Order
 #     extra = 1
@@ -225,8 +225,11 @@ class SettingsAdmin(admin.ModelAdmin):
             'fields': (('fee', 'fee_unit'),'tax')
         }),
     )
+class UserLogAdmin(admin.ModelAdmin):
+    list_display = ('id','user','creation_date')
 
 admin.site.register(UserBase, UserBaseAdmin)
+admin.site.register(UserLog, UserLogAdmin)
 admin.site.register(DrinkCategory, DrinkCategoryAdmin)
 admin.site.register(Drink,DrinkAdmin)
 admin.site.register(DrinkIngredient, DrinkIngredientAdmin)

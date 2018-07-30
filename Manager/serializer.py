@@ -404,7 +404,14 @@ class IngredientListSerializer(IngredientCreateSerializer):
     type = IngredientTypeSerializer(read_only=True)
     brand = IngredientBrandSerializer(read_only=True)
     type_search_view = serializers.SerializerMethodField(read_only=True)
+    background_color_apps = serializers.SerializerMethodField(read_only=True)
 
+    def get_background_color_apps(self,obj):
+        try: 
+            temp = obj.background_color[4:-1]
+            return temp.replace(",", "-")
+        except:
+            return None
     def get_type_search_view(self,obj):
         return obj.get_type_search_display()
 
@@ -418,7 +425,7 @@ class IngredientBrandWithIngredientSerializer(IngredientBrandSerializer):
     def get_ingredient_brands(self,obj):
         ingredientInRobot = RobotIngredient.objects.filter(remain_of_bottle__gt=0).values_list('ingredient_id',flat=True)
         query = obj.ingredient_brands.filter(id__in=ingredientInRobot)
-        return IngredientCreateSerializer(instance=query, many=True).data
+        return IngredientListSerializer(instance=query, many=True).data
 
 
 class IngredientHistorySerializer(serializers.ModelSerializer):

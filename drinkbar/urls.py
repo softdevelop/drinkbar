@@ -46,9 +46,9 @@ else:
         url(r'^docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION))
     ]
 
-    router = routers.DefaultRouter()
-    router.register("drink/search", views.DrinkSearchView, base_name="drink-search")
-    urlpatterns += router.urls
+    # router = routers.DefaultRouter()
+    # router.register("drink/search", views.DrinkSearchView, base_name="drink-search")
+    # urlpatterns += router.urls
 
     if settings.DEBUG:
         urlpatterns += static(settings.STATIC_URL.replace(settings.SITE_URL, ''), document_root=settings.STATIC_ROOT)

@@ -89,6 +89,10 @@ class UserBase(AbstractUser):
             pass
         return new_user
 
+class UserLog(models.Model):
+    user = models.ForeignKey("UserBase", related_name="log_at")
+    creation_date = models.DateTimeField(auto_now_add=True)
+
 @receiver(post_save, sender=UserBase)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
@@ -495,8 +499,8 @@ class Order(models.Model):
     status = models.SmallIntegerField(choices=STATUSES, default=STATUS_NEW, null=True, blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(UserBase, related_name='orders')
-    amount = models.FloatField(blank=True, null=True)
-    amount_without_fee = models.FloatField(blank=True, null=True)
+    amount = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=9)
+    amount_without_fee = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=9)
     channel = models.SmallIntegerField(choices=CHANNELS, null=True, blank=True)
     transaction_code = models.CharField(max_length=300, null=True, blank=True)
     transaction_id = models.CharField(max_length=50, null=True, blank=True)

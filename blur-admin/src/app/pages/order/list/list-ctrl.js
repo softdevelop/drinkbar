@@ -40,8 +40,8 @@
 				if (err.detail){
                     toastr.error(err.detail);
                 }
-                for( let key in err){
-                    let x = 'err.'+key;
+                for( var key in err){
+                    var x = 'err.'+key;
                     toastr.error(key.toUpperCase()+": "+eval(x)[0]);
                 }
 			})
@@ -55,8 +55,8 @@
 				if (err.detail){
                     toastr.error(err.detail);
                 }
-                for( let key in err){
-                    let x = 'err.'+key;
+                for( var key in err){
+                    var x = 'err.'+key;
                     toastr.error(key.toUpperCase()+": "+eval(x)[0]);
                 }
 			});
@@ -70,8 +70,8 @@
 				if (err.detail){
                     toastr.error(err.detail);
                 }
-                for( let key in err){
-                    let x = 'err.'+key;
+                for( var key in err){
+                    var x = 'err.'+key;
                     toastr.error(key.toUpperCase()+": "+eval(x)[0]);
                 }
 			});
@@ -109,8 +109,8 @@
 				if (err.detail){
                     toastr.error(err.detail);
                 }
-                for( let key in err){
-                    let x = 'err.'+key;
+                for( var key in err){
+                    var x = 'err.'+key;
                     toastr.error(key.toUpperCase()+": "+eval(x)[0]);
                 }
 			});
@@ -126,8 +126,8 @@
 				if (err.detail){
                     toastr.error(err.detail);
                 }
-                for( let key in err){
-                    let x = 'err.'+key;
+                for( var key in err){
+                    var x = 'err.'+key;
                     toastr.error(key.toUpperCase()+": "+eval(x)[0]);
                 }
 			})
