@@ -35,7 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
             'birthday','avatar_url', 'first_name','last_name', 
             'fb_uid', 'opt', 
             'is_email_verified', 'is_active', 'is_staff', 
-            'is_superuser', 'last_login', 'date_joined','qr_code')
+            'is_superuser', 'last_login', 'date_joined','qr_code',
+            'overall_spent','overall_drink')
         extra_kwargs = {'password': {'write_only': True},
                         'username': {'write_only': True},}
 
@@ -51,6 +52,11 @@ class UserSerializer(serializers.ModelSerializer):
         validated_data['is_staff'] = True
         validated_data['is_superuser'] = True
         return super(UserSerializer, self).create(validated_data)
+class UserBaseSerializer(UserSerializer):
+
+    class Meta(UserSerializer.Meta):
+        fields = ('id','username','email','avatar','avatar_url',
+                 'first_name','last_name', 'qr_code')
 
 class UserWithTokenSerializer(UserSerializer):
     token = serializers.CharField(read_only=True)
@@ -77,7 +83,19 @@ class DrinkCategorySerializer(serializers.ModelSerializer):
     def _main(self, obj):
         link = str(obj.get_main_level()).title()[1:]
         return int(link)
+        
+class DrinkCategoryStatisticSerializer(DrinkCategorySerializer):
+    user_purchase = serializers.SerializerMethodField()
+    # class Meta(DrinkCategorySerializer.Meta):
+    #     fields = DrinkCategorySerializer.Meta.fields + ('user_purchase')
 
+    def get_user_purchase(self,obj):
+        result = []
+        for key in obj.user_purchase:
+            ret = UserBaseSerializer(instance=UserBase.objects.get(pk=key)).data
+            ret['count'] = obj.user_purchase[key]
+            result.append(ret)
+        return result
 class DrinkCategorySmallSerializer(DrinkCategorySerializer):
     class Meta:
         model = DrinkCategory
@@ -255,6 +273,7 @@ class DrinkSerializer(serializers.ModelSerializer):
     creator = UserSerializer(read_only=True)
     is_favorite = serializers.SerializerMethodField(read_only=True)
     prep_view = serializers.SerializerMethodField()
+
     class Meta:
         model = Drink
         fields = ('id','status','prep','prep_view','numbers_bought','category','glass','ingredients',
@@ -278,6 +297,19 @@ class DrinkSerializer(serializers.ModelSerializer):
             return obj.get_prep_display()
         except Exception as e:
             pass
+
+class DrinkWithStatisticSerializer(DrinkSerializer):
+    user_purchase = serializers.SerializerMethodField()
+
+    class Meta(DrinkSerializer.Meta):
+        fields = DrinkSerializer.Meta.fields + ('user_purchase',)
+    def get_user_purchase(self,obj):
+        result = []
+        for key in obj.user_purchase:
+            ret = UserBaseSerializer(instance=UserBase.objects.get(pk=key)).data
+            ret['count'] = obj.user_purchase[key]
+            result.append(ret)
+        return result
 
 class DrinkUpdateSerializer(DrinkSerializer):
     garnishes = DrinkGarnishSerializer(many=True, required=False, read_only=True)
