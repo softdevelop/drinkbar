@@ -20,6 +20,7 @@
 		$scope.keywork = '';
 		$scope.sort = '';
 		$scope.arr_sort = [];
+		$scope.importCsv = '';
 		// $scope.arr_sort = ['name', 'status', 'numbers_bought', 'price', 'glass'];
 		$scope.static_sort = {
 			name: '',
@@ -81,7 +82,7 @@
 
 				DrinkService.updated(_data, $rootScope.userLogin.token).success(function (res) {
 					toastr.success('Change status success!');
-					getList();
+					// getList();
 				}).error(function (err, status, res) {
 					if (err.detail){
                     toastr.error(err.detail);
@@ -242,6 +243,13 @@
 
 		getList();
 
+		// =========== click import ==================
+
+		$scope.onClickImport = function(event){
+			console.log("lala");
+			console.log(event);
+			
+		}
 		// =========== change active ==================
 		$scope.changeActive = function (data) {
 			DrinkService.updated(data, $rootScope.userLogin.token).success(function (res) {

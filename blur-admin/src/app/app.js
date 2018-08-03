@@ -13,6 +13,7 @@ angular.module('BlurAdmin', [
         'ngJsTree',
         'angular-progress-button-styles',
         'colorpicker.module',
+        'ui.sortable',
         
         'BlurAdmin.theme',
         'BlurAdmin.pages',

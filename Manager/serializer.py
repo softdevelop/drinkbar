@@ -83,7 +83,7 @@ class DrinkCategorySerializer(serializers.ModelSerializer):
     def _main(self, obj):
         link = str(obj.get_main_level()).title()[1:]
         return int(link)
-        
+
 class DrinkCategoryStatisticSerializer(DrinkCategorySerializer):
     user_purchase = serializers.SerializerMethodField()
     # class Meta(DrinkCategorySerializer.Meta):
@@ -490,6 +490,13 @@ class AddToTabSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tab
         fields = '__all__'
+    def check_available(self, tab, quantity=None):
+        if not quantity:
+            quantity = tab.quantity
+        for robot in Robot.objects.all():
+            if tab.drink.is_enough_ingredient(robot,quantity):
+                return True
+        return False
 
     def create(self, validated_data):
         validated_data['drink'].save()
@@ -497,12 +504,13 @@ class AddToTabSerializer(serializers.ModelSerializer):
             raise api_utils.BadRequest("CANT NOT ORDER DRINK UNDER $0!")
 
         if validated_data['drink'].status==Drink.CONST_STATUS_BLOCKED:
-            raise api_utils.BadRequest("THIS DRINK HAS BEEN BLOCKED, PLEASE RELOAD")
+            raise api_utils.BadRequest("THIS DRINK HAS BEEN BLOCKED AT THE MOMENT, PLEASE RELOAD")
 
         ret = Tab(**validated_data)
         tab = Tab.objects.filter(drink=ret.drink, user=ret.user, order__isnull=True)
         if not tab:
-            ret.save()
+            if not check_available(ret):
+                raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR {} QUANTITY,PLEASE RELOAD!".format(ret))
             garnishes = self.initial_data.get('garnishes')
             if garnishes:
                 garnishes = DrinkGarnish.objects.filter(drink=ret.drink,garnish__in=ast.literal_eval(garnishes))
@@ -511,6 +519,8 @@ class AddToTabSerializer(serializers.ModelSerializer):
         else:
             temp = ret
             ret = tab.first()
+            if not check_available(temp):
+                raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR ADD MORE {} QUANTITY,PLEASE RELOAD".format(ret))
             ret.quantity +=temp.quantity
             ret.save()
         return ret
@@ -555,7 +565,7 @@ class OrderSmallSerializer(serializers.ModelSerializer):
         fields = ('id','status','status_view','creation_date','amount',
             'channel','transaction_code','transaction_id','amount_without_fee',
             'payer_firstname','payer_lastname','payer_email',
-            'tray_number','products','qr_code','total_time','photo','robot','user_view')
+            'tray_number','products','qr_code','total_time','photo','robot','user_view','priority')
 
     def get_status_view(self,obj):
         try:

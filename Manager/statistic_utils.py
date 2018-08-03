@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import generics, status, exceptions, permissions, viewsets, mixins
 from rest_framework.permissions import BasePermission, IsAdminUser
+import api_utils
 
 class Statistic(APIView):
 	year = None
@@ -20,15 +21,23 @@ class Statistic(APIView):
 	def get_context_data(self, queryset, **kwargs):
 		data = {}
 		for key in kwargs:
-			data[key] = eval(kwargs[key])
+			data[key] = eval(kwargs[key]) if eval(kwargs[key]) else 0
 		return data	
 
 	def get_statistic(self, subject, units, **kwargs):
 		ret = {}
 		ret['result']=[]
+		if self.year:
+			format_unit = "{}-".format(self.year) 
+		if self.month:
+		 	format_unit = "{}{}-".format(format_unit,self.month)
+		if self.day:
+			format_unit = "{}{}-".format(format_unit,self.day)
+
 		for unit in units:
 			data = {}
-			data[subject]=unit
+			data["datetimes"]="{}{}".format(format_unit, unit)
+			# data[subject]="{}{}".format(format_unit, unit)
 			queryset = eval('self.queryset.filter(creation_date__{}={})'.format(subject,"unit"))
 			if self.year:
 				queryset = queryset.filter(creation_date__year=self.year)

@@ -1,9 +1,21 @@
 <div ba-panel="" ba-panel-title="List Fifo" ba-panel-class="with-scroll">
+    <div style="overflow: auto;">
+        <div class="form-group" style="float: right; width: 150px;">
+            <select class="form-control" ng-model="maxSize" name="" placeholder="select page" ng-change="changeSizePage(maxSize)">
+                <option ng-repeat = "size in pageSize" value="{{size.value}}">{{size.label}}</option>
+                <!-- <option value="25">25 results</option>
+                <option value="50">50 results</option>
+                <option value="100">100 results</option> -->
+            </select>
+        </div>
+    </div>
     <div class="panel-body _fifo">
         <table class="table table-bordered">
             <thead>
                 <tr>
+                    <th colspan="2" style="text-align : left; min-width: 100px;">Action</th>
                     <th class="table-id ng-binding" style="text-align : left; width: 15px;">#</th>
+                    
                     <th style="text-align : left; min-width: 200px;">Create Date</th>
                     <th style="text-align : left; min-width: 200px;">Username</th>
                     <th style="text-align : left;">QR Code Link</th>
@@ -67,9 +79,23 @@
                     <th>Action</th> -->
                 </tr>
             </thead>
-            <tbody>
+            <tbody ui-sortable="sortableOptions" ng-model="listData">
                 <tr ng-repeat="item in listData" class="ng-scope">
+                    
+                    <td class="ng-binding" style="width: 30px; text-align : center;">
+                        <a href="" data-toggle="modal" ng-click="confirmDelete(item)" style="color : #e85555;">
+                            <i class="ion-android-delete"></i>
+                        </a>
+                    </td>
+
+                    <td class="ng-binding" style="width: 30px; text-align : center;">
+                        <a href="" data-toggle="modal" style="color : #90b900;">
+                            <i class="ion-navicon-round"></i>
+                        </a>
+                    </td>
+                    
                     <td class="table-id ng-binding" style="width: 15px; text-align: left;">{{ item.id }}</td>
+
                     <td class="ng-binding" style="text-align : left;">
                         {{ item.creation_date | date:'MM/dd/yyyy - HH:mm:ss' }}
                     </td>
@@ -487,7 +513,7 @@
         </table>
     </div>
     <div class="align-right" ng-show="bigTotalItems > 10">
-        <ul uib-pagination total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" ng-click="changePage(bigCurrentPage)"
+        <ul uib-pagination items-per-page="maxSize" total-items="bigTotalItems" ng-model="bigCurrentPage" max-size="maxSize" ng-click="changePage(bigCurrentPage)"
             class="pagination-sm" boundary-link-numbers="true"></ul>
     </div>
 </div>

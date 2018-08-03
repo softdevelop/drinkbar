@@ -518,6 +518,7 @@ class Order(models.Model):
 
     status = models.SmallIntegerField(choices=STATUSES, default=STATUS_NEW, null=True, blank=True)
     creation_date = models.DateTimeField(auto_now_add=True)
+    priority = models.IntegerField(blank=True, null=True, default=0)
     user = models.ForeignKey(UserBase, related_name='orders')
     amount = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=9)
     amount_without_fee = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=9)
@@ -553,15 +554,25 @@ def set_robot_and_line(sender, instance=None,created=False, **kwargs):
     '''
     if created:
         tray_number = 1
+        priority = 0
         try:
+            #Get tray number for order
             order = Order.objects.filter(robot=instance.robot).order_by('-id')[1]
             if order.tray_number:
                 tray_number = order.tray_number+1
+
+            #Get the last priority for order
+            order_priority = Order.objects.filter(robot=instance.robot).order_by('-priority')[0]
+            if order_priority.tray_number:
+                priority = order_priority.priority+1
+
         except Exception as e:
             pass
         if tray_number>4:
             tray_number=1
+            
         instance.tray_number = tray_number
+        instance.priority = priority
         instance.save()
 
 

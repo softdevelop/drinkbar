@@ -92,6 +92,7 @@
 		    display:  inline-block !important;
 		    vertical-align: top !important;
 		    width: calc(100% - 100px) !important;
+		    line-height: 70px !important;
 		}
 
 		.textStever h3{
@@ -529,13 +530,13 @@
 				<tr>
 					<td width="15%">{{tab.quantity}}</td>
 					<td width="25%"><img style="width: 40px;" src="http://hiefficiencybar.com/media/{{tab.drink.image}}"> <br>{{tab.drink.name}}</td>
-					<td width="15%">{{tab.amount}}</td>
-					<td width="30%" class="tab-center">
+					<td width="15%">{{tab.amount | floatformat:2}}</td>
+					<td width="30%">
 					{% for ingre in tab.drink.ingredients.all %}
 						{{ ingre.ingredient.name }}<br>
 					{% endfor %}
 					</td>
-					<td width="15%">{{ tab.amount | div:tab.quantity }}</td>
+					<td width="15%">{{ tab.amount | div:tab.quantity | floatformat:2}}</td>
 				</tr>
 				<tr>
 					<td colspan="5" style="border-bottom:  1px solid;"></td>
@@ -551,11 +552,11 @@
 ">
 		</div>
 		<div class="numberContainer">
-			<div class="number"><p>${{ order.amount_without_fee }}</p></div>
-			<div class="number"><p>${{ order.amount | sub:order.amount_without_fee }}</p></div>
-			<div class="number"><p>${{ order.amount }}</p></div>
+			<div class="number"><p>${{ order.amount_without_fee | floatformat:2 }}</p></div>
+			<div class="number"><p>${{ order.amount | sub:order.amount_without_fee | floatformat:2}}</p></div>
+			<div class="number"><p>${{ order.amount | floatformat:2 }}</p></div>
 			<div class="number" style="
-					margin-top:28.35%; 
+					margin-top:27.35%; 
 					background-color: #3097ab;
 					line-height: 25px;
 					">

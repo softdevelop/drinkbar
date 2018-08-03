@@ -51,9 +51,9 @@ urlpatterns = [
     url(r'^twitter/$', api_views.Twitter.as_view(), name="twitter"),
 
     url(r'^contactus/$', api_views.ContactUsSendEmail.as_view(), name="twitter"),
-
-    url(r'^do/$', api_views.DoOneTime.as_view(), name="do-one-time"),
+    
     url(r'^do/test-send-email/$', api_views.DoTestSendEmail.as_view(), name="do-test-send-email"),
+    url(r'^do/$', api_views.DoOneTime.as_view(), name="do-one-time"),
 
     url(r'^statistic/order/$', statistic_api_views.Order.as_view(), name="statistic"),    
     url(r'^statistic/user/$', statistic_api_views.UserLog.as_view(), name="statistic"),    

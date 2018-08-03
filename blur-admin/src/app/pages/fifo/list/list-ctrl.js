@@ -13,19 +13,41 @@
 	/** @ngInject */
 	function FifoListCtrl($scope, toastr, FifoService, $rootScope, $location, $window, $uibModal) {
 		$rootScope.listData = [];
+		$rootScope.priorityDefault = [];
 
-		$scope.maxSize = 10;
+		$scope.pageSize =  [
+	      {label: '10 results', value: 10},
+	      {label: '25 results', value: 25},
+	      {label: '50 results', value: 50},
+	      {label: '100 results', value: 100}
+	    ];
+		$scope.maxSize = '10';
         $scope.bigTotalItems = 0;
 		$scope.bigCurrentPage = 1;
 		$rootScope.offset = 0;
+
+		// ================ sortable ====================
+		$scope.sortableOptions = {
+		    update: function(e, ui) {
+				setTimeout(function () {
+					$rootScope.priorityDefault.forEach(function(item, index) {
+						$rootScope.listData[index].priority = item;
+						FifoService.updated($rootScope.listData[index], $rootScope.userLogin.token).success(function (res) {					
+						});
+					})//end foreach
+				},500);
+				toastr.success('Change success!');
+		    },
+		};
 		
 		// ================ pagination ====================
         $scope.changePage =  function(page_index){
-            $rootScope.offset = page_index > 1 ? ((page_index - 1)*10) : 0;
+            $rootScope.offset = page_index > 1 ? ((page_index - 1)*$scope.maxSize) : 0;
             getList();
         }
 
         $scope.selectPage = function(page_number, e){
+        	console.log(page_number);
         }
 
         // =============== show zoom QR Code =====================
@@ -67,13 +89,22 @@
 			})
 		}
 		
+		// ================= change size page ===============
+
+		$scope.changeSizePage = function(data){
+			$scope.maxSize = data.toString();
+			getList(data);
+		}
 		// ================= get list ===============
 		function getList(){
 			var _key = 1;
-			FifoService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
+			FifoService.getList($rootScope.userLogin.token,$scope.maxSize,$rootScope.offset).success(function(res){
 				$rootScope.listData = res.results;
 				$scope.bigTotalItems = res.count;
-				console.log($rootScope.listData)
+				$rootScope.listData.forEach(function(item,index){
+					$rootScope.priorityDefault[index]=item.priority
+				});
+				// console.log($rootScope.listData)
 				// $rootScope.listData.products.forEach(function(el){
 				// 	el.key = _key;
 				// 	_key++;
@@ -118,7 +149,10 @@
 		// ================= get list glass ===============
 		function getList(){
 			FifoService.getList($rootScope.userLogin.token, $rootScope.offset).success(function(res){
-				$rootScope.listData = res;
+				$rootScope.listData = res.results;
+				$rootScope.listData.forEach(function(item,index){
+					$rootScope.priorityDefault[index]=item.priority
+				});
 			}).error(function(err, status, res){
 				if (err.detail){
                     toastr.error(err.detail);
@@ -132,10 +166,16 @@
 
 		// =========== function delete glass =============
 		$scope.remove = function(data){
+			
 			FifoService.removed(data.id, $rootScope.userLogin.token).success(function(res){
 				toastr.success('Deleted success!');
 				$uibModalInstance.close();
 				getList();
+				// $rootScope.listData.forEach(function(item, index) {
+				// 	if (item.id == data.id){
+				// 		$rootScope.listData.splice(index,1)
+				// 	}
+				// })
 			}).error(function(err, status, res){
 				if (err.detail){
                     toastr.error(err.detail);

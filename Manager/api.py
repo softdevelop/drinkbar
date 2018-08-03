@@ -304,6 +304,12 @@ class UpdateTab(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = OrderTabSerializer
 
+    def perform_update(self, serializer):
+        addToTabSerializer =  AddToTabSerializer()
+        if not addToTabSerializer.check_available(tab=instance, quantity=serializer.validated_data['quantity']):
+            raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR ADD MORE QUANTITY")
+        serializer.save()
+
     def delete(self, request, *args, **kwargs):
         try:
             tab = Tab.objects.get(id=kwargs['pk'])
@@ -335,7 +341,7 @@ class UserOrder(generics.ListCreateAPIView):
     def get_queryset(self):
         is_robot = self.request.GET.get('robot', False)
         if is_robot or self.request.user.is_robot==True:
-            return self.queryset.exclude(status=Order.STATUS_TOOK).order_by('creation_date')
+            return self.queryset.exclude(status=Order.STATUS_TOOK).order_by('priority')
 
         is_admin = self.request.GET.get('admin', False)
         if not is_admin:
@@ -1010,9 +1016,15 @@ class Twitter(APIView):
 class DoOneTime(APIView):
     
     def get(self,request,format=None):
-        drinks = Drink.objects.all()
-        for drink in drinks:
-            drink.set_background_color()
+        # Update color for drink
+        if request.GET.get('drink_color'):
+            drinks = Drink.objects.all()
+            for drink in drinks:
+                drink.set_background_color()
+        # Update order priority
+        if request.GET.get('order_priority'):
+            Order.objects.exclude(status__gte=Order.STATUS_FINISHED).update(priority=F('id'))
+
         return Response(status=status.HTTP_200_OK)
 
 class DoTestSendEmail(APIView):
