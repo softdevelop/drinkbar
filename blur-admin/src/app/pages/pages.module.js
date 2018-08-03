@@ -77,6 +77,10 @@
 		'BlurAdmin.pages.detail-history',
 		// =========== settings ==============
 		'BlurAdmin.pages.settings',
+		// =========== hmi ==============
+		'BlurAdmin.pages.hmi',
+		// =========== stats ==============
+		'BlurAdmin.pages.stats',
 	])
 		.config(routeConfig);
 
@@ -279,6 +283,16 @@
 				{
 					title: 'Settings',
 					stateRef: 'settings'
+				},
+				// ============== HMI ==============
+				{
+					title: 'HMI',
+					stateRef: 'hmi'
+				},
+				// ============== settings ==============
+				{
+					title: 'Stats',
+					stateRef: 'stats'
 				},
 				// ===================================
 				{
