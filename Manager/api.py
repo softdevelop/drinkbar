@@ -603,6 +603,14 @@ class DrinkCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DrinkCategorySerializer
     permission_classes = [IsAuthenticated]
 
+    def get_serializer_class(self):
+        try:
+            if self.request.user.is_superuser:
+                return DrinkCategoryStatisticSerializer
+        except Exception as e:
+            pass
+        return DrinkCategorySerializer
+
 class DrinkList(generics.ListCreateAPIView):
     queryset = Drink.objects.all().order_by('id')
     serializer_class = DrinkSerializer
@@ -676,8 +684,12 @@ class DrinkDetial(generics.RetrieveUpdateDestroyAPIView):
     def get_serializer_class(self):
         try:
             is_admin = self.request.GET.get('admin', False)
+            if self.request.method == 'GET' and self.request.user.is_superuser == True:
+                return DrinkWithStatisticSerializer
             if self.request.method == 'GET' and is_admin == False:
                 return DrinkSerializer
+            
+
         except Exception as e:
             pass
         return DrinkUpdateSerializer

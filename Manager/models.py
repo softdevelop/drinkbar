@@ -34,6 +34,18 @@ class UserBase(AbstractUser):
     fb_uid = models.CharField(max_length=200, null=True, blank=True)
     fb_access_token = models.CharField(max_length=1000, null=True, blank=True)
     favorite_drink = models.ManyToManyField("Drink",related_name="favorite_by")
+    
+    # statistic fields
+
+    @property
+    def overall_spent(self):
+        return self.orders.all().aggregate(Sum('amount'))['amount__sum']
+    
+    @property
+    def overall_drink(self):
+        return self.orders.all().aggregate(Sum('products__quantity'))['products__quantity__sum']
+
+    # end statistic field
 
     @property
     def full_name(self):
@@ -47,7 +59,7 @@ class UserBase(AbstractUser):
         datetime_format = '%Y-%m-%d %H:%M:%S'
         # today = (self.last_login).strftime(datetime_format)
         data = u'User:{} {} Id:{}'.format(self.first_name, self.last_name, self.id)
-        data = urllib.quote_plus(data)
+        data = urllib.quote_plus(data.encode('utf8'))
         return u'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={}'.format(data)
 
     @classmethod
@@ -55,14 +67,14 @@ class UserBase(AbstractUser):
         new_user = UserBase()
         try:
             graph = facebook.GraphAPI(access_token=fb_token,version=3.0)
-            user = graph.get_object(id="me",fields="email, first_name, last_name, birthday")
+            user = graph.get_object(id="me",fields="email, first_name, last_name")
 
             fb_uid = user.get('id')
             email = user.get('email')
             first_name = user.get('first_name', '')
             last_name = user.get('last_name', '')
-            birthday = user.get('birthday', '')
-            birthday = datetime.strptime(birthday, '%m/%d/%Y')
+            # birthday = user.get('birthday', '12/09/1996')
+            # birthday = datetime.strptime(birthday, '%m/%d/%Y')
             avatar_url = "http://graph.facebook.com/%s/picture?width=500&height=500&type=square" % fb_uid
             new_user = self.objects.filter(fb_uid=fb_uid).first()
             if not new_user:
@@ -70,15 +82,14 @@ class UserBase(AbstractUser):
             if not new_user:
                 new_user = UserBase(username=email, email=email, fb_uid=fb_uid,
                             first_name=first_name, last_name=last_name, is_email_verified=True,
-                            birthday=birthday.date(), avatar_url=avatar_url,
-                            fb_access_token=unicode(fb_token).encode('utf-8'))
+                            avatar_url=avatar_url, fb_access_token=unicode(fb_token).encode('utf-8'))
                 new_user.save()
             else:
                 # Update user information if it was changed.
                 new_user.first_name=first_name
                 new_user.fb_uid=fb_uid
                 new_user.last_name=last_name
-                new_user.birthday=birthday.date()
+                # new_user.birthday=birthday.date()
                 new_user.is_email_verified==True
                 new_user.fb_access_token=unicode(fb_token).encode('utf-8')
                 new_user.avatar_url=avatar_url
@@ -202,6 +213,11 @@ class DrinkCategory(CategoryBase):
         ancestors = list(self.get_ancestors()) + [self, ]
         return prefix + '/'.join([force_text(ancestors[0].id)])
 
+    @property
+    def user_purchase(self):
+        temp =  Counter(self.contain_drink.filter(in_tab__order__isnull=False).values_list('in_tab__user__id', flat=True))
+        return dict(temp)
+
 class SeparateGlass(models.Model):
     CONST_UNIT_ML = 0
     CONST_UNIT_OZ = 10
@@ -283,7 +299,7 @@ class Drink(models.Model):
                                               default=CONST_PREP_SHAKE)
 
     name = models.CharField(max_length=200)
-    category = models.ManyToManyField(DrinkCategory)
+    category = models.ManyToManyField(DrinkCategory, related_name='contain_drink')
     image = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'),
                         blank=True, null=True, upload_to='drink')
     image_background = models.ImageField(help_text=_('Picture shall be squared, max 640*640, 500k'), 
@@ -298,6 +314,11 @@ class Drink(models.Model):
     is_have_ice = models.BooleanField(default=True)
     creator = models.ForeignKey(UserBase,related_name='creative_drinks', default=get_admin())
     creation_date = models.DateTimeField(auto_now_add=True)
+    
+    @property
+    def user_purchase(self):
+        temp =  Counter(self.in_tab.all().values_list('user__id', flat=True))
+        return dict(temp)
 
     @property
     def total_part(self):
@@ -326,7 +347,6 @@ class Drink(models.Model):
         if temp['sum_ratio'] == None:
             return 0
         return int(temp['sum_ratio'])
-
 
     def is_enough_ingredient(self,robot=1,quantity=1):
         temp=0
@@ -594,7 +614,7 @@ class Tab(models.Model):
     )
     status = models.SmallIntegerField(choices=STATUSES, default=STATUS_NEW, null=True, blank=True)
     user = models.ForeignKey(UserBase, related_name='tab')
-    drink = models.ForeignKey(Drink)
+    drink = models.ForeignKey(Drink, related_name='in_tab')
     ice = models.PositiveSmallIntegerField(_('ice'), choices=CONST_ICE_CHOICE, 
                                         default=CONST_100_ICE)
     garnishes = models.ManyToManyField(DrinkGarnish, blank =True)
