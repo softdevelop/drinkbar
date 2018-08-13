@@ -42,6 +42,7 @@ class OrderAdmin(admin.ModelAdmin):
             'tray_number','robot','creation_date','total_time','priority')
     readonly_fields = ('amount',)
     inlines = (TabInline,)
+    select_related = ['user']
     date_hierarchy = 'creation_date'
 # class OrderInline(admin.TabularInline):
 #     model = Order

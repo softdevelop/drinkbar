@@ -9,7 +9,7 @@
  	.controller('StatsCtrl', StatsCtrl);
 
  	/** @ngInject */
- 	function StatsCtrl($scope, $window, baConfig, StatsService, toastr, $rootScope,) {
+ 	function StatsCtrl($scope, $window, baConfig, StatsService, toastr, $rootScope) {
  		var layoutColors = baConfig.colors;
  		$scope.colors = [layoutColors.primary, layoutColors.warning, layoutColors.danger, layoutColors.info, layoutColors.success, layoutColors.primaryDark];
  		$scope.filterOrder = 'month';

@@ -7,7 +7,8 @@
 
 	angular.module('BlurAdmin.pages.list-drink')
 		.controller('DrinkListCtrl', DrinkListCtrl)
-		.controller('DrinkDeleteCtrl', DrinkDeleteCtrl);
+		.controller('DrinkDeleteCtrl', DrinkDeleteCtrl)
+		.controller('UploadFileCtrl', UploadFileCtrl);
 
 	/** @ngInject */
 	function DrinkListCtrl($scope, toastr, DrinkService, $rootScope, $location, $window, $uibModal) {
@@ -228,7 +229,7 @@
 				});
 				$rootScope.listDataDrink = res.results;
 				$scope.bigTotalItems = res.count;
-				console.log($rootScope.listDataDrink)
+				// console.log($rootScope.listDataDrink)
 				
 			}).error(function (err, status, res) {
 				if (err.detail){
@@ -246,8 +247,30 @@
 		// =========== click import ==================
 
 		$scope.onClickImport = function(event){
-			console.log("lala");
-			console.log(event);
+			var page = 'app/pages/manager-drink/drink/list/confirm/confirm_upload.html';
+			function show(myFile) {
+				$uibModal.open({
+					animation: true,
+					templateUrl: page,
+					size: 'sm',
+					resolve: {
+						items: function () {
+							return myFile;
+						}
+					},
+					controller: 'UploadFileCtrl',
+				});
+			}
+			var myFile = $(event).prop('files')[0];
+				if (myFile.type==="text/csv"){
+					show(myFile)
+				}
+				else{
+					toastr.error('File upload was not csv file');
+				}
+	
+				
+				
 			
 		}
 		// =========== change active ==================
@@ -285,13 +308,49 @@
 	};
 
 	// controler drinkListDeleteCtrl
+	function UploadFileCtrl($scope, toastr, DrinkService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance) {
+		$scope.item = items;
+		function getList() {
+			DrinkService.getList($rootScope.userLogin.token).success(function (res) {
+				$rootScope.listDataDrink = res.results;
+			}).error(function (err, status, res) {
+				if (err.detail){
+                    toastr.error(err.detail);
+                }
+                for( var key in err){
+                    var x = 'err.'+key;
+                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+                }
+			});
+		}
+
+		$scope.upload = function(){
+			toastr.warning("Please don't close the window until success!");
+			$uibModalInstance.close();
+
+			DrinkService.importCsv($scope.item,$rootScope.userLogin.token).success(function (res) {
+					toastr.success('Import success');
+					getList();
+				}).error(function (err, stt, res) {
+					if (err.detail){
+	                    toastr.error(err.detail);
+	                }
+	                for( var key in err){
+	                    var x = 'err.'+key;
+	                    toastr.error(key.toUpperCase()+": "+eval(x)[0]);
+	                }
+			})
+		}
+		
+	}
+
 	function DrinkDeleteCtrl($scope, toastr, DrinkService, $rootScope, $location, $window, $uibModal, items, $uibModalInstance) {
 		$scope.item_del = items;
 
 		// ================= get list glass ===============
 		function getList() {
 			DrinkService.getList($rootScope.userLogin.token).success(function (res) {
-				$rootScope.listDataDrink = res;
+				$rootScope.listDataDrink = res.results;
 			}).error(function (err, status, res) {
 				if (err.detail){
                     toastr.error(err.detail);

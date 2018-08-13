@@ -101,8 +101,19 @@ class UserBase(AbstractUser):
         return new_user
 
 class UserLog(models.Model):
+    CONST_STATUS_OPEN = 0
+    CONST_STATUS_CLOSE = 10
+
+    CONST_STATUSES = (
+        (CONST_STATUS_OPEN, _('Open')),
+        (CONST_STATUS_CLOSE, _('Close')),
+    )
+
     user = models.ForeignKey("UserBase", related_name="log_at")
     creation_date = models.DateTimeField(auto_now_add=True)
+    status = models.PositiveSmallIntegerField(_('status'), choices=CONST_STATUSES,
+                                        default=CONST_STATUS_OPEN)
+    how_long = models.IntegerField(null=True, blank=True)
 
 @receiver(post_save, sender=UserBase)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
@@ -166,14 +177,17 @@ class Ingredient(models.Model):
 
 @receiver(pre_save, sender=Ingredient)
 def update_ingredient_price(sender, instance, raw, using, update_fields, **kwargs):
-    new_price = instance.price/float(instance.quanlity_of_bottle)
-    new_price = float(fpformat.fix(new_price, 2))   
+    try:
+        new_price = instance.price/float(instance.quanlity_of_bottle)
+    except Exception as e:
+        new_price = 0
+    new_price = float(fpformat.fix(new_price, 2))  
     instance.price_per_ml = new_price
 
 @receiver(post_save, sender=Ingredient)
 def update_ingredient_drink_price(sender, instance, created, raw, 
                     using, update_fields, **kwargs):
-    print update_fields
+    # print update_fields
     for drink in instance.drinks.all():
         if drink.drink.is_fit_price:
             continue
@@ -402,7 +416,7 @@ def update_drink_price(sender, instance, created, raw,
             # raise e
             pass
         price = float(fpformat.fix(price, 2))
-        print price
+
         instance.price = price
 
     if instance.status is Drink.CONST_STATUS_BLOCKED:
@@ -424,6 +438,12 @@ class DrinkIngredient(models.Model):
     CONST_UNIT_SPLIT = 100
     CONST_UNIT_OZ = 110
 
+    CONST_UNIT_CUP = 120
+    CONST_UNIT_PINT = 130
+    CONST_UNIT_DROPS = 140
+    CONST_UNIT_PINCH = 150
+    CONST_UNIT_BOTTLE = 160
+
     CONST_UNIT = (
         (CONST_UNIT_PERCENT, _('%')),
         (CONST_UNIT_PART, _('part')),                         
@@ -438,6 +458,12 @@ class DrinkIngredient(models.Model):
         (CONST_UNIT_SNIT, _('snit')),
         (CONST_UNIT_SPLIT, _('split')),
         (CONST_UNIT_OZ, _('oz')),
+
+        (CONST_UNIT_CUP, _('cup')),
+        (CONST_UNIT_PINT, _('pint')),
+        (CONST_UNIT_DROPS, _('drop')),
+        (CONST_UNIT_PINCH, _('pinch')),
+        (CONST_UNIT_BOTTLE, _('bottle')),
     )
 
     EXCHANGE = {
@@ -452,6 +478,12 @@ class DrinkIngredient(models.Model):
         CONST_UNIT_SNIT: 0.33,
         CONST_UNIT_SPLIT:0.17,
         CONST_UNIT_OZ:1,
+
+        CONST_UNIT_CUP:8,
+        CONST_UNIT_PINT:16,
+        CONST_UNIT_DROPS:591,
+        CONST_UNIT_PINCH:96,
+        CONST_UNIT_BOTTLE:0.04,
     }
 
     drink = models.ForeignKey(Drink, related_name='ingredients', null=True, blank=True)

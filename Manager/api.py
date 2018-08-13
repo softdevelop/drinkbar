@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import generics, status, exceptions, permissions, viewsets, mixins
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.permissions import BasePermission, IsAdminUser
+from rest_framework.parsers import MultiPartParser, FormParser
 from .serializer import *
 from .models import *
 from . import tasks
@@ -16,7 +17,7 @@ from Manager.models import UserBase
 from django.core.mail import send_mail, EmailMessage
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 import hashlib
 import fpformat
 import json
@@ -28,6 +29,7 @@ import fpformat
 from requests_futures.sessions import FuturesSession
 from PIL import Image, ImageOps
 import os
+import csv
 '''
 User API:
 '''
@@ -142,6 +144,15 @@ class UserProfile(generics.GenericAPIView):
             serializer = self.get_serializer(user)
             return Response(serializer.data)
         raise api_utils.BadRequest("INVALID_PROFILE")
+class UserCloseApps(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request,format=None):
+        log = UserLog(user=request.user,status=UserLog.CONST_STATUS_CLOSE)
+        last_login = UserLog.objects.filter(creation_date__date=date.today(),status=UserLog.CONST_STATUS_OPEN).last()
+        if last_login:
+            log.how_long = (log.creation_date - last_login.creation_date).minutes
+            log.save()
 
 # Admin see detail user, user update, delete
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -646,7 +657,6 @@ class DrinkList(generics.ListCreateAPIView):
                     Q(glass__status=SeparateGlass.CONST_STATUS_BLOCKED)|\
                     Q(status=Drink.CONST_STATUS_BLOCKED)).filter(creator__is_superuser=True)
         if is_admin:
-            print (is_admin)
             ret = self.queryset.filter(creator__is_superuser=True)
 
         search_query = self.request.GET.get('search', None)
@@ -1001,7 +1011,8 @@ class SettingsAdmin(generics.RetrieveUpdateAPIView):
 
 
 class Twitter(APIView):
-    
+    permission_classes = [IsSuperAdmin]
+
     def get(self,request,format=None):
         data = tasks.twitter()
         ret = {}
@@ -1014,7 +1025,8 @@ class Twitter(APIView):
         return Response(ret,status=status.HTTP_200_OK)
 
 class DoOneTime(APIView):
-    
+    permission_classes = [IsSuperAdmin]
+
     def get(self,request,format=None):
         # Update color for drink
         if request.GET.get('drink_color'):
@@ -1028,6 +1040,7 @@ class DoOneTime(APIView):
         return Response(status=status.HTTP_200_OK)
 
 class DoTestSendEmail(APIView):
+    permission_classes = [IsSuperAdmin]
     
     def get(self,request,format=None):
         subject = 'Hi-Effeciency - Testing send email'
@@ -1049,3 +1062,133 @@ class ContactUsSendEmail(APIView):
         html_content = render_to_string('email/contact_us.html',{'name':name,'email':email,'message':message})
         tasks.send_email(subject, html_content, ['inquary@hiefficiencybar.com',])
         return Response({"detail":"THE EMAIL HAS BEEN SENT"},status=status.HTTP_200_OK)
+
+
+from threading import Thread
+        
+def async_ingredients(val,obj_drink):
+    CONST_UNIT_PCS = 0
+    exchange  = {
+        14:DrinkIngredient.CONST_UNIT_PART,
+        15:DrinkIngredient.CONST_UNIT_DROPS,
+        16:DrinkIngredient.CONST_UNIT_TABLESPOON,
+        17:DrinkIngredient.CONST_UNIT_DASH,
+        18:CONST_UNIT_PCS,
+        19:DrinkIngredient.CONST_UNIT_CUP,
+        20:DrinkIngredient.CONST_UNIT_SPLASH,
+        21:DrinkIngredient.CONST_UNIT_PINCH,
+        22:DrinkIngredient.CONST_UNIT_PINT,
+        23:DrinkIngredient.CONST_UNIT_BOTTLE,
+        24:DrinkIngredient.CONST_UNIT_ML,
+    }
+
+    try:
+        for i in range(0,10):
+            if not val[i*14+13] or val[i*14+13]=="":
+                break
+            print val[i*14+13] 
+            j = 0
+            for j in range(14,25):
+                if val[i*14+j]:
+                    unit=exchange[j]
+                    break;
+
+            # process ratio
+            try:
+                ratio = float(val[i*14+j])
+            except Exception as e:
+                ratio = 0
+
+            if val[i*14+18]:
+                garnish = Garnish.objects.get_or_create(name=val[i*14+13])
+                DrinkGarnish.objects.update_or_create (garnish=garnish[0], ratio=ratio, drink=obj_drink)
+            else:
+                type = IngredientType.objects.get_or_create(name=val[i*14+11])
+                brand = IngredientBrand.objects.get_or_create(name=val[i*14+12])
+                ingredient = Ingredient.objects.get_or_create(name=val[i*14+13],
+                                                            type=type[0], brand=brand[0])
+                DrinkIngredient.objects.update_or_create(ingredient=ingredient[0],
+                                            unit=unit,
+                                            ratio=ratio,drink=obj_drink)
+    except Exception as e:
+        raise e
+    
+class DrinkUploadFileView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [IsSuperAdmin]
+
+    def post(self, request, *args, **kwargs):
+    # try:
+        file = request.data['file']
+        # data = [row for row in csv.reader(file.read().splitlines())]
+        for ind, val in enumerate(csv.reader(file.read().splitlines())):
+            # First row, dismiss
+            if ind == 0:
+                continue 
+
+            # Id process
+            try:
+                id_drink = int(val[0])
+            except Exception as e:
+                id_drink = 0
+
+             # Ice id process
+            if val[10].strip().lower() == 'Normal'.lower():
+                is_have_ice = 0
+            else:
+                is_have_ice = 1
+
+            # Category processin
+            list_name = val[2].split(',');
+            list_objct = []
+            for name in list_name:
+                obj_category = DrinkCategory.objects.get_or_create(name=name)
+                list_objct.append(obj_category[0])
+
+            # Glass process
+            try:
+                obj_glass = SeparateGlass.objects.get(name=val[7])
+            except SeparateGlass.DoesNotExist:
+                obj_glass = SeparateGlass.objects.create(name=val[7],size=0)
+
+            # Add data in table drink
+            if id_drink>0:
+                obj_drink = Drink(id=id_drink,creation_date=datetime.now())
+                obj_drink.save()
+                obj_drink.category.clear()
+                obj_drink.ingredients.all().delete()
+                obj_drink.garnishes.all().delete()
+            else:
+                obj_drink = Drink()
+
+            obj_drink.name = val[1] 
+            obj_drink.image = val[3]
+            # Edit data csv to image_background
+            obj_drink.image_background = val[4]
+
+            try:
+                obj_drink.numbers_bought = int(val[5])
+            except Exception as e:
+                obj_drink.numbers_bought = 0
+
+            try:
+                obj_drink.price = float(val[6])
+            except Exception as e:
+                obj_drink.price = 0
+
+            obj_drink.glass = obj_glass
+            obj_drink.key_word = val[8]
+            obj_drink.estimate_time = int(val[9] if val[9] else 0)
+            obj_drink.is_have_ice = is_have_ice
+            obj_drink.save()  
+            obj_drink.set_background_color()
+
+            # Add many to many
+            obj_drink.category.add(*list_objct)
+
+            thr = Thread(target=async_ingredients, args=[val,obj_drink])
+            thr.start()
+            
+        return Response({'message':'Success'},status=status.HTTP_200_OK)
+    # except Exception as e:
+        raise api_utils.BadRequest("faild")

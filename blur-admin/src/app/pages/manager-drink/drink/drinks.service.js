@@ -4,7 +4,18 @@
         .factory('DrinkService', function ($http, AppSetting) {
             return {
                 getList: function (token, offset, keywork, sort) {
-                    return $http.get(AppSetting.BASE_URL + '/api/drink/?admin=true&limit=100&offset=' + offset + '&search=' + keywork + '&sort='+sort, {
+                    var query = '/api/drink/?admin=true&limit=100';
+                    if (offset){
+                        query += '&offset='+ offset ;
+                    }
+                    if (keywork){
+                        query += '&search=' + keywork;
+                    }
+                    if (sort){
+                        query += '&sort='+sort;
+                    }
+                    
+                    return $http.get(AppSetting.BASE_URL + query, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token
@@ -98,9 +109,20 @@
                 },
                 changed: function (data, token) {
                     var fd = new FormData();
-                    fd.append('status', data.status);
+                    fd.append('filke', data.status);
 
                     return $http.patch(AppSetting.BASE_URL + '/api/drink/' + data.id + '/', fd, {
+                        headers: {
+                            'Content-Type': undefined,
+                            'Authorization': 'Token ' + token
+                        }
+                    })
+                },
+                importCsv: function (data, token) {
+                    var fd = new FormData();
+                    fd.append('file', data);
+
+                    return $http.post(AppSetting.BASE_URL + '/api/drink/csv/', fd, {
                         headers: {
                             'Content-Type': undefined,
                             'Authorization': 'Token ' + token

@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^user/$', api_views.UserList.as_view(), name='user-list'), 
     url(r'^user/signup/$', api_views.UserSignUp.as_view(), name='user-signup'), 
     url(r'^user/me/$', api_views.UserProfile.as_view(), name='user-me'), 
+    url(r'^user/me/close/$', api_views.UserProfile.as_view(), name='user-me'), 
     url(r'^user/(?P<pk>[0-9]+)/$', api_views.UserDetail.as_view(), name='user-detail'), 
     url(r'^user/change/password/$', api_views.UserChangePassword.as_view(), name='user-change-password'), 
     url(r'^user/forget/password/$', api_views.UserForgetPassword.as_view(), name='user-forget-password'), 
@@ -25,6 +26,8 @@ urlpatterns = [
     url(r'^drink/category/(?P<pk>[0-9]+)/$',api_views.DrinkCategoryDetail.as_view(), name='drink-categories-detail'),
     url(r'^drink/ingredient/$', api_views.DrinkIngredientList.as_view(), name="drink-ingredient-list"),
     url(r'^drink/ingredient/(?P<pk>[0-9]+)/$', api_views.DrinkIngredientDetail.as_view(), name="drink-ingredient-detail"),
+    url(r'^drink/csv/$', api_views.DrinkUploadFileView.as_view(), name="drink-upload-file-csv"),
+
     url(r'^glass/$',api_views.SeparateGlassList.as_view(), name='glass-list'),
     url(r'^glass/(?P<pk>[0-9]+)/$',api_views.SeparateGlassDetail.as_view(), name='glass-detail'),
 
@@ -57,5 +60,6 @@ urlpatterns = [
 
     url(r'^statistic/order/$', statistic_api_views.Order.as_view(), name="statistic"),    
     url(r'^statistic/user/$', statistic_api_views.UserLog.as_view(), name="statistic"),    
-    url(r'^statistic/user/(?P<pk>[0-9]+)/$', statistic_api_views.UserPurchase.as_view(), name="statistic"),    
+    url(r'^statistic/user/(?P<pk>[0-9]+)/$', statistic_api_views.UserPurchase.as_view(), name="statistic"),
+
 ]
