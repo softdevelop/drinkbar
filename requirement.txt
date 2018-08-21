@@ -18,3 +18,7 @@ Pillow
 stripe
 requests-futures
 django-mathfilters
+django-haystack==2.5.1
+elasticsearch==5.0.1
+coreapi
+drf-haystack

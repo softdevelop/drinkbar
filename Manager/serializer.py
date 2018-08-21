@@ -509,8 +509,20 @@ class AddToTabSerializer(serializers.ModelSerializer):
         ret = Tab(**validated_data)
         tab = Tab.objects.filter(drink=ret.drink, user=ret.user, order__isnull=True)
         if not tab:
-            if not check_available(ret):
-                raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR {} QUANTITY,PLEASE RELOAD!".format(ret))
+            if not self.check_available(ret):
+                if ret.quantity==1:
+                    ret.drink.status = Drink.CONST_STATUS_BLOCKED
+                    ret.drink.save()
+                    raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR {} QUANTITY,PLEASE RELOAD!".format(ret.quantity))
+                else:
+                    # Check if still enough for 1 cup
+                    if not self.check_available(ret,1):
+                        ret.drink.status = Drink.CONST_STATUS_BLOCKED
+                        ret.drink.save()
+                        raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR {}, PLEASE RELOAD!".format(ret.drink.name.upper()))
+                    else:
+                        raise api_utils.BadRequest("JUST ENOUGH INGREDIENT FOR 1 CUP {}".format(tab.drink.name.upper()))
+            ret.save()
             garnishes = self.initial_data.get('garnishes')
             if garnishes:
                 garnishes = DrinkGarnish.objects.filter(drink=ret.drink,garnish__in=ast.literal_eval(garnishes))
@@ -519,8 +531,20 @@ class AddToTabSerializer(serializers.ModelSerializer):
         else:
             temp = ret
             ret = tab.first()
-            if not check_available(temp):
-                raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR ADD MORE {} QUANTITY,PLEASE RELOAD".format(ret))
+            temp_quantity = ret.quantity+temp.quantity
+            if not self.check_available(temp, temp_quantity):
+                if temp.quantity==1:
+                    temp.drink.status = Drink.CONST_STATUS_BLOCKED
+                    temp.drink.save()
+                    raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR ADDING MORE {} QUANTITY,PLEASE RELOAD!".format(ret.quantity))
+                else:
+                    # Check if still enough for 1 cup
+                    if not self.check_available(temp,1):
+                        temp.drink.status = Drink.CONST_STATUS_BLOCKED
+                        temp.drink.save()
+                        raise api_utils.BadRequest("NOT ENOUGH INGREDIENT FOR ADDING MORE {}, PLEASE RELOAD!".format(ret.drink.name.upper()))
+                    else:
+                        raise api_utils.BadRequest("JUST ENOUGH INGREDIENT FOR 1 CUP {}".format(tab.drink.name.upper()))
             ret.quantity +=temp.quantity
             ret.save()
         return ret

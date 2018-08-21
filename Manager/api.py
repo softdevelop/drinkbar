@@ -690,7 +690,7 @@ class DrinkList(generics.ListCreateAPIView):
             sort = list(sort)
             for s in sort:
                 ret = ret.order_by(s)
-        return ret
+        return ret.distinct()
 
 class DrinkDetial(generics.RetrieveUpdateDestroyAPIView):
     queryset = Drink
@@ -1069,26 +1069,27 @@ from threading import Thread
 def async_ingredients(val,obj_drink):
     CONST_UNIT_PCS = 0
     exchange  = {
-        14:DrinkIngredient.CONST_UNIT_PART,
-        15:DrinkIngredient.CONST_UNIT_DROPS,
-        16:DrinkIngredient.CONST_UNIT_TABLESPOON,
-        17:DrinkIngredient.CONST_UNIT_DASH,
-        18:CONST_UNIT_PCS,
-        19:DrinkIngredient.CONST_UNIT_CUP,
-        20:DrinkIngredient.CONST_UNIT_SPLASH,
-        21:DrinkIngredient.CONST_UNIT_PINCH,
-        22:DrinkIngredient.CONST_UNIT_PINT,
-        23:DrinkIngredient.CONST_UNIT_BOTTLE,
-        24:DrinkIngredient.CONST_UNIT_ML,
+        15:DrinkIngredient.CONST_UNIT_PART,
+        16:DrinkIngredient.CONST_UNIT_DROPS,
+        17:DrinkIngredient.CONST_UNIT_TABLESPOON,
+        18:DrinkIngredient.CONST_UNIT_DASH,
+        19:CONST_UNIT_PCS,
+        20:DrinkIngredient.CONST_UNIT_CUP,
+        21:DrinkIngredient.CONST_UNIT_SPLASH,
+        22:DrinkIngredient.CONST_UNIT_PINCH,
+        23:DrinkIngredient.CONST_UNIT_PINT,
+        24:DrinkIngredient.CONST_UNIT_BOTTLE,
+        25:DrinkIngredient.CONST_UNIT_ML,
     }
 
     try:
         for i in range(0,10):
-            if not val[i*14+13] or val[i*14+13]=="":
+            if not val[i*14+14] or val[i*14+14]=="":
                 break
-            print val[i*14+13] 
+            # print val[i*14+14]
+            print(val[0]) 
             j = 0
-            for j in range(14,25):
+            for j in range(15,26):
                 if val[i*14+j]:
                     unit=exchange[j]
                     break;
@@ -1099,13 +1100,13 @@ def async_ingredients(val,obj_drink):
             except Exception as e:
                 ratio = 0
 
-            if val[i*14+18]:
-                garnish = Garnish.objects.get_or_create(name=val[i*14+13])
+            if val[i*14+19]:
+                garnish = Garnish.objects.get_or_create(name=val[i*14+14])
                 DrinkGarnish.objects.update_or_create (garnish=garnish[0], ratio=ratio, drink=obj_drink)
             else:
-                type = IngredientType.objects.get_or_create(name=val[i*14+11])
-                brand = IngredientBrand.objects.get_or_create(name=val[i*14+12])
-                ingredient = Ingredient.objects.get_or_create(name=val[i*14+13],
+                type = IngredientType.objects.get_or_create(name=val[i*14+12])
+                brand = IngredientBrand.objects.get_or_create(name=val[i*14+13])
+                ingredient = Ingredient.objects.get_or_create(name=val[i*14+14],
                                                             type=type[0], brand=brand[0])
                 DrinkIngredient.objects.update_or_create(ingredient=ingredient[0],
                                             unit=unit,
@@ -1115,7 +1116,6 @@ def async_ingredients(val,obj_drink):
     
 class DrinkUploadFileView(APIView):
     parser_classes = (MultiPartParser, FormParser)
-    permission_classes = [IsSuperAdmin]
 
     def post(self, request, *args, **kwargs):
     # try:
@@ -1133,7 +1133,7 @@ class DrinkUploadFileView(APIView):
                 id_drink = 0
 
              # Ice id process
-            if val[10].strip().lower() == 'Normal'.lower():
+            if val[11].strip().lower() == 'Normal'.lower():
                 is_have_ice = 0
             else:
                 is_have_ice = 1
@@ -1147,9 +1147,9 @@ class DrinkUploadFileView(APIView):
 
             # Glass process
             try:
-                obj_glass = SeparateGlass.objects.get(name=val[7])
+                obj_glass = SeparateGlass.objects.get(name=val[8])
             except SeparateGlass.DoesNotExist:
-                obj_glass = SeparateGlass.objects.create(name=val[7],size=0)
+                obj_glass = SeparateGlass.objects.create(name=val[8],size=0)
 
             # Add data in table drink
             if id_drink>0:
@@ -1171,14 +1171,20 @@ class DrinkUploadFileView(APIView):
             except Exception as e:
                 obj_drink.numbers_bought = 0
 
+            # id_fit_price process
+            if val[6].strip().lower() == 'yes'.lower():
+                obj_drink.is_fit_price = True
+            else:
+                obj_drink.is_fit_price = False      
+
             try:
-                obj_drink.price = float(val[6])
+                obj_drink.price = float(val[7])
             except Exception as e:
                 obj_drink.price = 0
 
             obj_drink.glass = obj_glass
-            obj_drink.key_word = val[8]
-            obj_drink.estimate_time = int(val[9] if val[9] else 0)
+            obj_drink.key_word = val[9]
+            obj_drink.estimate_time = int(val[10] if val[10] else 0)
             obj_drink.is_have_ice = is_have_ice
             obj_drink.save()  
             obj_drink.set_background_color()

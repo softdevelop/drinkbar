@@ -664,7 +664,7 @@ class Tab(models.Model):
     quantity = models.PositiveIntegerField(blank=True, null= True, default=0)
     quantity_done = models.PositiveIntegerField(blank=True, null= True, default=0)
     order = models.ForeignKey(Order, related_name='products',blank=True, null= True,)
-    amount = models.FloatField(blank=True, null=True)
+    amount = models.DecimalField(blank=True, null=True, decimal_places=2, max_digits=9)
     modified_date = models.DateTimeField(auto_now=True)
     creation_date = models.DateTimeField(auto_now_add=True)
 

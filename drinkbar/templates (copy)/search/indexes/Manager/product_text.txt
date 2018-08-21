@@ -1,2 +1,0 @@
-{{object.name}}
-{{ object.key_word|default:"" }}

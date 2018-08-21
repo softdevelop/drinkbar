@@ -46,13 +46,13 @@
 		.textLogo{
 			background: url({% static 'email/receipt/images/bg-hd.png' %}) no-repeat center top !important;
 			background-size: 100% !important;
-			padding: 16% 0 3% 19% !important;
+			padding: 16.5% 0 3% 19% !important;
 		}
 		.textLogo h3{
 			font-size: 12px !important;
 			margin: 0 !important;
 			color: #000000 !important;
-			line-height: 8px !important;
+			line-height: 4px !important;
 			margin-bottom: -5px !important;
 		}
 		.textLogo a{
@@ -62,7 +62,7 @@
 			margin: 0 !important;
 			font-weight:  500 !important;
 			color: #000000 !important;
-			line-height: 12px !important;
+			line-height: 4px !important;
 		}
 		.cnt-hdtext{
 			overflow: hidden !important;
@@ -91,22 +91,23 @@
 		.textStever .fullName{
 		    display:  inline-block !important;
 		    vertical-align: top !important;
-		    width: calc(100% - 100px) !important;
+		    width: calc(100% - 90px) !important;
 		    line-height: 70px !important;
 		}
 
 		.textStever h3{
 			font-size: 20px !important;
-			display:  inline-block !important;
 			font-family: 'HelveticaNeueBold' !important;
 			color: #000000 !important;
 			margin: 0 !important; 
-			line-height: 18px !important;
-			vertical-align: middle !important;
+			line-height: 25px !important;
 		}
 		.textStever h3 span{
 			font-size: 13px !important;
 			font-family: 'HelveticaNeueMedium' !important;
+			color: #000000 !important;
+			margin: 0 !important; 
+			line-height: 20px !important;
 		}
 		.hdroboto{
 			width: 50% !important;
@@ -120,7 +121,6 @@
 			background: #263e71 !important;
 		}
 		.textRoboto-title table tr td{
-			width: 30% !important;
 			padding-right: 3.33% !important;
 			color: #fff !important;
 			font-size: 10px !important;
@@ -136,6 +136,9 @@
 			text-align: center !important;
 			font-size: 10px !important;
 			text-transform: uppercase !important;
+		}
+		.textRoboto table tr td .col-date-time{
+			width: 140px !important;
 		}
 		.textRoboto table tr td span{
 			font-size: 27px !important;
@@ -275,7 +278,7 @@
 			}
 			.textLogo h3 {
 		    	font-size: 10px !important;
-		    	margin-bottom: -2px !important;
+		    	line-height: 4px !important;
 			}
 			.textLogo a {
 			    font-size: 9px !important;
@@ -293,6 +296,10 @@
 			}
 			.textRoboto table tr td{
 				font-size: 8px !important;
+			}
+
+			.textRoboto table tr td .col-date-time{
+				width: 126px !important;
 			}
 			.textRoboto table tr td span {
 			    font-size: 16px !important;
@@ -346,11 +353,16 @@
 			    line-height: 13px !important;
 			  	font-size: 15px !important;
 			}
+
 			.hdroboto{
 				width: 50% !important;
 			}
 			.textRoboto-title table tr td{
 				font-size: 8px !important;
+			}
+
+			.textRoboto table tr td .col-date-time{
+				width: 103.5px !important;
 			}
 			.textRoboto table tr td span {
 			    font-size: 13px !important;
@@ -390,6 +402,10 @@
 			.textRoboto table tr td {
 			    font-size: 8px !important;
 			}
+
+			.textRoboto table tr td .col-date-time{
+				width: 80px !important;
+			}
 			
 			
 		}
@@ -420,6 +436,7 @@
 			.textRoboto table tr td span {
 			    font-size: 12px !important;
 			}
+
 		}
 		@media (max-width: 310px){
 			.headerContainer {
@@ -433,6 +450,10 @@
 			}
 			.textRoboto table tr td span {
 			    font-size: 12px !important;
+			}
+
+			.textRoboto table tr td .col-date-time{
+				width: 72px !important;
 			}
 		}
 		@media (max-width: 290px){
@@ -453,7 +474,11 @@
 			.textRoboto table tr td span {
 			    font-size: 12px !important;
 			}
-		
+			
+			.textRoboto table tr td .col-date-time{
+				width: 66px !important;
+			}
+
 			.textSub p {
 			    padding: 0px 10px 0 0 !important;
 			}
@@ -478,14 +503,15 @@
 			<div class="textStever">
 				<div class="avatar"><img src="http://hiefficiencybar.com/media/{{ user.avatar }}" alt="" width="70px"></div>
 				<div class="fullName">
-					<h3><span>Serving:</span> <br>{{user.full_name}}</h3>
+					<h3><span>Serving:</span></h3>
+					<h3>{{user.full_name}}</h3>
 				</div>
 			</div>
 			<div class="hdroboto">
 				<div class="textRoboto-title">
 					<table>
 						<tr>
-							<td colspan="2">DATE: {{order.creation_date|date:"M d, Y"}}</td>
+							<td colspan="2" class="col-date-time">DATE: {{order.creation_date|date:"M d, Y"}}</td>
 							<td>
 							TIME: {{order.creation_date|date:"f"}}</td>
 						</tr>
